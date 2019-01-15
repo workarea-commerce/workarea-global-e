@@ -3,13 +3,12 @@ $:.push File.expand_path("lib", __dir__)
 require "workarea/global_e/version"
 
 Gem::Specification.new do |spec|
-  spec.name        = "global_e"
+  spec.name        = "workarea-global_e"
   spec.version     = Workarea::GlobalE::VERSION
   spec.authors     = ["Eric Pigeon"]
   spec.email       = ["epigeon@weblinc.com"]
-  spec.homepage    = "TODO"
-  spec.summary     = "TODO: Summary of GlobalE."
-  spec.description = "TODO: Description of GlobalE."
+  spec.summary     = "Global E integration for Workarea Platform"
+  spec.description = "Global E integration for Workarea Platform"
   spec.license     = "MIT"
   spec.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
 
