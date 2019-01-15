@@ -11,6 +11,14 @@ module Workarea
       Workarea.config.global_e
     end
 
+    def self.javascript_source
+      config.javascript_source
+    end
+
+    def self.css_source
+      config.css_source
+    end
+
     def self.domestic_countries
       config.domestic_countries
     end

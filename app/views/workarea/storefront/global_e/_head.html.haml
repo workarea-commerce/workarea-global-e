@@ -1,0 +1,10 @@
+- if Workarea::GlobalE.javascript_source.present? && Workarea::GlobalE.css_source.present?
+  :javascript
+    (function() {
+      var s = document.createElement('script');
+      s.type = 'text/javascript';
+      s.async = true;
+      s.src = '#{Workarea::GlobalE.javascript_source}';
+      document.getElementsByTagName('head')[0].appendChild(s);
+    })();
+  %link{ id: "GEPIStyles", rel: "stylesheet", href: Workarea::GlobalE.css_source }
