@@ -2,6 +2,9 @@ module Workarea
   decorate Order, with: :global_e do
     decorated do
       field :global_e_id, type: String
+      field :global_e_token, type: String, default: -> { SecureRandom.hex(5).upcase }
+
+      index({ global_e_token: -1 })
     end
   end
 end

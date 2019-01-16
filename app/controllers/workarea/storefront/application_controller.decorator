@@ -1,0 +1,17 @@
+module Workarea
+  decorate Storefront::ApplicationController, with: :global_e do
+    decorated do
+      after_action :set_global_e_cart_id_cookie
+    end
+
+    private
+
+      def set_global_e_cart_id_cookie
+        if current_order.persisted?
+          cookies["GlobalECartId"] = current_order.global_e_token
+        else
+          cookies.delete "GlobalECartId"
+        end
+      end
+  end
+end
