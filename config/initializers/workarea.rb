@@ -1,3 +1,5 @@
 Workarea.configure do |config|
-  # Add custom configuration here
+  config.global_e = ActiveSupport::Configurable::Configuration.new
+
+  config.global_e.domestic_countries = ["US"]
 end

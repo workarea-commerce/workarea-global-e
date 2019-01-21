@@ -1,0 +1,24 @@
+module Workarea
+  decorate Storefront::CheckoutsController, with: :global_e do
+    decorated { before_action :route_global_e_order, if: :send_to_global_e? }
+
+    private
+
+      def route_global_e_order
+        redirect_to ge_checkout_path
+      end
+
+      def global_e_cookie
+        JSON.parse cookies[:GlobalE_Data] rescue {}
+      end
+
+      def global_e_country
+        global_e_cookie["countryISO"]
+      end
+
+      def send_to_global_e?
+        global_e_country.present? &&
+          !GlobalE.domestic_countries.include?(global_e_country)
+      end
+  end
+end

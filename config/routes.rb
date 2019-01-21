@@ -1,2 +1,3 @@
-Rails.application.routes.draw do
+Workarea::Storefront::Engine.routes.draw do
+  resource :ge_checkout, only: :show
 end
