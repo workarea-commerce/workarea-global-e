@@ -1,0 +1,7 @@
+module Workarea
+  decorate Admin::OrderViewModel, with: :global_e do
+    def global_e_api_events
+      @global_e_api_events ||= GlobalE::OrderApiEvents.find model.id rescue nil
+    end
+  end
+end

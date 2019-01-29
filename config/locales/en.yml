@@ -1,0 +1,9 @@
+en:
+  workarea:
+    admin:
+      orders:
+        cards:
+          global_e:
+            title: GlobalE
+        global_e:
+          title: "%{name} Details"

@@ -136,6 +136,158 @@ module Workarea
         end
       end
 
+      def global_e_send_order_to_mechant_body(email: "John.Smith@global-e.com", cart_id: nil)
+        cart_id ||= SecureRandom.hex(5).upcase
+
+        {
+          "ClearCart" => true,
+          "UserId" => nil,
+          "CurrencyCode" => "ILS",
+          "Products" => [
+            {
+              "Attributes" => [
+                {
+                  "AttributeKey" => "color",
+                  "AttributeValue" => "GREY"
+                }
+              ],
+              "Sku" => "7290012491726",
+              "Price" => 21.5500,
+              "Quantity" => 8,
+              "VATRate" => 18.000000,
+              "Intern ationalPrice" => 4.8400,
+              "CartItemId" => "11007",
+              "Brand" => nil,
+              "Categories" => []
+            }
+          ],
+          "Customer" => {
+            "EmailAddress" => "info@global-e.com",
+            "IsEndCustomerPrimary" => false,
+            "SendConfirmation" => false
+          },
+          "PrimaryShipping" => {
+            "FirstName" => "GlobalE ",
+            "LastName" => "GlobalE",
+            "MiddleName" => nil,
+            "Salutation" => nil,
+            "Company" => "GlobalE",
+            "Address1" => "21/D, Yegi'a Kapayim st. Yellow building - Floor 1",
+            "Address2" => "Test Address2\r\nGlobal-e OrderId => GE927127",
+            "City" => "Petach Tikva",
+            "StateCode" => "NN",
+            "StateOrProvince" => nil,
+            "Zip" => "4913020",
+            "Email" => "info@global-e.com",
+            "Phone1" => " 972 73 204 1384",
+            "Phone2" => "Test Phone2",
+            "Fax" => "Test Fax",
+            "CountryCode" => "IL",
+            "CountryName" => "Israel"
+          },
+          "SecondaryShipping" => {
+            "FirstName" => "John",
+            "LastName" => "S mith",
+            "MiddleName" => nil,
+            "Salutation" => nil,
+            "Company" => nil,
+            "Address1" => "Amishav 24",
+            "Address2" => nil,
+            "City" => "Paris",
+            "StateCode" => nil,
+            "StateOrProvince" => nil,
+            "Zip" => "66666",
+            "Email" => email,
+            "Phone1" => "98756344782",
+            "Phone2" => nil,
+            "Fax" => nil,
+            "CountryCode" => "FR",
+            "CountryName" => "France"
+          },
+          "ShippingMethodCode" => "globaleintegration_standard",
+          "Discounts" => [
+            {
+              "Name" => "Shipping discount provided by globale",
+              "Description" => "Auto calculated according to products",
+              "Price" => 35.3100,
+              "DiscountType" => 2,
+              "VATRate" => 18.000000,
+              "CouponCode" => nil,
+              "InternationalPrice" =>  6.5800
+            }
+          ],
+          "InternationalDetails" => {
+            "CurrencyCode" => "EUR",
+            "TotalPrice" => 64.8800,
+            "TransactionCurrencyCode" => " EUR",
+            "TransactionTotalPrice" => 64.8800,
+            "TotalShippingPrice" => 32.7400,
+            "TotalDutiesPrice" => 0.0000,
+            "ShippingMethodCode" => "2",
+            "PaymentMethodCode" => "1",
+            "PaymentMethodName" => "Visa",
+            "ShippingMethodName" => "DHL Express Worldwide",
+            "ShippingMethodTypeCode" => "Express",
+            "ShippingMethodTypeName" => "Express Courier (Air)",
+            "DutiesGuaranteed" => false,
+            "OrderTrackingNumber" => nil,
+            "OrderTrackingUrl" => "http://www.israelpost.co.il/ itemtrace.nsf/mainsearch?openform",
+            "OrderWaybillNumber" => nil,
+            "OrderWaybillUrl" => nil,
+            "ShippingMethodStatusCode" => "0",
+            "ShippingMethodStatusName" => "undefined",
+            "CardNumberLastFourDigits" => "7854",
+            "ExpirationDate" => "2023-06-30",
+            "TotalVATAmount" => 11.1400
+          },
+          "PaymentDetails" => nil,
+          "PrimaryBilling" => {
+            "FirstName" => "GlobalE",
+            "LastName" => "GlobalE",
+            "MiddleName" => nil,
+            "Salutation" => nil,
+            "Company" => "GlobalE",
+            "Address1" => "21/D, Yegi'a Kapayim st. Yellow building - Floor 1",
+            "Address2" => nil,
+            "City" => "Petach Tikva",
+            "StateCode" => nil,
+            "StateOrProvince" => nil,
+            "Zip" => "4913020",
+            "Email" => "info@global-e.com",
+            "Phone1" => " 972 73 204 1384",
+            "Phone2" => nil,
+            "Fax" => " 972 73 204 1386",
+            "CountryCode" => "IL",
+            "CountryName" => "Israel"
+          },
+          "SecondaryBilling" => {
+            "FirstName" => "John",
+            "LastName" => "S mith",
+            "MiddleName" => nil,
+            "Salutation" => nil,
+            "Company" => "GlobalE",
+            "Address1" => "Amishav 24",
+            "Address2" => nil,
+            "City" => "Paris",
+            "StateCode" => nil,
+            "StateOrProvince" => nil,
+            "Zip" => "66666",
+            "Email" => email,
+            "Phone1" => "972500000",
+            "Phone2" => nil,
+            "Fax" => nil,
+            "CountryCode" => "FR",
+            "CountryName" => "France"
+          },
+          "OrderId" => "GE927127",
+          "StatusCode" => "N/A",
+          "MerchantGUID" => "0f4eec24-8988-4361-be9a- a7468d05f1fe",
+          "CartId" => cart_id,
+          "MerchantOrderId" => nil,
+          "PriceCoefficientRate" => 1.000000
+        }.to_json
+      end
+
       private
 
         def create_global_e_order_id

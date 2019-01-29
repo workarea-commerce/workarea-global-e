@@ -86,7 +86,7 @@ module Workarea
 
       #  Company name
       #
-      #  @return [String[
+      #  @return [String]
       #
       def company
       end

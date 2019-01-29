@@ -4,6 +4,7 @@ require 'workarea/admin'
 
 require 'workarea/global_e/engine'
 require 'workarea/global_e/version'
+require 'workarea/global_e/error'
 
 module Workarea
   module GlobalE
@@ -25,6 +26,14 @@ module Workarea
 
     def self.shipping_discount_types
       config.shipping_discount_types
+    end
+
+    def self.report_error(error)
+      if defined? ::Raven
+        Raven.capture_exception error
+      else
+        Rails.logger.debug error
+      end
     end
   end
 end

@@ -1,0 +1,11 @@
+module Workarea
+  decorate Address, with: :global_e do
+    decorated do
+      field :skip_region_presence, type: Boolean
+    end
+
+    def region_presence
+      skip_region_presence || super
+    end
+  end
+end

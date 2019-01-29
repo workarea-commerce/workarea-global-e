@@ -1,0 +1,7 @@
+module Workarea
+  decorate Fulfillment, with: :global_e do
+    decorated do
+      field :global_e_tracking_url, type: String
+    end
+  end
+end

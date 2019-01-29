@@ -17,3 +17,8 @@ Workarea.append_javascripts(
   "storefront.modules",
   "workarea/storefront/global_e/modules/suppress_price_ranges"
 )
+
+Workarea.append_partials(
+  'admin.order_cards',
+  'workarea/admin/orders/global_e'
+)

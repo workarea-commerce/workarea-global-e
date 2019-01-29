@@ -3,8 +3,10 @@ module Workarea
     decorated do
       field :global_e_id, type: String
       field :global_e_token, type: String, default: -> { SecureRandom.hex(5).upcase }
+      field :currency, type: String, default: -> { Money.default_currency.iso_code }
 
       index({ global_e_token: -1 })
+      index({ global_e_id: -1 })
     end
   end
 end

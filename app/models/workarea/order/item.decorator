@@ -1,0 +1,7 @@
+module Workarea
+  decorate Order::Item, with: :global_e do
+    decorated do
+      field :international_total_price, type: Money
+    end
+  end
+end

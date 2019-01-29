@@ -1,12 +1,5 @@
 module Workarea
   decorate Shipping::Sku, with: :global_e do 
-    decorated do
-      # @!attribute dimensions
-      #   @return [Array] Height x Width x Length
-      #
-      field :dimensions, type: Array, default: []
-    end
-
     def height
       dimensions.first
     end

@@ -1,0 +1,6 @@
+module Workarea
+  decorate Admin::OrdersController, with: :global_e do
+    def global_e
+    end
+  end
+end

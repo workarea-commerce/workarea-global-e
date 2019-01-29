@@ -1,0 +1,19 @@
+- @page_title = t('workarea.admin.orders.global_e.title', name: @order.name)
+
+.view
+  .view__header
+    .grid.grid--middle.grid--right
+      .grid__cell.grid__cell--50
+        .view__heading
+          = link_to_index_for(@order)
+          %h1= link_to @order.name, url_for(@order)
+      .grid__cell.grid__cell--25
+        = render_aux_navigation_for(@order)
+
+  .view__container
+    = render_cards_for(@order, :global_e)
+
+  .view__container.view__container--narrow
+    .grid
+      .grid__cell.grid__cell--100
+        = @order.global_e_api_events.send_order_to_merchant

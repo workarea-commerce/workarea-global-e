@@ -6,12 +6,15 @@ module Workarea
           .permit(:cartToken, :countryCode, :IsStockValidation)
 
         order = Order.find_by(global_e_token: checkout_cart_info_params.require(:cartToken))
+        order.update_attribute(:checkout_started_at, Time.current)
+
+        InventoryAdjustment.new(order).tap(&:perform)
 
         if checkout_cart_info_params[:IsStockValidation]
           InventoryAdjustment.new(order).tap(&:perform)
         end
 
-        render json: GlobalE::CheckoutCartInfo.new(order).to_json
+        render json: Workarea::GlobalE::CheckoutCartInfo.new(order).to_json
       end
     end
   end

@@ -1,0 +1,9 @@
+module Workarea
+  decorate Shipping, with: :global_e do
+    decorated do
+      embeds_many :global_e_price_adjustments,
+        class_name: 'Workarea::PriceAdjustment',
+        extend: PriceAdjustmentExtension
+    end
+  end
+end
