@@ -2,7 +2,11 @@ module Workarea
   module Storefront
     module Globale
       class ApiController < Storefront::ApplicationController
-        after_action :log_api_event, only: [:receive_order, :receive_payment]
+        before_action :parse_merchant_order
+        before_action :find_order
+        after_action :log_api_event, only: [:receive_order, :receive_payment, :update_order_status]
+
+        rescue_from Exception, with: :api_error_response
 
         # After this step is completed the order can be included in
         # order history in the customer’s “My Account” section on the
@@ -11,38 +15,8 @@ module Workarea
         # the second step will follow too.
         #
         def receive_order
-          @merchant_order = Workarea::GlobalE::Merchant::Order.new(
-            params.to_unsafe_hash.except(:controller, :action)
-          )
-          @order = Order.find_by(global_e_token: @merchant_order.cart_id)
-
-          checkout = Workarea::GlobalE::Checkout.new(@order, @merchant_order)
-          checkout.update_order
-          checkout.save_shippings
-          checkout.save_payment
-
-          with_order_lock do
-            raise GlobalE::UnpurchasableOrder, @order.errors.full_messages.join("\n") unless @order.valid?(:purchasable)
-
-            reservation = InventoryAdjustment.new(@order).tap(&:perform)
-            raise GlobalE::InsufficientInventory, reservation.errors.join("\n") if reservation.errors.present?
-
-            checkout.capture_invetory
-
-            @response = Workarea::GlobalE::Merchant::ResponseInfo.new(order: @order)
-            render json: @response.to_json
-          end
-        rescue => error
-          GlobalE.report_error error
-          @response = GlobalE::Merchant::ResponseInfo.error(message: error.message, order: @order)
-          render json: @response.to_json, status: :internal_server_error
-        ensure
-          if @order && @merchant_order && @response
-            @api_events = {
-              send_order_to_merchant: @merchant_order.to_h,
-              send_order_to_merchant_response: @response.to_h
-            }
-          end
+          @response = GlobalE::Api::SendOrderToMerchant.new(@order, @merchant_order).response
+          render json: @response.to_json
         end
 
         # Posts order payment details for the order to the Merchant and performs
@@ -50,30 +24,46 @@ module Workarea
         # mandatory for this method.
         #
         def receive_payment
-          @merchant_order = Workarea::GlobalE::Merchant::Order.new(
-            params.to_unsafe_hash.except(:controller, :action)
-          )
-          @order = Order.find(@merchant_order.merchant_order_id)
-
-          checkout = Workarea::GlobalE::Checkout.new(@order, @merchant_order)
-          checkout.place_order
-
-          @response = Workarea::GlobalE::Merchant::ResponseInfo.new(order: @order)
+          @response = GlobalE::Api::PerformOrderPayment.new(@order, @merchant_order).response
           render json: @response.to_json
-        rescue => error
-          GlobalE.report_error error
-          @response = GlobalE::Merchant::ResponseInfo.error(message: error.message, order: @order)
-          render json: @response.to_json, status: :internal_server_error
-        ensure
-          if @order && @merchant_order && @response
-            @api_events = {
-              perform_order_payment: @merchant_order.to_h,
-              perform_order_payment_response: @response.to_h
-            }
-          end
+        end
+
+        def update_order_status
+          @response = GlobalE::Api::UpdateOrderStatus.new(@order, @merchant_order).response
+          render json: @response.to_json
         end
 
         private
+
+          def api_error_response(error)
+            GlobalE.report_error error
+            @response = GlobalE::Merchant::ResponseInfo.error(message: error.message, order: @order)
+            GlobalE::OrderApiEvents.upsert_one(
+              @order.id,
+              set: {
+                "#{params[:action]}" => @merchant_order.to_h,
+                "#{params[:action]}_response" => @response.to_h
+              }
+            )
+            render json: @response.to_json, status: :internal_server_error
+          end
+
+          def parse_merchant_order
+            @merchant_order = Workarea::GlobalE::Merchant::Order.new(
+              params.to_unsafe_hash.except(:controller, :action, :api)
+            )
+          end
+
+          def find_order
+            @order ||=
+              if @merchant_order.cart_id.present?
+                Order.find_by(global_e_token: @merchant_order.cart_id)
+              elsif @merchant_order.merchant_order_id.present?
+                Order.find(@merchant_order.merchant_order_id)
+              elsif @merchant_order.order_id.present?
+                Order.find_by(global_e_id: @merchant_order.order_id)
+              end
+          end
 
           def with_order_lock
             @order.lock!
@@ -83,11 +73,14 @@ module Workarea
           end
 
           def log_api_event
-            return unless @order && @api_events
+            return unless @order && @response
 
             GlobalE::OrderApiEvents.upsert_one(
               @order.id,
-              set: @api_events
+              set: {
+                "#{params[:action]}" => @merchant_order.to_h,
+                "#{params[:action]}_response" => @response.to_h
+              }
             )
           end
       end

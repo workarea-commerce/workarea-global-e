@@ -58,13 +58,9 @@ module Workarea
       order.tap(&:save!)
 
       merchant_order = GlobalE::Merchant::Order.new(
-        JSON.parse(global_e_send_order_to_mechant_body)
+        JSON.parse(global_e_send_order_to_mechant_body(order: order))
       )
-      checkout = GlobalE::Checkout.new(order, merchant_order)
-      checkout.update_order
-      checkout.save_shippings
-      checkout.save_payment
-      checkout.capture_invetory
+      GlobalE::Api::SendOrderToMerchant.new(order, merchant_order).response
 
       order
     end
@@ -122,14 +118,14 @@ module Workarea
       end
     end
 
-    def global_e_send_order_to_mechant_body(email: "John.Smith@global-e.com", cart_id: nil)
-      cart_id ||= SecureRandom.hex(5).upcase
+    def global_e_send_order_to_mechant_body(email: "John.Smith@global-e.com", order: nil)
+      order ||= create_cart
 
       {
         "ClearCart" => true,
         "UserId" => nil,
         "CurrencyCode" => "ILS",
-        "Products" => [
+        "Products" => order.items.map do |order_item|
           {
             "Attributes" => [
               {
@@ -141,12 +137,13 @@ module Workarea
             "Price" => 21.5500,
             "Quantity" => 8,
             "VATRate" => 18.000000,
-            "Intern ationalPrice" => 4.8400,
-            "CartItemId" => "11007",
+            "InternationalPrice" => 4.8400,
+            "InternationalDiscountedPrice" => 4.8400,
+            "CartItemId" => order_item.id.to_s,
             "Brand" => nil,
             "Categories" => []
           }
-        ],
+        end,
         "Customer" => {
           "EmailAddress" => "info@global-e.com",
           "IsEndCustomerPrimary" => false,
@@ -268,7 +265,7 @@ module Workarea
         "OrderId" => "GE927127",
         "StatusCode" => "N/A",
         "MerchantGUID" => "0f4eec24-8988-4361-be9a- a7468d05f1fe",
-        "CartId" => cart_id,
+        "CartId" => order.global_e_token,
         "MerchantOrderId" => nil,
         "PriceCoefficientRate" => 1.000000
       }.to_json
@@ -467,6 +464,14 @@ module Workarea
         "WebStoreCode" => nil,
         "WebStoreInstanceCode" => "GlobalEDefaultStoreInstance"
       }.to_json
+    end
+
+    def global_e_update_order_status_body(global_e_order_id:)
+      {
+        "OrderId"      => global_e_order_id,
+        "StatusCode"   => "canceled",
+        "MerchantGUID" => "abcdabcd-abcd-abcd-abcd-abcdabcdabcd"
+      }
     end
 
     private

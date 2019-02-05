@@ -3,10 +3,12 @@ module Workarea
     class OrderApiEvents
       include ApplicationDocument
 
-      field :send_order_to_merchant, type: Hash
-      field :send_order_to_merchant_response, type: Hash
-      field :perform_order_payment, type: Hash
-      field :perform_order_payment_response, type: Hash
+      field :receive_order, type: Hash
+      field :receive_order_response, type: Hash
+      field :receive_payment, type: Hash
+      field :receive_payment_response, type: Hash
+      field :update_order_status, type: Hash
+      field :update_order_status_response, type: Hash
 
       def self.upsert_one(id, set: {})
         timestamp = Time.current
@@ -20,7 +22,6 @@ module Workarea
           upsert: true
         )
       end
-
     end
   end
 end

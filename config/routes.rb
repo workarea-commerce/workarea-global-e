@@ -4,7 +4,10 @@ Workarea::Storefront::Engine.routes.draw do
 
   namespace :globale do
     post :receive_order, controller: :api
+    # TODO hack alias
+    post :performorderpayment, to: 'api#receive_payment'
     post :receive_payment, controller: :api
+    post :update_order_status, controller: :api
   end
 end
 

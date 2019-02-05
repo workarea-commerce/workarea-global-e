@@ -23,8 +23,8 @@ module Workarea
           )
 
           api_events = GlobalE::OrderApiEvents.find(order.id)
-          assert api_events.perform_order_payment.present?
-          assert api_events.perform_order_payment_response.present?
+          assert api_events.receive_payment.present?
+          assert api_events.receive_payment_response.present?
         end
       end
     end

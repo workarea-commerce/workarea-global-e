@@ -9,7 +9,7 @@ module Workarea
 
           post storefront.globale_receive_order_path,
             headers: { 'CONTENT_TYPE' => 'application/json' },
-            params: global_e_send_order_to_mechant_body(cart_id: order.global_e_token)
+            params: global_e_send_order_to_mechant_body(order: order)
 
           assert response.ok?
           assert_nil cookies[:order_id]
@@ -22,6 +22,8 @@ module Workarea
           assert_equal "GE927127", order.global_e_id
           refute order.placed?
 
+          order.items.each { |oi| assert oi.international_total_price.present? }
+
           assert_equal :pending_global_e, order.status
 
           inventory_transaction = Inventory::Transaction.find_by order_id: order.id
@@ -31,8 +33,8 @@ module Workarea
           assert shipping.shipping_service.present?
 
           api_events = GlobalE::OrderApiEvents.find(order.id)
-          assert api_events.send_order_to_merchant.present?
-          assert api_events.send_order_to_merchant_response.present?
+          assert api_events.receive_order.present?
+          assert api_events.receive_order_response.present?
         end
 
         def test_item_going_out_of_stock
@@ -53,7 +55,7 @@ module Workarea
 
           post storefront.globale_receive_order_path,
             headers: { 'CONTENT_TYPE' => 'application/json' },
-            params: global_e_send_order_to_mechant_body(cart_id: order.global_e_token)
+            params: global_e_send_order_to_mechant_body(order: order)
 
           refute response.ok?
           assert_equal "500", response.code
@@ -73,8 +75,8 @@ module Workarea
           assert_equal expected_body, response_body
 
           api_events = GlobalE::OrderApiEvents.find(order.id)
-          assert api_events.send_order_to_merchant.present?
-          assert api_events.send_order_to_merchant_response.present?
+          assert api_events.receive_order.present?
+          assert api_events.receive_order_response.present?
         end
 
         def test_order_locked
@@ -84,7 +86,7 @@ module Workarea
 
           post storefront.globale_receive_order_path,
             headers: { 'CONTENT_TYPE' => 'application/json' },
-            params: global_e_send_order_to_mechant_body(cart_id: order.global_e_token)
+            params: global_e_send_order_to_mechant_body(order: order)
 
           refute response.ok?
           assert_equal "500", response.code
@@ -104,8 +106,8 @@ module Workarea
           assert_equal expected_body, response_body
 
           api_events = GlobalE::OrderApiEvents.find(order.id)
-          assert api_events.send_order_to_merchant.present?
-          assert api_events.send_order_to_merchant_response.present?
+          assert api_events.receive_order.present?
+          assert api_events.receive_order_response.present?
         end
 
         def test_failing_to_place_order
@@ -113,7 +115,7 @@ module Workarea
 
           post storefront.globale_receive_order_path,
             headers: { 'CONTENT_TYPE' => 'application/json' },
-            params: global_e_send_order_to_mechant_body(email: "epigeon%40weblinc", cart_id: order.global_e_token)
+            params: global_e_send_order_to_mechant_body(email: "epigeon%40weblinc", order: order)
 
           refute response.ok?
           assert_equal "500", response.code
@@ -133,8 +135,8 @@ module Workarea
           assert_equal expected_body, response_body
 
           api_events = GlobalE::OrderApiEvents.find(order.id)
-          assert api_events.send_order_to_merchant.present?
-          assert api_events.send_order_to_merchant_response.present?
+          assert api_events.receive_order.present?
+          assert api_events.receive_order_response.present?
         end
       end
     end
