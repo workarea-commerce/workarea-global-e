@@ -1,0 +1,7 @@
+module Workarea
+  decorate Search::Admin::Order, with: :global_e do
+    def keywords
+      super + [model.global_e_id].compact
+    end
+  end
+end
