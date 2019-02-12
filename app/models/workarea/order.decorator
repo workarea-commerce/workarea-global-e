@@ -1,0 +1,7 @@
+module Workarea
+  decorate Order, with: :global_e do
+    decorated do
+      field :global_e_id, type: String
+    end
+  end
+end
