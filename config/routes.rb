@@ -4,6 +4,7 @@ Workarea::Storefront::Engine.routes.draw do
 
   namespace :globale do
     post :receive_order, controller: :api
+    post :receive_payment, controller: :api
   end
 end
 

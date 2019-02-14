@@ -1,12 +1,35 @@
 module Workarea
   decorate Order, with: :global_e do
     decorated do
+      scope :not_pending_global_e, -> { where(received_from_global_e_at: nil) }
+
       field :global_e_id, type: String
       field :global_e_token, type: String, default: -> { SecureRandom.hex(5).upcase }
       field :currency, type: String, default: -> { Money.default_currency.iso_code }
+      field :received_from_global_e_at, type: Time
 
-      index({ global_e_token: -1 })
-      index({ global_e_id: -1 })
+      index({ global_e_token: 1 })
+      index({ global_e_id: 1 })
+      index({ received_from_global_e_at: 1, email: 1 })
+    end
+
+    class_methods do
+      # Find a current cart for a session. Returns a new order if one cannot be found.
+      #
+      # @param params [Hash]
+      # @return [Order]
+      #
+      def find_current(params = {})
+        if params[:id].present?
+          Order.not_placed.not_pending_global_e.find(params[:id].to_s)
+        elsif params[:user_id].present?
+          Order.recently_updated.not_placed.not_pending_global_e.find_by(params.slice(:user_id))
+        else
+          Order.new(user_id: params[:user_id])
+        end
+      rescue Mongoid::Errors::DocumentNotFound
+        Order.new(user_id: params[:user_id])
+      end
     end
   end
 end

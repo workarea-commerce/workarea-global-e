@@ -20,16 +20,15 @@ module Workarea
 
           order.reload
           assert_equal "GE927127", order.global_e_id
-          assert order.placed?
+          refute order.placed?
+
+          assert_equal :pending_global_e, order.status
 
           inventory_transaction = Inventory::Transaction.find_by order_id: order.id
           assert inventory_transaction.captured
 
           shipping = Workarea::Shipping.find_by(order_id: order.id)
           assert shipping.shipping_service.present?
-
-          fulfillment = Fulfillment.find order.id
-          assert_equal "http://www.israelpost.co.il/ itemtrace.nsf/mainsearch?openform", fulfillment.global_e_tracking_url
 
           api_events = GlobalE::OrderApiEvents.find(order.id)
           assert api_events.send_order_to_merchant.present?

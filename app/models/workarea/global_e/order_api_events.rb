@@ -5,6 +5,8 @@ module Workarea
 
       field :send_order_to_merchant, type: Hash
       field :send_order_to_merchant_response, type: Hash
+      field :perform_order_payment, type: Hash
+      field :perform_order_payment_response, type: Hash
 
       def self.upsert_one(id, set: {})
         timestamp = Time.current

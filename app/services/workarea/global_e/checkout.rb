@@ -39,21 +39,22 @@ module Workarea
       def update_order
         order.update_attributes(
           global_e_id: global_e_order.order_id,
-          email: shipping_details.email
+          email: shipping_details.email,
+          received_from_global_e_at: Time.current
         )
       end
 
       # @raise [Workarea::GlobalE::InventoryCaptureFailure]
-      # @raise [Workarea::GlobalE::OrderPlaceError]
       #
+      def capture_invetory
+        inventory.purchase
+        raise InventoryCaptureFailure, inventory.error.full_messages.join("\n") unless inventory.captured?
+      end
+
       # @return [Boolean]
       #
       def place_order
-        inventory.purchase
-        raise InventoryCaptureFailure, inventory.error.full_messages.join("\n") unless inventory.captured?
-
         result = order.place
-        raise OrderPlaceError.new(order.errors.full_messages.join("\n")) unless result
 
         CreateFulfillment.new(
           order,

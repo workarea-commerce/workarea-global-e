@@ -7,4 +7,6 @@ Workarea.configure do |config|
   config.global_e.domestic_countries = ["US"]
 
   config.global_e.shipping_discount_types = ["Workarea::Pricing::Discount::Shipping"]
+
+  config.order_status_calculators.unshift("Workarea::Order::Status::PendingGlobalE")
 end

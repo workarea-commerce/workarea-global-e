@@ -3,6 +3,6 @@ module Workarea
     class Error < StandardError; end
     class InsufficientInventory < Error; end
     class InventoryCaptureFailure < Error; end
-    class OrderPlaceError < Error; end
+    class UnpurchasableOrder < Error; end
   end
 end

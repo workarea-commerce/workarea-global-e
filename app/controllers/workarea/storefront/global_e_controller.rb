@@ -8,8 +8,6 @@ module Workarea
         order = Order.find_by(global_e_token: checkout_cart_info_params.require(:cartToken))
         order.update_attribute(:checkout_started_at, Time.current)
 
-        InventoryAdjustment.new(order).tap(&:perform)
-
         if checkout_cart_info_params[:IsStockValidation]
           InventoryAdjustment.new(order).tap(&:perform)
         end
