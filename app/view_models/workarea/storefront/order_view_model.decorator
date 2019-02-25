@@ -1,0 +1,23 @@
+module Workarea
+  decorate Storefront::OrderViewModel, with: :global_e do
+    def subtotal_price
+      return super unless global_e?
+      international_subtotal_price
+    end
+
+    def total_price
+      return super unless global_e?
+      international_total_price
+    end
+
+    def paid_amount
+      return super unless global_e?
+      international_total_price
+    end
+
+    def shipping_total
+      return super unless global_e?
+      international_shipping_total
+    end
+  end
+end

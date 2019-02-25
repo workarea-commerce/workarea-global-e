@@ -216,6 +216,7 @@ module Workarea
           "TransactionCurrencyCode" => " EUR",
           "TransactionTotalPrice" => 64.8800,
           "TotalShippingPrice" => 32.7400,
+          "DiscountedShippingPrice" => 19.97,
           "TotalDutiesPrice" => 0.0000,
           "ShippingMethodCode" => "2",
           "PaymentMethodCode" => "1",
@@ -274,6 +275,7 @@ module Workarea
           "CountryName" => "France"
         },
         "OrderId" => "GE927127",
+        "DiscountedShippingPrice" => 19.97,
         "StatusCode" => "N/A",
         "MerchantGUID" => "0f4eec24-8988-4361-be9a- a7468d05f1fe",
         "CartId" => order.global_e_token,

@@ -1,0 +1,8 @@
+module Workarea
+  decorate Storefront::OrderItemViewModel, with: :global_e do
+    def original_price
+      return super unless order.global_e?
+      model.international_total_price
+    end
+  end
+end

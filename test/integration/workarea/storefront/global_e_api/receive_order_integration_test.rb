@@ -22,6 +22,12 @@ module Workarea
           assert_equal "GE927127", order.global_e_id
           refute order.placed?
 
+          assert order.global_e?
+          assert order.international_total_price.present?
+          assert_equal "€4.84", order.international_subtotal_price.format
+          assert_equal "€19.97", order.international_shipping_total.format
+          assert_equal "€64.88", order.international_total_price.format
+          assert_equal "€0.00", order.total_duties_price.format
           order.items.each { |oi| assert oi.international_total_price.present? }
 
           assert_equal :pending_global_e, order.status

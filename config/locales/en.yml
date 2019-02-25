@@ -7,3 +7,4 @@ en:
             title: GlobalE
         global_e:
           title: "%{name} Details"
+        tax_and_duties: Taxes and Duties

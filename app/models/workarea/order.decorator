@@ -3,9 +3,14 @@ module Workarea
     decorated do
       scope :not_pending_global_e, -> { where(received_from_global_e_at: nil) }
 
+      field :currency, type: String, default: -> { Money.default_currency.iso_code }
+      field :global_e, type: Boolean, default: false
       field :global_e_id, type: String
       field :global_e_token, type: String, default: -> { SecureRandom.hex(5).upcase }
-      field :currency, type: String, default: -> { Money.default_currency.iso_code }
+      field :international_shipping_total, type: Money
+      field :international_subtotal_price, type: Money
+      field :international_total_price, type: Money
+      field :total_duties_price, type: Money
       field :received_from_global_e_at, type: Time
 
       index({ global_e_token: 1 })

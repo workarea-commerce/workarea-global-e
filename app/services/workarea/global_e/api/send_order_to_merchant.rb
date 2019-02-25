@@ -34,10 +34,41 @@ module Workarea
 
           def update_order
             order.update_attributes(
+              global_e: true,
               global_e_id: merchant_order.order_id,
               email: shipping_details.email,
+              international_subtotal_price: international_subtotal_price,
+              international_shipping_total: discounted_international_shipping_price,
+              international_total_price: international_total_price,
+              total_duties_price: total_duties_price,
               received_from_global_e_at: Time.current
             )
+          end
+
+          def international_subtotal_price
+            subtotal = merchant_order.products.sum(&:international_discounted_price)
+            Money.from_amount(
+              subtotal,
+              merchant_order.international_details.currency_code
+            )
+          end
+
+          def international_total_price
+            Money.from_amount(
+              merchant_order.international_details.total_price,
+              merchant_order.international_details.currency_code
+            )
+          end
+
+          def total_duties_price
+            Money.from_amount(
+              merchant_order.international_details.total_duties_price,
+              merchant_order.international_details.currency_code
+            )
+          end
+
+          def discounted_international_shipping_price
+            merchant_order.international_details.discounted_shipping_price.to_m(merchant_order.international_details.currency_code)
           end
 
           def save_shippings
@@ -56,7 +87,7 @@ module Workarea
               global_e_price_adjustments: [
                 {
                   price: 'shipping',
-                  amount: merchant_order.international_details.discounted_shipping_price.to_m(merchant_order.international_details.currency_code),
+                  amount: discounted_international_shipping_price,
                   description: shipping_service[:nmae],
                   calculator: self.class.name
                 }
