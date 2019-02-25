@@ -5,6 +5,10 @@ Workarea.configure do |config|
     "Workarea::Payment::Status::PendingGlobalEFraudCheck",
     "Workarea::Payment::Status::GlobalEApproved"
   )
+  config.fulfillment_status_calculators.unshift(
+    "Workarea::Fulfillment::Status::Refunded",
+    "Workarea::Fulfillment::Status::PartiallyRefunded"
+  )
 
   config.global_e = ActiveSupport::Configurable::Configuration.new
 

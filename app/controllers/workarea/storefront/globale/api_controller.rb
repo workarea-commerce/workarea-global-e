@@ -74,13 +74,6 @@ module Workarea
               end
           end
 
-          def with_order_lock
-            @order.lock!
-            yield
-          ensure
-            @order.unlock! if @order
-          end
-
           def log_api_event
             return unless @order && @response
 

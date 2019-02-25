@@ -76,6 +76,18 @@ module Workarea
       order
     end
 
+    def create_global_e_shipped_order(order: nil)
+      order = create_global_e_placed_order
+
+      merchant_order = GlobalE::Merchant::Order.new(
+        JSON.parse(global_e_update_order_shipping_info_body(order: order))
+      )
+
+      GlobalE::Api::UpdateOrderShippingInfo.new(order, merchant_order).response
+
+      order
+    end
+
     def create_complete_product(overrides = {})
       attributes = {
         name:     'Test Product',
@@ -498,6 +510,38 @@ module Workarea
           "OrderTrackingUrl" => "http://www.somecarrier.com/?1265443"
         },
         "MerchantGUID" => "abcdabcd-abcd-abcd-abcd-abcdabcdabcd"
+      }.to_json
+    end
+
+    def global_e_notify_order_refunded_body(order: nil)
+      order ||= create_global_e_completed_checkout
+
+      {
+        "MerchantGUID" => "abcdabcd-abcd-abcd-abcd-abcdabcdabcd",
+        "MerchantOrderId" => order.id.to_s,
+        "Products" => order.items.map do |order_item|
+          {
+            "CartItemId" => order_item.id.to_s,
+            "RefundQuantity" => order_item.quantity,
+            "OriginalRefundAmount" => "114.5300",
+            "RefundAmount" => "170.1000",
+            "RefundReason" => {
+              "OrderRefundReasonCode" => "DAMAGED-ITEM-CODE",
+              "Name" => "Damaged Item"
+            },
+            "RefundComments" => "Fully refunded order"
+          }
+        end,
+        "OrderId" => order.global_e_id,
+        "TotalRefundAmount" => "170.10",
+        "RefundReason" => {
+          "OrderRefundReasonCode" => "DAMAGED-ITEM-CODE",
+           "Name" => "Damaged Item"
+        },
+        "RefundComments" => "Fully refunded order",
+        "OriginalTotalRefundAmount" => "114.53",
+        "ServiceGestureAmount" => "0.00",
+        "WebStoreCode" => nil
       }.to_json
     end
 

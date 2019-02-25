@@ -9,6 +9,7 @@ Workarea::Storefront::Engine.routes.draw do
     post :receive_payment, controller: :api
     post :update_order_status, controller: :api
     post :receive_shipping_info, controller: :api
+    post :receive_order_refund, controller: :refund
   end
 end
 

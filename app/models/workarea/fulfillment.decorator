@@ -3,5 +3,44 @@ module Workarea
     decorated do
       field :global_e_tracking_url, type: String
     end
+
+    # Refund items in the fulfillment
+    #
+    # The hashes should contain 'id', the order_item_id and 'quantity' the amount
+    # to be canceled, any other key/values will be stored on the Fulfillment::Event#data
+    #
+    # refund_items([
+    #   { 'id' => '1234', 'quantity' => 4, 'replacement_sku' => '9999' },
+    #   { 'id' => '4321', 'quantity' => 1 }
+    # ])
+    #
+    # @param [Array<Hash>] refunded_items
+    # @return [Boolean]
+    #
+    def refund_items(refunded_items)
+      return false unless refunded_items.present?
+
+      occured_at = Time.current
+
+      refunded_items = refunded_items.map do |refunded_item|
+        refunded_item = refunded_item.with_indifferent_access
+        next unless refunded_item['quantity'].to_i > 0
+
+        item = items.detect { |i| i.order_item_id == refunded_item['id'].to_s }
+        next unless item.present?
+
+        item.events.build(
+          status: 'refunded',
+          quantity: refunded_item['quantity'],
+          created_at: occured_at,
+          updated_at: occured_at,
+          data: refunded_item.except('id', 'quantity')
+        )
+      end.compact
+
+      return false unless refunded_items.present?
+
+      save
+    end
   end
 end
