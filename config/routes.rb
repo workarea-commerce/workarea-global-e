@@ -8,6 +8,7 @@ Workarea::Storefront::Engine.routes.draw do
     post :performorderpayment, to: 'api#receive_payment'
     post :receive_payment, controller: :api
     post :update_order_status, controller: :api
+    post :receive_shipping_info, controller: :api
   end
 end
 

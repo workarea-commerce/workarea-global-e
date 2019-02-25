@@ -65,6 +65,17 @@ module Workarea
       order
     end
 
+    def create_global_e_placed_order(order: nil)
+      order = create_global_e_completed_checkout
+
+      merchant_order = GlobalE::Merchant::Order.new(
+        JSON.parse(global_e_peform_order_payment_body(order: order))
+      )
+      GlobalE::Api::PerformOrderPayment.new(order, merchant_order).response
+
+      order
+    end
+
     def create_complete_product(overrides = {})
       attributes = {
         name:     'Test Product',
@@ -273,7 +284,6 @@ module Workarea
 
     def global_e_peform_order_payment_body(order: nil)
       order ||= create_global_e_completed_checkout
-      cart_id ||= SecureRandom.hex(5).upcase
 
       {
         "AllowMailsFromMerchant" => false,
@@ -471,7 +481,20 @@ module Workarea
         "OrderId"      => global_e_order_id,
         "StatusCode"   => "canceled",
         "MerchantGUID" => "abcdabcd-abcd-abcd-abcd-abcdabcdabcd"
-      }
+      }.to_json
+    end
+
+    def global_e_update_order_shipping_info_body(order: nil)
+      order ||= create_global_e_placed_order
+
+      {
+        "OrderId" => order.global_e_id,
+        "InternationalDetails" => {
+          "OrderTrackingNumber" => "1265443",
+          "OrderTrackingUrl" => "http://www.somecarrier.com/?1265443"
+        },
+        "MerchantGUID" => "abcdabcd-abcd-abcd-abcd-abcdabcdabcd"
+      }.to_json
     end
 
     private

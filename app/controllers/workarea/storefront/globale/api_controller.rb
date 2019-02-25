@@ -4,7 +4,7 @@ module Workarea
       class ApiController < Storefront::ApplicationController
         before_action :parse_merchant_order
         before_action :find_order
-        after_action :log_api_event, only: [:receive_order, :receive_payment, :update_order_status]
+        after_action :log_api_event
 
         rescue_from Exception, with: :api_error_response
 
@@ -30,6 +30,15 @@ module Workarea
 
         def update_order_status
           @response = GlobalE::Api::UpdateOrderStatus.new(@order, @merchant_order).response
+          render json: @response.to_json
+        end
+
+        # Updates order international shipping information on the Merchant’s
+        # site. Only order.OrderId and order.InternationalDetails members are
+        # mandatory for this method.
+        #
+        def receive_shipping_info
+          @response = GlobalE::Api::UpdateOrderShippingInfo.new(@order, @merchant_order).response
           render json: @response.to_json
         end
 

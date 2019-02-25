@@ -13,7 +13,7 @@ module Workarea
           @response ||=
             begin
               klass.perform(order)
-              Workarea::GlobalE::Merchant::ResponseInfo.new(order: order)
+              Merchant::ResponseInfo.new(order: order)
             end
         end
 

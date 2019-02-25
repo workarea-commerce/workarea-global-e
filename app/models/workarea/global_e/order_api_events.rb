@@ -9,6 +9,8 @@ module Workarea
       field :receive_payment_response, type: Hash
       field :update_order_status, type: Hash
       field :update_order_status_response, type: Hash
+      field :receive_shipping_info, type: Hash
+      field :receive_shipping_info_response, type: Hash
 
       def self.upsert_one(id, set: {})
         timestamp = Time.current
