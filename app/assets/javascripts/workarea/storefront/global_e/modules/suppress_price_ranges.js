@@ -17,7 +17,7 @@ WORKAREA.registerModule('global_e_price_filter', (function () {
         },
 
         init = function($scope) {
-            if (_.isNull(shippingCountry()) || _.includes(WORKAREA.config.globalE.domesticCountries, shippingCountry())) {
+            if (_.isUndefined(shippingCountry()) || _.includes(WORKAREA.config.globalE.domesticCountries, shippingCountry())) {
                 return;
             }
 
