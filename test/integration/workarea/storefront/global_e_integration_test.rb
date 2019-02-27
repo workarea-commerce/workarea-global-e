@@ -79,7 +79,7 @@ module Workarea
               "DiscountType" => 1,
               "Name" => "Order Total Discount",
               "Description" => "Order Total - Order Total Discount",
-              "CalculationMode"=> 1,
+              "CalculationMode" => 1,
               "CouponCode" => "testcode"
             }
           ]
