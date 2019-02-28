@@ -11,8 +11,7 @@ module Workarea
         {
           productsList: products_list,
           clientIp: client_ip,
-          shippingDetails: shipping_details,
-          billingDetails: billing_details,
+          userDetails: user_details,
           discountsList: discounts_list,
           cartId: cart_id
         }.compact.to_json
@@ -58,20 +57,12 @@ module Workarea
       # above becomes mandatory and will be used to determine the end user’s
       # shipping country by Global-e system.
       #
-      # optional
-      #
-      # TODO return
-      #
       def shipping_details
       end
 
       # Billing details of a registered user (if available on the Merchant’s
       # site). If user_details property mentioned below is specified then
       # billing_details will be ignored.
-      #
-      # optional
-      #
-      # TODO return
       #
       def billing_details
       end
@@ -85,6 +76,9 @@ module Workarea
       # @return [Workarea::GlobalE::CartUserDetails]
       #
       def user_details
+        return unless user.present?
+
+        @user_details ||= GlobalE::CartUserDetails.new(user)
       end
 
       # IncludeVAT value returned from CountryCoefficients method
@@ -297,6 +291,12 @@ module Workarea
       end
 
       private
+
+        def user
+          return unless order.user_id.present?
+
+          @user ||= User.find order.user_id
+        end
 
         def shippings
           @shippings ||= Shipping.by_order(order.id).to_a

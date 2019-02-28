@@ -2,8 +2,8 @@ module Workarea
   module GlobalEFactories
     Factories.add self
 
-    def create_cart(order: nil, items: nil)
-      order ||= create_order(email: nil, checkout_started_at: Time.current)
+    def create_cart(order: nil, items: nil, user: nil)
+      order ||= create_order(email: nil, checkout_started_at: Time.current, user_id: user&.id&.to_s)
       items = items ||
         begin
           product = create_product

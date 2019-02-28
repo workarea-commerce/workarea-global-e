@@ -195,6 +195,135 @@ module Workarea
         }
         assert_equal(expected_response, JSON.parse(response.body))
       end
+
+      def test_get_checkout_cart_info_with_user_addresses
+        user = create_user(
+          addresses: [
+            {
+              first_name: 'Ben',
+              last_name: 'Crouse',
+              street: '22 S. 3rd St.',
+              city: 'Philadelphia',
+              postal_code: '19106',
+              region: 'PA',
+              country: 'US',
+              phone_number: '2159251800',
+              last_billed_at: Time.current
+            },
+            {
+              first_name: 'Ben',
+              last_name: 'Crouse',
+              street: '22 S. 3rd St.',
+              city: 'Philadelphia',
+              postal_code: '19106',
+              region: 'PA',
+              country: 'US',
+              phone_number: '2159251800',
+              last_shipped_at: Time.current
+            },
+            {
+              first_name: 'Ben',
+              last_name: 'Crouse',
+              street: '22 S. 3rd St.',
+              city: 'Philadelphia',
+              postal_code: '19106',
+              region: 'PA',
+              country: 'US',
+              phone_number: '2159251800',
+              last_billed_at: Time.current,
+              last_shipped_at: Time.current
+            }
+          ]
+        )
+        product_1 = create_complete_product
+        cart = create_cart(
+          user: user,
+          items: [
+            { product: product_1, sku: product_1.skus.first, quantity: 1 }
+          ]
+        )
+
+        get storefront.global_e_checkout_cart_info_path(cartToken: cart.global_e_token, format: :json)
+
+        assert response.ok?
+        expected_response = {
+          "productsList" => [
+            {
+              "ProductCode" => product_1.skus.first,
+              "ProductGroupCode" => product_1.id,
+              "CartItemId" => cart.items.first.id.to_s,
+              "Name" => product_1.name,
+              "Description" => product_1.description,
+              "URL" => "http://www.example.com/products/test-product",
+              "Weight" => 5.0,
+              "Height" => 5,
+              "Width" => 5,
+              "Length" => 5,
+              "ImageURL" => "/product_images/test-product/cotton/#{product_1.images.first.id}/detail.jpg?c=0",
+              "ImageHeight" => 780,
+              "ImageWidth" => 780,
+              "OriginalListPrice" => 5.0,
+              "OriginalSalePrice" => 5.0,
+              "OrderedQuantity" => 1,
+              "Attributes" => [
+                {
+                  "AttributeCode" => "cotton",
+                  "AttributeTypeCode" => "material"
+                }
+              ]
+            }
+          ],
+          'discountsList' => [],
+          'userDetails' => {
+            "UserId" => user.id.to_s,
+            "AddressDetails" => [
+              {
+                "FirstName" => "Ben",
+                "LastName" => "Crouse",
+                "Phone1" => "2159251800",
+                "Address1" => "22 S. 3rd St.",
+                "City" => "Philadelphia",
+                "StateCode" => "PA",
+                "Zip" => "19106",
+                "CountryCode" => "US",
+                "IsBilling" => true,
+                "IsShipping" => false,
+                "IsDefaultBilling" => false,
+                "IsDefaultShipping" => false
+              },
+              {
+                "FirstName" => "Ben",
+                "LastName" => "Crouse",
+                "Phone1" => "2159251800",
+                "Address1" => "22 S. 3rd St.",
+                "City" => "Philadelphia",
+                "StateCode" => "PA",
+                "Zip" => "19106",
+                "CountryCode" => "US",
+                "IsBilling" => false,
+                "IsShipping" => true,
+                "IsDefaultBilling" => false,
+                "IsDefaultShipping" => false
+              },
+              {
+                "FirstName" => "Ben",
+                "LastName" => "Crouse",
+                "Phone1" => "2159251800",
+                "Address1" => "22 S. 3rd St.",
+                "City" => "Philadelphia",
+                "StateCode" => "PA",
+                "Zip" => "19106",
+                "CountryCode" => "US",
+                "IsBilling" => true,
+                "IsShipping" => true,
+                "IsDefaultBilling" => true,
+                "IsDefaultShipping" => true
+              }
+            ]
+          }
+        }
+        assert_equal(expected_response, JSON.parse(response.body))
+      end
     end
   end
 end
