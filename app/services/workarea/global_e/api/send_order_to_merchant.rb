@@ -80,7 +80,7 @@ module Workarea
                 {
                   price: 'shipping',
                   amount: merchant_order.discounted_shipping_price.to_m,
-                  description: shipping_service[:nmae],
+                  description: shipping_service[:name],
                   calculator: self.class.name
                 }
               ],
@@ -88,7 +88,7 @@ module Workarea
                 {
                   price: 'shipping',
                   amount: discounted_international_shipping_price,
-                  description: shipping_service[:nmae],
+                  description: shipping_service[:name],
                   calculator: self.class.name
                 }
               ]
