@@ -14,6 +14,75 @@
     = render_cards_for(@order, :global_e)
 
   .view__container.view__container--narrow
-    .grid
-      .grid__cell.grid__cell--100
-        = @order.global_e_api_events.receive_order
+    %h2
+      = t('workarea.admin.orders.global_e.global_e_id')
+      = @order.global_e_id
+      %span (#{@order.currency})
+    .section
+      .grid.grid--huge
+        .grid__cell.grid__cell--66-at-medium
+          %h2= t('workarea.admin.orders.global_e.items.title')
+          %table
+            %thead
+              %tr
+                %th= t('workarea.admin.orders.global_e.items.product')
+                %th.align-center= t('workarea.admin.orders.global_e.items.quantity')
+                %th.align-right= t('workarea.admin.orders.global_e.items.international_pricing')
+            %tbody
+              - @order.items.each do |item|
+                %tr
+                  %td
+                    .grid.grid--auto
+                      .grid__cell
+                        = link_to image_tag(product_image_url(item.image, :small), alt: item.product.name), catalog_product_url(item.product, sku: item.sku)
+                      .grid__cell
+                        %p= link_to item.product.name, catalog_product_path(item.product, sku: item.sku)
+                        %p= item.sku
+                        - if item.customizations.any?
+                          - item.customizations.each do |name, value|
+                            %p #{name.titleize}: #{value}
+                        = append_partials('admin.order_attributes_item_details', item: item)
+                  %td.align-center= item.quantity
+                  %td.align-right
+                    %p
+                      %span= number_to_currency(item.international_total_price)
+
+        .grid__cell.grid__cell--33-at-medium
+          %h2= t('workarea.admin.orders.global_e.international_totals')
+          %table
+            %thead
+              %tr
+                %th
+                %th.align-center= t('workarea.admin.field.amount')
+            %tbody
+              %tr
+                %td
+                  %p= t('workarea.admin.orders.cards.global_e.international_subtotal_price')
+                %td.align-center= @order.international_subtotal_price
+              %tr
+                %td
+                  %p= t('workarea.admin.orders.cards.global_e.international_shipping_total')
+                %td.align-center= @order.international_shipping_total
+              %tr
+                %td
+                  %p= t('workarea.admin.orders.cards.global_e.total_duties_price')
+                %td.align-center= number_to_currency @order.total_duties_price
+              %tr
+                %td
+                  %p= t('workarea.admin.orders.cards.global_e.total_price')
+                %td.align-center= number_to_currency @order.international_total_price
+
+  - if current_user.super_admin?
+    .view__container
+      %h2= t('workarea.admin.orders.global_e.raw_receive_order')
+      .section
+        %table.data-pairs
+          %tbody
+            - @order.global_e_api_events.receive_order.each do |key, value|
+              - sanitized = sanitize_config_value(value)
+              - if sanitized.present?
+                %tr
+                  %th
+                    %span.data-pairs__name= key.to_s.titleize
+                  %td
+                    = sanitized

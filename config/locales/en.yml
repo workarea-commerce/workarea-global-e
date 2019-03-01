@@ -4,7 +4,21 @@ en:
       orders:
         cards:
           global_e:
-            title: GlobalE
+            button: View Global E
+            global_e_id: 'GlobalE ID:'
+            international_subtotal_price: 'Subtotal:'
+            international_shipping_total: 'Shipping Total:'
+            total_duties_price: 'Taxes and Duties:'
+            total_price: 'Total Price:'
+            title: Global-E
         global_e:
+          global_e_id: 'GlobalE ID:'
+          international_totals: International Totals
           title: "%{name} Details"
+          transacting_currency: Transacting currency
+          items:
+            international_pricing: International Pricing
+            products: Products
+            quantity: Quantity
+            title: Items
         tax_and_duties: Taxes and Duties

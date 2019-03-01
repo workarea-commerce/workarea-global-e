@@ -1,21 +1,27 @@
-.grid__cell
-  .card{ class: card_classes(:global_e, local_assigns[:active]) }
-    = link_to global_e_order_path(order), class: 'card__header' do
-      %span.card__header-text= t('workarea.admin.orders.cards.global_e.title')
-      = inline_svg 'workarea/admin/icons/link.svg', class: 'card__icon'
+- if order.global_e?
+  .grid__cell
+    .card{ class: card_classes(:global_e, local_assigns[:active]) }
+      = link_to global_e_order_path(order), class: 'card__header' do
+        %span.card__header-text= t('workarea.admin.orders.cards.global_e.title')
+        = inline_svg 'workarea/admin/i18n.svg', class: 'card__icon'
 
-    - if local_assigns[:active].blank?
-      .card__body
-        %ul.list-reset
-          -# %li
-          -#   %strong= t('workarea.admin.fields.placed_at')
-          -#   - if order.placed_at.present?
-          -#     #{order.placed_at}
-          -#   - else
-          -#     #{t('workarea.admin.orders.cards.global_e.pending_import')}
-          -# %li
-          -#   %strong= t('workarea.admin.orders.cards.global_e.global_e_total_price')
-          -#   = number_to_currency order.global_e_total_price
-          -# %li
-          -#   %strong= t('workarea.admin.orders.cards.global_e.global_e_tax_total')
-          -#   = number_to_currency order.global_e_tax_total
+      - if local_assigns[:active].blank?
+        .card__body
+          %ul.list-reset
+            %li
+              %strong= t('workarea.admin.orders.cards.global_e.global_e_id')
+              = order.global_e_id
+            %li
+              %strong= t('workarea.admin.orders.cards.global_e.international_subtotal_price')
+              = order.international_subtotal_price
+            %li
+              %strong= t('workarea.admin.orders.cards.global_e.international_shipping_total')
+              = order.international_shipping_total
+            %li
+              %strong= t('workarea.admin.orders.cards.global_e.total_duties_price')
+              = number_to_currency order.total_duties_price
+            %li
+              %strong= t('workarea.admin.orders.cards.global_e.total_price')
+              = number_to_currency order.international_total_price
+          = link_to global_e_order_path(order), class: 'card__button' do
+            %span.button.button--small= t('workarea.admin.orders.cards.global_e.button')
