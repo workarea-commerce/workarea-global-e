@@ -116,11 +116,13 @@ module Workarea
 
             variant_attrs = attrs.except(*(pricing_attrs + inventory_attrs))
             product.variants.build(variant_attrs)
-            if variant_attrs[:details].any?
+            if variant_attrs[:details]&.any?
               product.images.build(
                 image: product_image_file,
                 option: variant_attrs[:details].values.first
               )
+            else
+              product.images.build(image: product_image_file)
             end
           end
         end

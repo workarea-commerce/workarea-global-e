@@ -52,6 +52,8 @@ module Workarea
           ImageWidth: image_width,
           OriginalListPrice: original_list_price,
           OrderedQuantity: ordered_quantity,
+          IsVirtual: is_virtual,
+          IsBlockedForGlobalE: is_blocked_for_global_e,
           Attributes: attributes,
           OriginalSalePrice: original_sale_price
         }.compact
@@ -444,6 +446,7 @@ module Workarea
       # @return [Boolean]
       #
       def is_virtual
+        product.digital?
       end
 
       # Setting this to TRUE indicates that the product is not available
@@ -452,6 +455,7 @@ module Workarea
       # @return [Boolean]
       #
       def is_blocked_for_global_e
+        product.try(:gift_card?) || false
       end
 
       # Code applicable to the product on the Merchant’s site. This code may
@@ -582,6 +586,8 @@ module Workarea
               sku_options = variant.details.values.flat_map { |options| options.map(&:optionize) }
 
               product.images.detect do |image|
+                next unless image.option.present?
+
                 sku_options.include?(image.option.optionize)
               end
             end
