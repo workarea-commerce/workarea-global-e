@@ -106,6 +106,7 @@ module Workarea
       # @return [String]
       #
       def email
+        user.email
       end
 
       #  Company name
