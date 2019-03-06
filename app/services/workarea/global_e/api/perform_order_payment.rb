@@ -13,6 +13,7 @@ module Workarea
           @response ||=
             begin
               raise UnpurchasableOrder unless order.place
+              update_payment
               CreateFulfillment.new(
                 order,
                 global_e_tracking_url: merchant_order.international_details&.order_tracking_url
@@ -22,6 +23,16 @@ module Workarea
               Workarea::GlobalE::Merchant::ResponseInfo.new(order: order)
             end
         end
+
+        private
+
+          def update_payment
+            payment.update_attributes(global_e_approved_at: Time.current)
+          end
+
+          def payment
+            @payment ||= Workarea::Payment.find order.id
+          end
       end
     end
   end

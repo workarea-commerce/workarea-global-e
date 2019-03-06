@@ -1,0 +1,31 @@
+module Workarea
+  decorate PaymentTest, with: :global_e do
+    def test_global_e_statuses
+      payment = Payment.new(
+        address: {
+          first_name: 'Ben',
+          last_name: 'Crouse',
+          street: '22 S. 3rd St.',
+          street_2: 'Second Floor',
+          city: 'Philadelphia',
+          region: 'PA',
+          postal_code: '19106',
+          country: 'US',
+          phone_number: '2159251800'
+        },
+        global_e_payment: {
+          name: "Visa",
+          payment_method_code: "1",
+          last_four: "1111",
+          expiration_date: "2023-06-04"
+        }
+      )
+
+      assert_equal :pending_global_e_fraud_check, payment.status
+
+      payment.update_attributes(global_e_approved_at: Time.current)
+
+      assert_equal :global_e_approved, payment.status
+    end
+  end
+end

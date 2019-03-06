@@ -1,0 +1,10 @@
+module Workarea
+  decorate Payment, with: :global_e do
+    decorated do
+      field :global_e_approved_at, type: Time
+
+      embeds_one :global_e_payment,
+        class_name: "Workarea::Payment::Tender::GlobalEPayment"
+    end
+  end
+end

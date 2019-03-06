@@ -32,6 +32,8 @@ module Workarea
 
         private
 
+          delegate :international_details, to: :merchant_order
+
           def update_order
             order.update_attributes(
               global_e: true,
@@ -96,7 +98,19 @@ module Workarea
           end
 
           def save_payment
-            payment.set_address billing_address
+            payment.update_attributes(
+              address: billing_address,
+              global_e_payment: {
+                name: international_details.payment_method_name,
+                payment_method_code: international_details.payment_method_code,
+                last_four: international_details.card_number_last_four_digits,
+                expiration_date: international_details.expiration_date,
+                amount: Money.from_amount(
+                  international_details.transaction_total_price,
+                  international_details.currency_code
+                )
+              }
+            )
           end
 
           # @raise [Workarea::GlobalE::InventoryCaptureFailure]

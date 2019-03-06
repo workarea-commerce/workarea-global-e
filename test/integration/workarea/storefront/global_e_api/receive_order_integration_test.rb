@@ -38,6 +38,12 @@ module Workarea
           shipping = Workarea::Shipping.find_by(order_id: order.id)
           assert shipping.shipping_service.present?
 
+          payment = Workarea::Payment.find order.id
+          assert_equal "Visa", payment.global_e_payment.name
+          assert_equal "1", payment.global_e_payment.payment_method_code
+          assert_equal "7854", payment.global_e_payment.last_four
+          assert_equal "2023-06-30", payment.global_e_payment.expiration_date
+
           api_events = GlobalE::OrderApiEvents.find(order.id)
           assert api_events.receive_order.present?
           assert api_events.receive_order_response.present?

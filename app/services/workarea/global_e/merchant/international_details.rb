@@ -79,7 +79,7 @@ module Workarea
         #
         # @return [Float]
         #
-        def remoate_area_surcharge
+        def remote_area_surcharge
           hash["RemoteAreaSurcharge"]
         end
 

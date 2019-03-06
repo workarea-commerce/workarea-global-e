@@ -275,6 +275,8 @@ module Workarea
               "OriginalListPrice" => 5.0,
               "OriginalSalePrice" => 5.0,
               "OrderedQuantity" => 1,
+              "IsVirtual" => false,
+              "IsBlockedForGlobalE" => false,
               "Attributes" => [
                 {
                   "AttributeCode" => "cotton",
@@ -299,7 +301,8 @@ module Workarea
                 "IsBilling" => true,
                 "IsShipping" => false,
                 "IsDefaultBilling" => false,
-                "IsDefaultShipping" => false
+                "IsDefaultShipping" => false,
+                "Email" => "user0@workarea.com"
               },
               {
                 "FirstName" => "Ben",
@@ -313,7 +316,8 @@ module Workarea
                 "IsBilling" => false,
                 "IsShipping" => true,
                 "IsDefaultBilling" => false,
-                "IsDefaultShipping" => false
+                "IsDefaultShipping" => false,
+                "Email" => "user0@workarea.com"
               },
               {
                 "FirstName" => "Ben",
@@ -327,7 +331,8 @@ module Workarea
                 "IsBilling" => true,
                 "IsShipping" => true,
                 "IsDefaultBilling" => true,
-                "IsDefaultShipping" => true
+                "IsDefaultShipping" => true,
+                "Email" => "user0@workarea.com"
               }
             ]
           }
