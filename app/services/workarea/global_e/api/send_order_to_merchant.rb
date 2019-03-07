@@ -12,18 +12,17 @@ module Workarea
         def response
           @response ||=
             begin
-              set_product_prices
-              update_order
-              save_shippings
-              save_payment
-
               with_order_lock do
+                set_product_prices
+                update_order
+                save_shippings
+                save_payment
+
                 raise GlobalE::UnpurchasableOrder, order.errors.full_messages.join("\n") unless @order.valid?(:purchasable)
 
-                reservation = InventoryAdjustment.new(order).tap(&:perform)
-                raise GlobalE::InsufficientInventory, reservation.errors.join("\n") if reservation.errors.present?
-
                 capture_invetory
+                place_order
+                place_order_side_effects
 
                 Workarea::GlobalE::Merchant::ResponseInfo.new(order: order)
               end
@@ -34,16 +33,24 @@ module Workarea
 
           delegate :international_details, to: :merchant_order
 
+          def place_order
+            order.place
+          end
+
+          def place_order_side_effects
+            CreateFulfillment.new(order).perform
+            SaveOrderAnalytics.new(order).perform
+          end
+
           def update_order
-            order.update_attributes(
+            order.assign_attributes(
               global_e: true,
               global_e_id: merchant_order.order_id,
               email: shipping_details.email,
               international_subtotal_price: international_subtotal_price,
               international_shipping_total: discounted_international_shipping_price,
               international_total_price: international_total_price,
-              total_duties_price: total_duties_price,
-              received_from_global_e_at: Time.current
+              total_duties_price: total_duties_price
             )
           end
 
@@ -117,7 +124,7 @@ module Workarea
           #
           def capture_invetory
             inventory.purchase
-            raise InventoryCaptureFailure, inventory.error.full_messages.join("\n") unless inventory.captured?
+            raise InventoryCaptureFailure, inventory.errors.full_messages.join("\n") unless inventory.captured?
           end
 
           def set_product_prices

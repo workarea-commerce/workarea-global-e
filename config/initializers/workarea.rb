@@ -1,6 +1,6 @@
 Workarea.configure do |config|
   config.tender_types.prepend(:global_e_payment)
-  config.order_status_calculators.unshift("Workarea::Order::Status::PendingGlobalE")
+  config.order_status_calculators.unshift("Workarea::Order::Status::PendingGlobalEFraudCheck")
   config.payment_status_calculators.unshift(
     "Workarea::Payment::Status::PendingGlobalEFraudCheck",
     "Workarea::Payment::Status::GlobalEApproved"

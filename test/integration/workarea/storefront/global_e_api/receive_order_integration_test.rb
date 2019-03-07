@@ -11,7 +11,7 @@ module Workarea
             headers: { 'CONTENT_TYPE' => 'application/json' },
             params: global_e_send_order_to_mechant_body(order: order)
 
-          assert response.ok?
+          assert response.ok?, "Expected 200 response"
           assert_nil cookies[:order_id]
 
           response_body = JSON.parse response.body
@@ -20,7 +20,7 @@ module Workarea
 
           order.reload
           assert_equal "GE927127", order.global_e_id
-          refute order.placed?
+          assert order.placed?
 
           assert order.global_e?
           assert order.international_total_price.present?
@@ -30,7 +30,7 @@ module Workarea
           assert_equal "€0.00", order.total_duties_price.format
           order.items.each { |oi| assert oi.international_total_price.present? }
 
-          assert_equal :pending_global_e, order.status
+          assert_equal :pending_global_e_fraud_check, order.status
 
           inventory_transaction = Inventory::Transaction.find_by order_id: order.id
           assert inventory_transaction.captured
@@ -81,7 +81,7 @@ module Workarea
             "PaymentAmount"       => nil,
             "Success"             => false,
             "ErrorCode"           => nil,
-            "Message"             => "Sorry, SKU2 is unavailable, it has been removed.",
+            "Message"             => "insufficient inventory for SKU: SKU2",
             "Description"         => nil
           }
           assert_equal expected_body, response_body

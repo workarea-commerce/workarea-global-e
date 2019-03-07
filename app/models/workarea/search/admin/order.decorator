@@ -3,9 +3,5 @@ module Workarea
     def keywords
       super + [model.global_e_id].compact
     end
-
-    def should_be_indexed?
-      super || model.status == :pending_global_e
-    end
   end
 end

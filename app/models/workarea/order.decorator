@@ -1,39 +1,33 @@
 module Workarea
   decorate Order, with: :global_e do
     decorated do
-      scope :not_pending_global_e, -> { where(received_from_global_e_at: nil) }
-
       field :currency, type: String, default: -> { Money.default_currency.iso_code }
       field :global_e, type: Boolean, default: false
       field :global_e_id, type: String
       field :global_e_token, type: String, default: -> { SecureRandom.hex(5).upcase }
+      field :global_e_approved_at, type: Time
+
       field :international_shipping_total, type: Money
       field :international_subtotal_price, type: Money
       field :international_total_price, type: Money
       field :total_duties_price, type: Money
-      field :received_from_global_e_at, type: Time
 
       index({ global_e_token: 1 })
       index({ global_e_id: 1 })
-      index({ received_from_global_e_at: 1, email: 1 })
     end
 
-    class_methods do
-      # Find a current cart for a session. Returns a new order if one cannot be found.
-      #
-      # @param params [Hash]
-      # @return [Order]
-      #
-      def find_current(params = {})
-        if params[:id].present?
-          Order.not_placed.not_pending_global_e.find(params[:id].to_s)
-        elsif params[:user_id].present?
-          Order.recently_updated.not_placed.not_pending_global_e.find_by(params.slice(:user_id))
-        else
-          Order.new(user_id: params[:user_id])
-        end
-      rescue Mongoid::Errors::DocumentNotFound
-        Order.new(user_id: params[:user_id])
+    # Do not run callbacks if global_e order, they will be run after
+    # PerformOrderPayment
+    def place
+      return super unless purchasable? && global_e?
+
+      self.placed_at = Time.current
+      with(write: { w: "majority", j: true }) { save }
+    end
+
+    def global_e_approve!
+      run_callbacks :place do
+        update_attributes(global_e_approved_at: Time.current)
       end
     end
   end
