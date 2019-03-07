@@ -146,6 +146,7 @@ module Workarea
       # @return [String]
       #
       def state_or_province
+        address.country.subdivisions[address.region].name rescue nil
       end
 
       # State or province ISO code such as AZ for Arizona (if applicable)

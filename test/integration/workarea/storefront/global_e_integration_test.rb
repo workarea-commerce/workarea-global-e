@@ -234,11 +234,11 @@ module Workarea
             {
               first_name: 'Ben',
               last_name: 'Crouse',
-              street: '22 S. 3rd St.',
-              city: 'Philadelphia',
-              postal_code: '19106',
-              region: 'PA',
-              country: 'US',
+              street: "211 Yonge St",
+              city: "Toronto",
+              postal_code: "ON M5B 1M4",
+              region: "ON",
+              country: "CA",
               phone_number: '2159251800',
               last_billed_at: Time.current,
               last_shipped_at: Time.current
@@ -296,6 +296,7 @@ module Workarea
                 "Address1" => "22 S. 3rd St.",
                 "City" => "Philadelphia",
                 "StateCode" => "PA",
+                "StateOrProvice" => "Pennsylvania",
                 "Zip" => "19106",
                 "CountryCode" => "US",
                 "IsBilling" => true,
@@ -311,6 +312,7 @@ module Workarea
                 "Address1" => "22 S. 3rd St.",
                 "City" => "Philadelphia",
                 "StateCode" => "PA",
+                "StateOrProvice" => "Pennsylvania",
                 "Zip" => "19106",
                 "CountryCode" => "US",
                 "IsBilling" => false,
@@ -323,16 +325,17 @@ module Workarea
                 "FirstName" => "Ben",
                 "LastName" => "Crouse",
                 "Phone1" => "2159251800",
-                "Address1" => "22 S. 3rd St.",
-                "City" => "Philadelphia",
-                "StateCode" => "PA",
-                "Zip" => "19106",
-                "CountryCode" => "US",
-                "IsBilling" => true,
+                "Email" => "user0@workarea.com",
+                "Address1" => "211 Yonge St",
+                "City" => "Toronto",
+                "StateOrProvice" => "Ontario",
+                "StateCode" => "ON",
+                "Zip" => "ON M5B 1M4",
+                "CountryCode" => "CA",
                 "IsShipping" => true,
-                "IsDefaultBilling" => true,
+                "IsBilling" => true,
                 "IsDefaultShipping" => true,
-                "Email" => "user0@workarea.com"
+                "IsDefaultBilling" => true
               }
             ]
           }
