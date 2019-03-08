@@ -5,6 +5,8 @@ module Workarea
     private
 
       def route_global_e_order
+        current_checkout.reset!
+        current_order.update_attributes(user_id: current_user.id) if current_user.present?
         redirect_to ge_checkout_path
       end
 
