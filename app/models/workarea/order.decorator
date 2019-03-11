@@ -11,6 +11,7 @@ module Workarea
       field :international_subtotal_price, type: Money
       field :international_total_price, type: Money
       field :total_duties_price, type: Money
+      field :duties_guaranteed, type: Boolean, default: false
 
       index({ global_e_token: 1 })
       index({ global_e_id: 1 })

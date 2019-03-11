@@ -192,7 +192,7 @@ module Workarea
         #
         # @return [Boolean]
         #
-        def duties_guarenteed
+        def duties_guaranteed
           hash["DutiesGuaranteed"]
         end
 

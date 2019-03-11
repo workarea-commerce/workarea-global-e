@@ -50,7 +50,8 @@ module Workarea
               international_subtotal_price: international_subtotal_price,
               international_shipping_total: discounted_international_shipping_price,
               international_total_price: international_total_price,
-              total_duties_price: total_duties_price
+              total_duties_price: total_duties_price,
+              duties_guaranteed: international_details.duties_guaranteed
             )
           end
 
