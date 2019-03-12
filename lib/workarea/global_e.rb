@@ -28,6 +28,10 @@ module Workarea
       config.shipping_discount_types
     end
 
+    def self.free_gift_discount_types
+      config.free_gift_discount_types
+    end
+
     def self.report_error(error)
       if defined? ::Raven
         Raven.capture_exception error

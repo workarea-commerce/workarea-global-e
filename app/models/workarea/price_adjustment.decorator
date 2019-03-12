@@ -1,0 +1,13 @@
+module Workarea
+  decorate PriceAdjustment, with: :global_e do
+    def global_e_discount_code
+      return unless discount?
+
+      if price == "order" && data["order_id"].present?
+        "#{data["order_id"]}-#{description.systemize}"
+      else
+        "#{_parent.id}-#{description.systemize}"
+      end
+    end
+  end
+end

@@ -18,4 +18,5 @@ Workarea.configure do |config|
   config.global_e.domestic_countries = ["US"]
 
   config.global_e.shipping_discount_types = ["Workarea::Pricing::Discount::Shipping"]
+  config.global_e.free_gift_discount_types = ["Workarea::Pricing::Discount::FreeGift"]
 end

@@ -32,7 +32,7 @@
 
     %ul.product-list{ data: { analytics: product_list_analytics_data('Cart').to_json } }
       - @cart.items.each_with_index do |item, index|
-        %li.product-list__item
+        %li.product-list__item{ data: { ge_basket_cartitemid: item.id.to_s } }
           .product-list__item-cell
             .product-list__summary
               %p.product-list__media= link_to image_tag(product_image_url(item.image, :small_thumb), alt: item.product_name, class: 'product-list__media-image'), product_url(item.product, sku: item.sku), class: 'product-list__media-link'
@@ -75,16 +75,18 @@
                           %span.table__price-label= adjustment.description.titleize
 
                         - if adjustment.discount?
-                          %strong.table__price-discount= number_to_currency(adjustment.amount)
+                          %strong.table__price-discount{ data: { ge_basket_productdiscountsprice: adjustment.global_e_discount_code } }= number_to_currency(adjustment.amount)
+                        - elsif item.total_adjustments.one?
+                          %span{ data: { ge_basket_producttotalprice: "" } }= number_to_currency(adjustment.amount)
                         - else
-                          %span= number_to_currency(adjustment.amount)
+                          %span{ data: { ge_basket_productsubtotalprice: "" } }= number_to_currency(adjustment.amount)
 
                     - if item.total_adjustments.many?
                       %p.table__price
                         %span.table__price-label= t('workarea.storefront.orders.item_total')
-                        %span{ data: { ge_basket_product_totalprice: "" } }= number_to_currency(item.total_price)
+                        %span{ data: { ge_basket_producttotalprice: "" } }= number_to_currency(item.total_price)
       - @cart.free_gifts.each do |item|
-        %li.product-list__item
+        %li.product-list__item{ data: { ge_basket_cartitemid: item.id.to_s, ge_basket_freegift: '' } }
           .product-list__item-cell
             .product-list__summary
               %p.product-list__media= link_to image_tag(product_image_url(item.image, :small_thumb), alt: item.product_name, class: 'product-list__media-image'), product_url(item.product, sku: item.sku), class: 'product-list__media-link'
@@ -135,11 +137,11 @@
                   %span= adjustment.description.titleize
                 %td
                   - if adjustment.discount?
-                    %strong= number_to_currency(adjustment.amount)
+                    %strong{ data: { ge_basket_discounts: adjustment.global_e_discount_code }}= number_to_currency(adjustment.amount)
                   - else
                     %span= number_to_currency(adjustment.amount)
             - if @cart.requires_shipping?
-              %tr
+              %tr{ data: { globale_hide: "" } }
                 %th
                   %span= t('workarea.storefront.orders.shipping')
                 %td
@@ -147,7 +149,7 @@
                     #{@cart.shipping_service} - #{number_to_currency(@cart.shipping_total)}
                   - else
                     = t('workarea.storefront.carts.calculated_at_checkout')
-            %tr
+            %tr{ data: { globale_hide: "" } }
               %th
                 %span= t('workarea.storefront.orders.tax')
               %td

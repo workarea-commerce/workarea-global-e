@@ -4,7 +4,7 @@ module Workarea
   module Storefront
     class GlobalEIntegrationTest < Workarea::IntegrationTest
       def test_get_checkout_cart_info
-        create_order_total_discount(promo_codes: %w(TESTCODE))
+        _order_discount = create_order_total_discount(promo_codes: %w(TESTCODE))
         product_1 = create_complete_product(
           variants: [{ sku: 'SKU', details: { material: 'cotton' }, regular: 5.00, sale: 4.00 }]
         )
@@ -84,7 +84,8 @@ module Workarea
               "Name" => "Order Total Discount",
               "Description" => "Order Total - Order Total Discount",
               "CalculationMode" => 1,
-              "CouponCode" => "testcode"
+              "CouponCode" => "testcode",
+              "DiscountCode" => "#{cart.id}-order_total_discount"
             }
           ]
         }
@@ -339,6 +340,257 @@ module Workarea
               }
             ]
           }
+        }
+        assert_equal(expected_response, JSON.parse(response.body))
+      end
+
+      def test_product_discount_with_multiple_line_items
+        product_1 = create_complete_product
+        product_2 = create_complete_product(
+          variants: [{ sku: 'SKU2', details: { material: 'cotton' }, regular: 5.00, sale: 4.00, on_sale: true }]
+        )
+
+        product_discount = create_product_discount(
+          product_ids: [product_1.id.to_s, product_2.id.to_s]
+        )
+
+        _order_discount = create_order_total_discount(
+          compatible_discount_ids: [product_discount.id.to_s]
+        )
+
+        cart = create_cart(
+          items: [
+            { product: product_1, sku: product_1.skus.first, quantity: 1 },
+            { product: product_2, sku: product_2.skus.first, quantity: 1 }
+          ]
+        )
+
+        get storefront.global_e_checkout_cart_info_path(cartToken: cart.global_e_token, format: :json)
+
+        assert response.ok?
+        expected_response = {
+          "productsList" => [
+            {
+              "ProductCode" => product_1.skus.first,
+              "ProductGroupCode" => product_1.id,
+              "CartItemId" => cart.items.first.id.to_s,
+              "Name" => product_1.name,
+              "Description" => product_1.description,
+              "URL" => "http://www.example.com/products/test-product",
+              "Weight" => 5.0,
+              "Height" => 5,
+              "Width" => 5,
+              "Length" => 5,
+              "ImageURL" => "/product_images/test-product/cotton/#{product_1.images.first.id}/detail.jpg?c=0",
+              "ImageHeight" => 780,
+              "ImageWidth" => 780,
+              "OriginalListPrice" => 5.0,
+              "OriginalSalePrice" => 5.0,
+              "OrderedQuantity" => 1,
+              "IsVirtual" => false,
+              "IsBlockedForGlobalE" => false,
+              "Attributes" => [
+                {
+                  "AttributeCode" => "cotton",
+                  "AttributeTypeCode" => "material"
+                }
+              ]
+            },
+            {
+              "ProductCode" => product_2.skus.first,
+              "ProductGroupCode" => product_2.id,
+              "CartItemId" => cart.items.second.id.to_s,
+              "Name" => product_2.name,
+              "Description" => product_2.description,
+              "URL" => "http://www.example.com/products/test-product-1",
+              "Weight" => 5.0,
+              "Height" => 5,
+              "Width" => 5,
+              "Length" => 5,
+              "ImageURL" => "/product_images/test-product-1/cotton/#{product_2.images.first.id}/detail.jpg?c=0",
+              "ImageHeight" => 780,
+              "ImageWidth" => 780,
+              "OriginalListPrice" => 5.0,
+              "OriginalSalePrice" => 4.0,
+              "OrderedQuantity" => 1,
+              "IsVirtual" => false,
+              "IsBlockedForGlobalE" => false,
+              "Attributes" => [
+                {
+                  "AttributeCode" => "cotton",
+                  "AttributeTypeCode" => "material"
+                }
+              ]
+            }
+          ],
+          "discountsList" => [
+            {
+              "OriginalDiscountValue" => 2.50,
+              "DiscountType" => 1,
+              "Name" => "Test Discount",
+              "Description" => "Product - Test Discount",
+              "ProductCartItemId" => cart.items.first.id.to_s,
+              "DiscountCode" => "#{cart.items.first.id.to_s}-test_discount",
+              "CalculationMode" => 1
+            },
+            {
+              "OriginalDiscountValue" => 2.00,
+              "DiscountType" => 1,
+              "Name" => "Test Discount",
+              "Description" => "Product - Test Discount",
+              "ProductCartItemId" => cart.items.second.id.to_s,
+              "DiscountCode" => "#{cart.items.second.id}-test_discount",
+              "CalculationMode" => 1
+            },
+            {
+              "OriginalDiscountValue" => 0.45,
+              "Name" => "Order Total Discount",
+              "Description" => "Order Total - Order Total Discount",
+              "DiscountCode" => "#{cart.id}-order_total_discount",
+              "DiscountType" => 1,
+              "CalculationMode" => 1
+            }
+          ]
+        }
+        assert_equal(expected_response, JSON.parse(response.body))
+      end
+
+      def test_multiple_discounts_with_same_name
+        product_1 = create_complete_product
+
+        product_discount_1 = create_product_discount(
+          product_ids: [product_1.id.to_s]
+        )
+
+        _product_discount_2 = create_product_discount(
+          product_ids: [product_1.id.to_s],
+          compatible_discount_ids: [product_discount_1.id.to_s]
+        )
+
+        cart = create_cart(
+          items: [
+            { product: product_1, sku: product_1.skus.first, quantity: 1 }
+          ]
+        )
+
+        get storefront.global_e_checkout_cart_info_path(cartToken: cart.global_e_token, format: :json)
+
+        assert response.ok?
+        expected_response = {
+          "productsList" =>  [
+            {
+
+              "ProductCode" => product_1.skus.first,
+              "ProductGroupCode" => product_1.id,
+              "CartItemId" => cart.items.first.id.to_s,
+              "Name" => product_1.name,
+              "Description" => product_1.description,
+              "URL" => "http://www.example.com/products/test-product",
+              "Weight" => 5.0,
+              "Height" => 5,
+              "Width" => 5,
+              "Length" => 5,
+              "ImageURL" => "/product_images/test-product/cotton/#{product_1.images.first.id}/detail.jpg?c=0",
+              "ImageHeight" => 780,
+              "ImageWidth" => 780,
+              "OriginalListPrice" => 5.0,
+              "OrderedQuantity" => 1,
+              "IsVirtual" => false,
+              "IsBlockedForGlobalE" => false,
+              "Attributes" =>  [{ "AttributeCode" => "cotton", "AttributeTypeCode" => "material" }],
+              "OriginalSalePrice" => 5.0
+            }
+          ],
+          "discountsList" =>  [
+            {
+              "OriginalDiscountValue" => 3.75,
+              "Name" => "Test Discount",
+              "Description" => "Product - Test Discount",
+              "ProductCartItemId" => cart.items.first.id.to_s,
+              "DiscountCode" => "#{cart.items.first.id}-test_discount",
+              "DiscountType" => 1,
+              "CalculationMode" => 1
+            }
+          ]
+        }
+        assert_equal(expected_response, JSON.parse(response.body))
+      end
+
+      def test_free_gifts
+        product_1 = create_complete_product
+
+        free_gift = create_product(
+          name: 'Free Item',
+          variants: [{ sku: 'FREE_SKU', regular: 5.to_m }]
+        )
+
+        create_free_gift_discount(
+          name: 'Test',
+          sku: 'FREE_SKU',
+          order_total_operator: :greater_than,
+          order_total: 1
+        )
+
+        cart = create_cart(
+          items: [{ product: product_1, sku: product_1.skus.first, quantity: 1 }]
+        )
+
+        get storefront.global_e_checkout_cart_info_path(cartToken: cart.global_e_token, format: :json)
+
+        assert response.ok?
+        expected_response = {
+          "productsList" => [
+            {
+              "ProductCode" => product_1.skus.first,
+              "ProductGroupCode" => product_1.id,
+              "CartItemId" => cart.items.first.id.to_s,
+              "Name" => product_1.name,
+              "Description" => product_1.description,
+              "URL" => "http://www.example.com/products/test-product",
+              "Weight" => 5.0,
+              "Height" => 5,
+              "Width" => 5,
+              "Length" => 5,
+              "ImageURL" => "/product_images/test-product/cotton/#{product_1.images.first.id}/detail.jpg?c=0",
+              "ImageHeight" => 780,
+              "ImageWidth" => 780,
+              "OriginalListPrice" => 5.0,
+              "OriginalSalePrice" => 5.0,
+              "OrderedQuantity" => 1,
+              "IsVirtual" => false,
+              "IsBlockedForGlobalE" => false,
+              "Attributes" => [
+                {
+                  "AttributeCode" => "cotton",
+                  "AttributeTypeCode" => "material"
+                }
+              ]
+            },
+            {
+              "ProductCode" => "FREE_SKU",
+              "ProductGroupCode" => free_gift.id,
+              "CartItemId" => cart.items.detect(&:free_gift?).id.to_s,
+              "Name" => "Free Item",
+              "URL" => "http://www.example.com/products/free-item",
+              "OriginalListPrice" => 5.0,
+              "OrderedQuantity" => 1,
+              "IsVirtual" => false,
+              "IsBlockedForGlobalE" => false,
+              "Attributes" => [],
+              "OriginalSalePrice" => 0.0
+            }
+          ],
+          "discountsList" => [
+            {
+              "OriginalDiscountValue" => 0.0,
+              "CalculationMode" => 1,
+              "Name" => "Test",
+              "Description" => "Free Gift - Test",
+              "ProductCartItemId" => cart.items.detect(&:free_gift?).id.to_s,
+              "DiscountCode" => "#{cart.items.detect(&:free_gift?).id}-test",
+              "DiscountType" => 1
+            }
+          ]
         }
         assert_equal(expected_response, JSON.parse(response.body))
       end

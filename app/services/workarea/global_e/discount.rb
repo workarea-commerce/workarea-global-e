@@ -1,11 +1,12 @@
 module Workarea
   module GlobalE
     class Discount
-      attr_reader :discount, :order, :shipping
+      attr_reader :discount, :order, :price_adjustment, :shipping
 
-      def initialize(discount, order: nil)
+      def initialize(discount, order:, price_adjustment: nil)
         @discount = discount
         @order = order
+        @price_adjustment = price_adjustment
       end
 
       def as_json(*_args)
@@ -33,13 +34,18 @@ module Workarea
       # @return [Float]
       #
       def original_discount_value
-        # TODO shippings
-        order
-          .price_adjustments
-          .select { |pa| pa.data['discount_id'] == discount.id.to_s }
-          .sum
-          .abs
-          .to_f
+        # return 100.to_f if free_gift?
+
+        if price_adjustment.present?
+          price_adjustment.amount.abs.to_f
+        else
+          order
+            .price_adjustments
+            .select { |pa| pa.data['discount_id'] == discount.id.to_s }
+            .sum
+            .abs
+            .to_f
+        end
       end
 
       # VAT rate applied to this discount
@@ -100,6 +106,9 @@ module Workarea
       # @return [String]
       #
       def product_cart_item_id
+        if price_adjustment.price == "item"
+          price_adjustment&._parent&.id&.to_s
+        end
       end
 
       # Discount code used to identify the discount on the Merchant’s site.
@@ -110,6 +119,7 @@ module Workarea
       # @return [String]
       #
       def discount_code
+        price_adjustment.global_e_discount_code
       end
 
       # Code used on the Merchant’s site to identify the Loyalty Voucher
@@ -158,6 +168,8 @@ module Workarea
       # return [Integer]
       #
       def calculation_mode
+        return 1 if free_gift?
+
         amount_type = discount.try(:amount_type)
         case amount_type
         when :percent
@@ -168,6 +180,10 @@ module Workarea
       end
 
       private
+
+        def free_gift?
+          GlobalE.free_gift_discount_types.include? discount.class.name
+        end
 
         def discount_promo_codes
           discount.promo_codes + generated_codes

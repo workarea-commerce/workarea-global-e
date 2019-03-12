@@ -6,7 +6,9 @@ module Workarea
           .permit(:cartToken, :countryCode, :IsStockValidation)
 
         order = Order.find_by(global_e_token: checkout_cart_info_params.require(:cartToken))
-        order.update_attribute(:checkout_started_at, Time.current)
+        if checkout_cart_info_params[:countryCode].present?
+          order.update_attribute(:checkout_started_at, Time.current)
+        end
 
         if checkout_cart_info_params[:IsStockValidation]
           InventoryAdjustment.new(order).tap(&:perform)

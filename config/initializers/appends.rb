@@ -18,6 +18,13 @@ Workarea.append_javascripts(
   "workarea/storefront/global_e/modules/suppress_price_ranges"
 )
 
+if Rails.env.test? || Rails.env.development?
+  Workarea.append_javascripts(
+    "storefront.modules",
+    "workarea/storefront/global_e/modules/checkout_info_validator"
+  )
+end
+
 Workarea.append_partials(
   'admin.order_cards',
   'workarea/admin/orders/global_e'

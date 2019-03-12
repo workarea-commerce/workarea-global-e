@@ -3,6 +3,8 @@ module Workarea
     class CheckoutCartInfo
       attr_reader :order
 
+      # @param [Workarea::Order] order
+      #
       def initialize(order)
         @order = order
       end
@@ -95,9 +97,7 @@ module Workarea
       # @return [Array<Workarea::GlobalE::Discount>]
       #
       def discounts_list
-        discounts.map do |discount|
-          GlobalE::Discount.new discount, order: order
-        end
+        item_discounts + order_discounts
       end
 
       # 3-char ISO currency code denoting the end customer’s currency. If not
@@ -304,6 +304,35 @@ module Workarea
 
         def discounts
           @discounts ||= Pricing::Discount.find(order.discount_ids).to_a
+        end
+
+        def discount_item_price_adjustments
+          order.items.flat_map do |order_item|
+            order_item.price_adjustments.discounts.reduce_by_description("item")
+          end.compact
+        end
+
+        def discount_order_price_adjustments
+          order.price_adjustments.reduce_by_description("order", "order_id" => order.id.to_s)
+        end
+
+        def item_discounts
+          discount_item_price_adjustments.map do |price_adjustment|
+            discount = discounts.detect { |d| d.id.to_s == price_adjustment.data["discount_id"] }
+
+            GlobalE::Discount.new discount, order: order, price_adjustment: price_adjustment
+          end
+        end
+
+        def order_discounts
+          # discounts
+          #   .select { |discount| discount.price_level.to_s == "order" }
+          #   .map { |discount| GlobalE::Discount.new discount, order: order }
+          discount_order_price_adjustments.map do |price_adjustment|
+            discount = discounts.detect { |d| d.id.to_s == price_adjustment.data["discount_id"] }
+
+            GlobalE::Discount.new discount, order: order, price_adjustment: price_adjustment
+          end
         end
     end
   end

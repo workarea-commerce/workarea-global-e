@@ -329,7 +329,8 @@ module Workarea
       # @return [Float]
       #
       def original_list_price
-        pricing_sku.find_price(quantity: ordered_quantity).regular.to_f
+        order_item.price_adjustments&.first&.data['original_price']&.to_f ||
+          pricing_sku.find_price(quantity: ordered_quantity).regular.to_f
       end
 
       # Product sale price as displayed to the customer, after applying
@@ -373,7 +374,7 @@ module Workarea
       #
       #
       def original_sale_price
-        pricing_sku.find_price(quantity: ordered_quantity).sell.to_f
+        order_item.price_adjustments.first.unit.to_f
       end
 
       # Line item (product in ordered quantity) sale price in original
@@ -564,9 +565,7 @@ module Workarea
 
       private
 
-        def mounted_core
-          self
-        end
+
 
         def variant
           @variant ||= product.variants.find_by(sku: sku)

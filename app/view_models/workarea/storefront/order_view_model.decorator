@@ -19,5 +19,9 @@ module Workarea
       return super unless global_e?
       international_shipping_total
     end
+
+    def total_adjustments
+      @total_adjustments ||= price_adjustments.reduce_by_description('order', "order_id" => model.id.to_s)
+    end
   end
 end
