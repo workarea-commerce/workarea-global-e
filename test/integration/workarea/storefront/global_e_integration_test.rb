@@ -303,7 +303,7 @@ module Workarea
                 "IsShipping" => false,
                 "IsDefaultBilling" => false,
                 "IsDefaultShipping" => false,
-                "Email" => "user0@workarea.com"
+                "Email" => user.email
               },
               {
                 "FirstName" => "Ben",
@@ -319,13 +319,13 @@ module Workarea
                 "IsShipping" => true,
                 "IsDefaultBilling" => false,
                 "IsDefaultShipping" => false,
-                "Email" => "user0@workarea.com"
+                "Email" => user.email
               },
               {
                 "FirstName" => "Ben",
                 "LastName" => "Crouse",
                 "Phone1" => "2159251800",
-                "Email" => "user0@workarea.com",
+                "Email" => user.email,
                 "Address1" => "211 Yonge St",
                 "City" => "Toronto",
                 "StateOrProvice" => "Ontario",
