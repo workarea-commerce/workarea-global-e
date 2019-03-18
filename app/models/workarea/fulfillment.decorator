@@ -4,6 +4,14 @@ module Workarea
       field :global_e_tracking_url, type: String
     end
 
+    def ship_items(tracking_number, shipped_items, send_to_global_e: true)
+      result = super(tracking_number, shipped_items)
+      if result && send_to_global_e
+        GlobalE::UpdateOrderDispatch.perform_async(id, tracking_number)
+      end
+      result
+    end
+
     # Refund items in the fulfillment
     #
     # The hashes should contain 'id', the order_item_id and 'quantity' the amount

@@ -45,7 +45,7 @@ module Workarea
                 calculator: self.class.name,
                 data: {
                   "on_sale" => base_currency_sell_price < base_currency_list_price,
-                  "original_price" => base_currency_list_price
+                  "original_price" => base_currency_list_price.to_f
                 },
                 amount: base_currency_sell_price
               )]
@@ -61,7 +61,7 @@ module Workarea
                 calculator: self.class.name,
                 data: {
                   "on_sale" => international_currency_sell_price < international_currency_list_price,
-                  "original_price" => international_currency_list_price
+                  "original_price" => international_currency_list_price.to_f
                 },
                 amount: international_currency_sell_price
               )]
