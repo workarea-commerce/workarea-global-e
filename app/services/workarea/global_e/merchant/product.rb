@@ -192,6 +192,14 @@ module Workarea
         #
         def attributes
         end
+
+        def list_price
+          hash["ListPrice"]
+        end
+
+        def international_list_price
+          hash["InternationalListPrice"]
+        end
       end
     end
   end

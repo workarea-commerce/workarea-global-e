@@ -34,9 +34,9 @@ module Workarea
       # @return [Float]
       #
       def original_discount_value
-        # return 100.to_f if free_gift?
-
-        if price_adjustment.present?
+        if free_gift? && pricing_sku.present?
+          pricing_sku.find_price(quantity: 1).regular.to_f
+        elsif price_adjustment.present?
           price_adjustment.amount.abs.to_f
         else
           order
@@ -183,6 +183,10 @@ module Workarea
 
         def free_gift?
           GlobalE.free_gift_discount_types.include? discount.class.name
+        end
+
+        def pricing_sku
+          @pricing_sku ||= Pricing::Sku.find discount.sku rescue nil
         end
 
         def discount_promo_codes

@@ -7,14 +7,30 @@ module Workarea
       field :global_e_token, type: String, default: -> { SecureRandom.hex(5).upcase }
       field :global_e_approved_at, type: Time
 
-      field :international_shipping_total, type: Money
-      field :international_subtotal_price, type: Money
-      field :international_total_price, type: Money
-      field :total_duties_price, type: Money
       field :duties_guaranteed, type: Boolean, default: false
+
+      field :international_subtotal_price, type: Money
+      field :international_shipping_total, type: Money
+      field :discounted_international_shipping_total, type: Money
+      field :total_duties_price, type: Money
+      # TODO total_value
+      field :international_total_price, type: Money
+
+      embeds_many :international_discount_adjustments,
+        class_name: 'Workarea::PriceAdjustment',
+        extend: PriceAdjustmentExtension
 
       index({ global_e_token: 1 })
       index({ global_e_id: 1 })
+    end
+
+    # All international price adjustments on this order.
+    #
+    # @return [PriceAdjustmentSet]
+    #
+    def international_price_adjustments
+      PriceAdjustmentSet.new(items.flat_map(&:international_price_adjustments))
+      # FlowPriceAdjustmentSet.new(items.flat_map(&:flow_price_adjustments), experience)
     end
 
     # Do not run callbacks if global_e order, they will be run after

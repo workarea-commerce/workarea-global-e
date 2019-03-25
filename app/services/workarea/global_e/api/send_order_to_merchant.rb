@@ -14,6 +14,7 @@ module Workarea
             begin
               with_order_lock do
                 set_product_prices
+                set_order_discounts
                 update_order
                 save_shippings
                 save_payment
@@ -31,7 +32,7 @@ module Workarea
 
         private
 
-          delegate :international_details, to: :merchant_order
+          delegate :international_details, :discounts, to: :merchant_order
 
           def place_order
             order.place
@@ -43,13 +44,21 @@ module Workarea
           end
 
           def update_order
+
             order.assign_attributes(
               global_e: true,
+              currency: international_details.currency_code,
               global_e_id: merchant_order.order_id,
               email: shipping_details.email,
-              international_subtotal_price: international_subtotal_price,
+
+              subtotal_price: order.price_adjustments.adjusting('item').sum,
+              international_subtotal_price: order.international_price_adjustments.adjusting('item').sum,
+
               international_shipping_total: discounted_international_shipping_price,
+              discounted_international_shipping_total: discounted_international_shipping_price,
+
               international_total_price: international_total_price,
+
               total_duties_price: total_duties_price,
               duties_guaranteed: international_details.duties_guaranteed
             )
@@ -77,8 +86,18 @@ module Workarea
             )
           end
 
+          def international_shipping_price
+            Money.from_amount(
+              international_details.shipping_price,
+              international_details.currency_code
+            )
+          end
+
           def discounted_international_shipping_price
-            merchant_order.international_details.discounted_shipping_price.to_m(merchant_order.international_details.currency_code)
+            Money.from_amount(
+              international_details.discounted_shipping_price,
+              international_details.currency_code
+            )
           end
 
           def save_shippings
@@ -132,7 +151,33 @@ module Workarea
             merchant_order.products.each do |merchant_product|
               order_item = order.items.find merchant_product.cart_item_id
 
-              order_item.international_total_price = merchant_product.international_discounted_price
+              ItemPricer.perform(
+                order_item,
+                merchant_product,
+                discounts,
+                merchant_order.currency_code,
+                international_details.currency_code
+              )
+            end
+          end
+
+          def set_order_discounts
+            order.international_discount_adjustments = order_discounts.map do |discount|
+              {
+                price: "order",
+                # TODO
+                quantity: 1,
+                description: discount.description,
+                calculator: self.class.name,
+                amount: Money.from_amount(discount.international_price, international_details.currency_code),
+                data: discount.hash
+              }
+            end
+          end
+
+          def order_discounts
+            discounts.select do |merchant_discount|
+              merchant_discount.product_cart_item_id.blank?
             end
           end
 
@@ -210,10 +255,10 @@ module Workarea
           end
 
           def with_order_lock
-            @order.lock!
+            order.lock!
             yield
           ensure
-            @order.unlock! if @order
+            order.unlock! if order
           end
       end
     end

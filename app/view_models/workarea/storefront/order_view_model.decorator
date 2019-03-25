@@ -1,27 +1,45 @@
 module Workarea
   decorate Storefront::OrderViewModel, with: :global_e do
     def subtotal_price
-      return super unless global_e?
-      international_subtotal_price
+      return super unless model.global_e?
+
+      model.international_subtotal_price
     end
 
     def total_price
-      return super unless global_e?
-      international_total_price
-    end
+      return super unless model.global_e?
 
-    def paid_amount
-      return super unless global_e?
-      international_total_price
+      model.international_total_price
     end
 
     def shipping_total
-      return super unless global_e?
-      international_shipping_total
+      return super unless model.global_e?
+
+      model.international_shipping_total
     end
 
     def total_adjustments
-      @total_adjustments ||= price_adjustments.reduce_by_description('order', "order_id" => model.id.to_s)
+      return super unless model.global_e?
+
+      @total_adjustments ||= international_price_adjustments.reduce_by_description('order')
+    end
+
+    def store_credit_amount
+      if store_credit.present?
+        store_credit.amount
+      else
+        0.to_m(order.currency)
+      end
+    end
+
+    if Plugin.installed?(:gift_cards)
+      def gift_card_tender_amount
+        if gift_card?
+          gift_card_tender.amount
+        else
+          0.to_m(order.currency)
+        end
+      end
     end
   end
 end

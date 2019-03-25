@@ -1,8 +1,38 @@
 module Workarea
   decorate Storefront::OrderItemViewModel, with: :global_e do
+    # def original_unit_price
+    #   return super unless order.global_e?
+
+    #   return 0.to_m(order.currency) if international_price_adjustments.blank?
+    #   flow_price_adjustments.first.unit.to_m
+    # end
+
+    # def total_price
+    #   byebug
+    #   return super unless order.experience.present?
+
+    #   model.flow_total_price
+    # end
+
+    # def flow_price_adjustments
+    #   byebug
+    #   @flow_price_adjustments ||= FlowPriceAdjustmentSet.new(
+    #     model.flow_price_adjustments,
+    #     order.experience
+    #   )
+    # end
+
+    # def total_adjustments
+    #   byebug
+    #   return super unless order.experience.present?
+
+    #   @total_adjustments ||= flow_price_adjustments.reduce_by_description('item')
+    # end
+
     def original_price
       return super unless order.global_e?
-      model.international_total_price
+
+      Money.demongoize international_price_adjustments.first.data['original_price']
     end
   end
 end

@@ -44,8 +44,10 @@
                         = append_partials('admin.order_attributes_item_details', item: item)
                   %td.align-center= item.quantity
                   %td.align-right
-                    %p
-                      %span= number_to_currency(item.international_total_price)
+                    - item.international_price_adjustments.each do |adjustment|
+                      %p
+                        %strong= price_adjustment_description_for(adjustment)
+                        %span= number_to_currency(adjustment.amount)
 
         .grid__cell.grid__cell--33-at-medium
           %h2= t('workarea.admin.orders.global_e.international_totals')

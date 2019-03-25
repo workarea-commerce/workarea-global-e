@@ -582,7 +582,7 @@ module Workarea
           ],
           "discountsList" => [
             {
-              "OriginalDiscountValue" => 0.0,
+              "OriginalDiscountValue" => 5.0,
               "CalculationMode" => 1,
               "Name" => "Test",
               "Description" => "Free Gift - Test",

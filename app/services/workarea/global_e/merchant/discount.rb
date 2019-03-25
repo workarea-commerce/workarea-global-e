@@ -2,11 +2,18 @@ module Workarea
   module GlobalE
     module Merchant
       class Discount
+        attr_reader :hash
+
+        def initialize(hash)
+          @hash = hash
+        end
+
         # Discount Name
         #
         # @return [String]
         #
         def name
+          hash["Name"]
         end
 
         # Discount value in currency defined in CurrencyCode property of the
@@ -15,6 +22,7 @@ module Workarea
         # @return [Float]
         #
         def price
+          hash["Price"]
         end
 
         # VAT rate applied to this discount
@@ -22,6 +30,7 @@ module Workarea
         # @return [Float]
         #
         def vat_rate
+          hash["VATRate"]
         end
 
         # VAT rate that would be applied to this discount if the order was
@@ -32,6 +41,7 @@ module Workarea
         # @return [Float]
         #
         def local_vat_rate
+          hash["LocalVATRate"]
         end
 
         # Discount value in end customer’s currency (specified in
@@ -41,7 +51,8 @@ module Workarea
         #
         # @return [Float]
         #
-        def intenational_price
+        def international_price
+          hash["InternationalPrice"]
         end
 
         # Discount textual description
@@ -49,6 +60,7 @@ module Workarea
         # @return [String]
         #
         def description
+          hash["Description"]
         end
 
         # Merchant’s coupon code used for this discount (applicable to
@@ -57,6 +69,7 @@ module Workarea
         # @return [String]
         #
         def coupon_code
+          hash["CouponCode"]
         end
 
         # Identifier of the product cart item related to this discount on the
@@ -67,6 +80,7 @@ module Workarea
         # @return [String[
         #
         def product_cart_item_id
+          hash["ProductCartItemId"]
         end
 
         # Discount code originally specified in Discount.DiscountCode property of
@@ -76,6 +90,7 @@ module Workarea
         # @return [String]
         #
         def discount_code
+          hash["DiscountCode"]
         end
 
         # Loyalty Voucher code originally specified in
@@ -85,6 +100,7 @@ module Workarea
         # @return [String]
         #
         def loyalty_voucher_code
+          hash["LoyaltyVoucherCode"]
         end
 
         # Discount type (“Cart”, “Shipping”, etc.), as defined in
@@ -93,6 +109,7 @@ module Workarea
         # @return [Integer]
         #
         def discount_type
+          hash["DiscountType"]
         end
       end
     end

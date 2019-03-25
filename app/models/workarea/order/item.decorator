@@ -1,7 +1,15 @@
 module Workarea
   decorate Order::Item, with: :global_e do
     decorated do
-      field :international_total_price, type: Money
+      # TODO
+      # field :international_total_value, type: Money, default: 0
+      field :international_total_price, type: Money, default: 0
+
+      field :international_discounted_price, type: Money
+
+      embeds_many :international_price_adjustments,
+        class_name: 'Workarea::PriceAdjustment',
+        extend: PriceAdjustmentExtension
     end
   end
 end
