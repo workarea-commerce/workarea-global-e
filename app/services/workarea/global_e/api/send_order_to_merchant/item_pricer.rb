@@ -20,9 +20,10 @@ module Workarea
           order_item.update_attributes(
             price_adjustments: base_currency_adjustments,
             international_price_adjustments: international_currency_adjustments,
-            # TODO
-            # total_value: ,
-            # international_total_value: ,
+
+            total_value: discounted_price,
+            international_total_value: international_discounted_price,
+
             total_price:               base_currency_adjustments.adjusting("item").sum,
             international_total_price: international_currency_adjustments.adjusting("item").sum
           )
@@ -78,6 +79,10 @@ module Workarea
 
           def international_currency_sell_price
             Money.from_amount(merchant_product.international_price, international_currency)
+          end
+
+          def discounted_price
+            Money.from_amount(merchant_product.discounted_price, currency)
           end
 
           def international_discounted_price

@@ -3,5 +3,11 @@ module Workarea
     def global_e_api_events
       @global_e_api_events ||= GlobalE::OrderApiEvents.find model.id rescue nil
     end
+
+    def total_adjustments
+      return super unless model.global_e?
+
+      model.discount_adjustments
+    end
   end
 end

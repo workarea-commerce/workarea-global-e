@@ -174,6 +174,7 @@ module Workarea
             ],
             "Sku" => "7290012491726",
             "Price" => 21.5500,
+            "DiscountedPrice" => 20.50,
             "Quantity" => 8,
             "VATRate" => 18.000000,
             "InternationalPrice" => 4.8400,

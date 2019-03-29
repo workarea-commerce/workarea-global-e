@@ -20,6 +20,10 @@ module Workarea
         class_name: 'Workarea::PriceAdjustment',
         extend: PriceAdjustmentExtension
 
+      embeds_many :discount_adjustments,
+        class_name: 'Workarea::PriceAdjustment',
+        extend: PriceAdjustmentExtension
+
       index({ global_e_token: 1 })
       index({ global_e_id: 1 })
     end
