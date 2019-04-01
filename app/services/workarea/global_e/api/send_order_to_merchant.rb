@@ -44,7 +44,6 @@ module Workarea
           end
 
           def update_order
-
             order.assign_attributes(
               global_e: true,
               currency: international_details.currency_code,
@@ -54,11 +53,17 @@ module Workarea
               subtotal_price: order.price_adjustments.adjusting('item').sum,
               international_subtotal_price: order.international_price_adjustments.adjusting('item').sum,
 
+              shipping_total: discounted_shipping_price,
               international_shipping_total: discounted_international_shipping_price,
               discounted_international_shipping_total: discounted_international_shipping_price,
 
+              total_value: order.items.sum(&:total_value),
+              total_price: order.items.sum(&:total_value) + discounted_shipping_price,
               international_total_price: international_total_price,
 
+              # GlobalE tax isn't a reconciliation value and therefore isn't available
+              # in the merchant's base currency
+              tax_total: 0.to_m,
               total_duties_price: total_duties_price,
               duties_guaranteed: international_details.duties_guaranteed
             )
@@ -88,8 +93,15 @@ module Workarea
 
           def international_shipping_price
             Money.from_amount(
-              international_details.shipping_price,
+              international_details.total_shipping_price,
               international_details.currency_code
+            )
+          end
+
+          def discounted_shipping_price
+            Money.from_amount(
+              merchant_order.discounted_shipping_price,
+              merchant_order.currency_code
             )
           end
 
@@ -165,11 +177,21 @@ module Workarea
             order.international_discount_adjustments = order_discounts.map do |discount|
               {
                 price: "order",
-                # TODO
                 quantity: 1,
                 description: discount.description,
                 calculator: self.class.name,
-                amount: Money.from_amount(discount.international_price, international_details.currency_code),
+                amount: -Money.from_amount(discount.international_price, international_details.currency_code),
+                data: discount.hash
+              }
+            end
+
+            order.discount_adjustments = order_discounts.map do |discount|
+              {
+                price: "order",
+                quantity: 1,
+                description: discount.description,
+                calculator: self.class.name,
+                amount: -Money.from_amount(discount.price, merchant_order.currency_code),
                 data: discount.hash
               }
             end

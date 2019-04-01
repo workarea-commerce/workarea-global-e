@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.summary     = "Global E integration for Workarea Platform"
   spec.description = "Global E integration for Workarea Platform"
   spec.license     = "MIT"
-  s.files          = `git ls-files`.split("\n")
+  spec.files       = `git ls-files`.split("\n")
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
   # to allow pushing to a single host or delete this section to allow pushing to any host.

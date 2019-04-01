@@ -20,8 +20,6 @@ module Workarea
         visit storefront.users_order_path order.id
 
         assert page.has_text? "€5.00"
-
-        save_and_open_screenshot
       end
 
       def test_viewing_orders_with_discounts
@@ -39,8 +37,6 @@ module Workarea
         assert page.has_content? order.id
 
         visit storefront.users_order_path order.id
-
-        save_and_open_screenshot
       end
     end
   end

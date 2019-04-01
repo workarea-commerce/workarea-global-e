@@ -55,24 +55,34 @@
             %thead
               %tr
                 %th
-                %th.align-center= t('workarea.admin.field.amount')
+                %th.align-right= t('workarea.admin.field.amount')
             %tbody
               %tr
                 %td
                   %p= t('workarea.admin.orders.cards.global_e.international_subtotal_price')
-                %td.align-center= @order.international_subtotal_price
+                %td.align-right= @order.international_subtotal_price
+              - if @order.international_discount_adjustments.any?
+                - @order.international_discount_adjustments.each do |adjustment|
+                  %tr
+                    %td
+                      %span= adjustment.description.titleize
+                    %td.align-right
+                      - if adjustment.discount?
+                        %strong= number_to_currency(adjustment.amount)
+                      - else
+                        %span= number_to_currency(adjustment.amount)
               %tr
                 %td
                   %p= t('workarea.admin.orders.cards.global_e.international_shipping_total')
-                %td.align-center= @order.international_shipping_total
+                %td.align-right= @order.international_shipping_total
               %tr
                 %td
                   %p= t('workarea.admin.orders.cards.global_e.total_duties_price')
-                %td.align-center= number_to_currency @order.total_duties_price
+                %td.align-right= number_to_currency @order.total_duties_price
               %tr
                 %td
                   %p= t('workarea.admin.orders.cards.global_e.total_price')
-                %td.align-center= number_to_currency @order.international_total_price
+                %td.align-right= number_to_currency @order.international_total_price
 
   - if current_user.super_admin?
     .view__container

@@ -4,9 +4,6 @@ module Workarea
       class InternationalDetails
         attr_reader :hash
 
-        # hash["ShipmentLocation"]
-        # hash["ShipmentStatusUpdateTime"]
-
         def initialize(hash)
           @hash = hash
         end
