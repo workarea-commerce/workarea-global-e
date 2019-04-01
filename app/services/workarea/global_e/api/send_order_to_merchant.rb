@@ -2,11 +2,16 @@ module Workarea
   module GlobalE
     module Api
       class SendOrderToMerchant
-        attr_reader :order, :merchant_order
+        attr_reader :order, :merchant_order, :order_discount_price_adjustments
 
         def initialize(order, merchant_order)
           @order = order
           @merchant_order = merchant_order
+          @order_discount_price_adjustments = order
+            .price_adjustments
+            .discounts
+            .select { |pa| pa.price == "order" }
+            .group_discounts_by_id
         end
 
         def response
@@ -174,6 +179,22 @@ module Workarea
           end
 
           def set_order_discounts
+            order.discount_adjustments = order_discounts.map do |discount|
+              original_price_adjustment = order_discount_price_adjustments
+                .detect { |pa| pa.global_e_discount_code == discount.discount_code }
+
+              {
+                price: "order",
+                quantity: 1,
+                description: discount.description,
+                calculator: self.class.name,
+                amount: -Money.from_amount(discount.price, merchant_order.currency_code),
+                data: original_price_adjustment.data
+                .merge("dicount_value" => -Money.from_amount(discount.price, merchant_order.currency_code))
+                .merge(discount.hash)
+              }
+            end
+
             order.international_discount_adjustments = order_discounts.map do |discount|
               {
                 price: "order",
@@ -181,17 +202,6 @@ module Workarea
                 description: discount.description,
                 calculator: self.class.name,
                 amount: -Money.from_amount(discount.international_price, international_details.currency_code),
-                data: discount.hash
-              }
-            end
-
-            order.discount_adjustments = order_discounts.map do |discount|
-              {
-                price: "order",
-                quantity: 1,
-                description: discount.description,
-                calculator: self.class.name,
-                amount: -Money.from_amount(discount.price, merchant_order.currency_code),
                 data: discount.hash
               }
             end

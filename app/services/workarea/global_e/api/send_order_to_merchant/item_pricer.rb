@@ -24,7 +24,7 @@ module Workarea
             total_value: discounted_price,
             international_total_value: international_discounted_price,
 
-            total_price:               base_currency_adjustments.adjusting("item").sum,
+            total_price: base_currency_adjustments.adjusting("item").sum,
             international_total_price: international_currency_adjustments.adjusting("item").sum
           )
         end
@@ -97,13 +97,21 @@ module Workarea
 
           def base_currency_discount_adjustments
             product_discounts.map do |discount|
+
+              original_price_adjustment = order
+                .price_adjustments
+                .discounts
+                .detect { |pa| pa.global_e_discount_code == discount.discount_code }
+
               PriceAdjustment.new(
                 price: "item",
                 quantity:order_item.quantity,
                 description: discount.description,
                 calculator: self.class.name,
                 amount: -Money.from_amount(discount.price, currency),
-                data: discount.hash
+                data: original_price_adjustment.data
+                  .merge("dicount_value" => -Money.from_amount(discount.price, currency))
+                  .merge(discount.hash)
               )
             end
           end

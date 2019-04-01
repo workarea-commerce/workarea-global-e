@@ -160,10 +160,54 @@ module Workarea
     def global_e_send_order_to_mechant_body(email: "John.Smith@global-e.com", order: nil)
       order ||= create_cart
 
+      discounts = Pricing::Discount.all.to_a
+
+      order_discounts = order.price_adjustments.discounts.reject { |pa| pa.price == "order" } +
+        order.price_adjustments.discounts.select { |pa| pa.price == "order" }.group_discounts_by_id
+
       {
+        "AllowMailsFromMerchant" => false,
+        "ReservationRequestId" => nil,
         "ClearCart" => true,
-        "UserId" => nil,
         "CurrencyCode" => "USD",
+        "Customer" => {
+          "EmailAddress" => "info@global-e.com",
+          "IsEndCustomerPrimary" => false,
+          "SendConfirmation" => false
+        },
+        "CustomerComments" => nil,
+        "Discounts" => order_discounts.map do |price_adjustment|
+          discount = discounts.detect { |d| price_adjustment.data["discount_id"] == d.id.to_s }
+          {
+            "Name" => discount.name,
+            "Description" => "#{discount.class.name.demodulize.underscore.titleize} - #{discount.name}",
+            "Price" => (price_adjustment.amount * 1.1).abs.to_f,
+            "DiscountType" => 1,
+            "VATRate" => 0.0,
+            "LocalVATRate" => 0.0,
+            "CouponCode" => nil,
+            "InternationalPrice" => (price_adjustment.amount * 1.4).abs.to_f,
+            "DiscountCode" => price_adjustment.global_e_discount_code,
+            "ProductCartItemId" => price_adjustment.price == "item" ? price_adjustment._parent.id.to_s : nil,
+            "LoyaltyVoucherCode" => nil
+          }
+        end,
+        "DoNotChargeVAT" => false,
+        "FreeShippingCouponCode" => nil,
+        "IsFreeShipping" => false,
+        "IsSplitOrder" => false,
+        "LoyaltyCode" => nil,
+        "LoyaltyPointsEarned" => 0.0,
+        "LoyaltyPointsSpent" => 0.0,
+        "Markups" => [],
+        "OriginalMerchantTotalProductsDiscountedPrice" => 249.32,
+        "OTVoucherAmount" => nil,
+        "OTVoucherCode" => nil,
+        "OTVoucherCurrencyCode" => nil,
+        "InitialCheckoutCultureCode" => "en-GB",
+        "CultureCode" => "en-GB",
+        "HubId" => 40,
+        "UserId" => nil,
         "Products" => order.items.map do |order_item|
           {
             "Attributes" => [
@@ -186,11 +230,9 @@ module Workarea
             "InternationalListPrice" => 5.00
           }
         end,
-        "Customer" => {
-          "EmailAddress" => "info@global-e.com",
-          "IsEndCustomerPrimary" => false,
-          "SendConfirmation" => false
-        },
+        "RoundingRate" => 0.723416,
+        "SameDayDispatch" => false,
+        "SameDayDispatchCost" => 0.0,
         "PrimaryShipping" => {
           "FirstName" => "GlobalE ",
           "LastName" => "GlobalE",
@@ -230,17 +272,6 @@ module Workarea
           "CountryName" => "France"
         },
         "ShippingMethodCode" => "globaleintegration_standard",
-        "Discounts" => [
-          {
-            "Name" => "Shipping discount provided by globale",
-            "Description" => "Auto calculated according to products",
-            "Price" => 35.3100,
-            "DiscountType" => 2,
-            "VATRate" => 18.000000,
-            "CouponCode" => nil,
-            "InternationalPrice" =>  6.5800
-          }
-        ],
         "InternationalDetails" => {
           "CurrencyCode" => "EUR",
           "TotalPrice" => 64.8800,
@@ -315,8 +346,15 @@ module Workarea
       }.to_json
     end
 
+    # Deprecated global_e_send_order_to_mechant_body now includes discounts
+    #
     def global_e_send_order_to_mechant_body_with_discounts(order: nil)
       order ||= create_cart
+
+      discounts = Pricing::Discount.all.to_a
+
+      order_discounts = order.price_adjustments.discounts.reject { |pa| pa.price == "order" } +
+        order.price_adjustments.discounts.select { |pa| pa.price == "order" }.group_discounts_by_id
 
       {
         "AllowMailsFromMerchant" => false,
@@ -329,47 +367,22 @@ module Workarea
           "SendConfirmation" => false
         },
         "CustomerComments" => nil,
-        "Discounts" => [
+        "Discounts" => order_discounts.map do |price_adjustment|
+          discount = discounts.detect { |d| price_adjustment.data["discount_id"] == d.id.to_s }
           {
-            "Name" => "testing 2",
-            "Description" => "Order Total - testing 2",
-            "Price" => 13.15,
+            "Name" => discount.name,
+            "Description" => "#{discount.class.name.demodulize.underscore.titleize} - #{discount.name}",
+            "Price" => (price_adjustment.amount * 1.1).abs.to_f,
             "DiscountType" => 1,
             "VATRate" => 0.0,
             "LocalVATRate" => 0.0,
             "CouponCode" => nil,
-            "InternationalPrice" => 18.29,
-            "DiscountCode" => "CF5163D3BA-testing_2",
-            "ProductCartItemId" => nil,
-            "LoyaltyVoucherCode" => nil
-          },
-          {
-            "Name" => "testing",
-            "Description" => "Product - testing",
-            "Price" => 27.4,
-            "DiscountType" => 1,
-            "VATRate" => 0.0,
-            "LocalVATRate" => 0.0,
-            "CouponCode" => nil,
-            "InternationalPrice" => 38.42,
-            "DiscountCode" => "5c938c67a0e1cd33e57161f5-testing",
-            "ProductCartItemId" => order.items.first.id.to_s,
-            "LoyaltyVoucherCode" => nil
-          },
-          {
-            "Name" => "10% Off Order ioejeirj",
-            "Description" => "Order Total - 10% Off Order ioejeirj",
-            "Price" => 29.24,
-            "DiscountType" => 1,
-            "VATRate" => 0.0,
-            "LocalVATRate" => 0.0,
-            "CouponCode" => "10percentoff",
-            "InternationalPrice" => 40.66,
-            "DiscountCode" => "CF5163D3BA-10_off_order_ioejeirj",
-            "ProductCartItemId" => nil,
+            "InternationalPrice" => (price_adjustment.amount * 1.4).abs.to_f,
+            "DiscountCode" => price_adjustment.global_e_discount_code,
+            "ProductCartItemId" => price_adjustment.price == "item" ? price_adjustment._parent.id.to_s : nil,
             "LoyaltyVoucherCode" => nil
           }
-        ],
+        end,
         "DoNotChargeVAT" => false,
         "FreeShippingCouponCode" => nil,
         "IsFreeShipping" => false,

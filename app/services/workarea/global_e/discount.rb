@@ -39,6 +39,7 @@ module Workarea
         elsif price_adjustment.present?
           price_adjustment.amount.abs.to_f
         else
+          # TODO is this dead?
           order
             .price_adjustments
             .select { |pa| pa.data['discount_id'] == discount.id.to_s }

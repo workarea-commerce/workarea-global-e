@@ -13,14 +13,13 @@ module Workarea
       field :international_shipping_total, type: Money
       field :discounted_international_shipping_total, type: Money
       field :total_duties_price, type: Money
-      # TODO total_value
       field :international_total_price, type: Money
 
-      embeds_many :international_discount_adjustments,
+      embeds_many :discount_adjustments,
         class_name: 'Workarea::PriceAdjustment',
         extend: PriceAdjustmentExtension
 
-      embeds_many :discount_adjustments,
+      embeds_many :international_discount_adjustments,
         class_name: 'Workarea::PriceAdjustment',
         extend: PriceAdjustmentExtension
 
@@ -50,6 +49,13 @@ module Workarea
       run_callbacks :place do
         update_attributes(global_e_approved_at: Time.current)
       end
+    end
+
+    def discount_ids
+      super + discount_adjustments
+        .map { |pa| pa.data['discount_id'] }
+        .compact
+        .uniq
     end
   end
 end

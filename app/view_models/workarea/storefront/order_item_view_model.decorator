@@ -29,6 +29,14 @@ module Workarea
     #   @total_adjustments ||= flow_price_adjustments.reduce_by_description('item')
     # end
 
+    def total_adjustments
+      if order.placed?
+        raise 'x'
+      else
+        model.price_adjustments.adjusting("item")
+      end
+    end
+
     def original_price
       return super unless order.global_e?
 

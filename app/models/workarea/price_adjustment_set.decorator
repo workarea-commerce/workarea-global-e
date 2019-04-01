@@ -1,29 +1,25 @@
 module Workarea
   decorate PriceAdjustmentSet, with: :global_e do
-    def reduce_by_description(type, data = {})
-      amounts = adjusting(type).reduce({}) do |memo, adjustment|
-        memo[adjustment.description] ||= {
-          amount: 0.to_m,
-          parent: adjustment._parent,
-          data: adjustment.data
-        }
-
-        memo[adjustment.description][:amount] += adjustment.amount
-        memo[adjustment.description][:data].merge adjustment.data
-        memo
-      end
-
-      self.class.new(
-        amounts.map do |(description, aggregate)|
-          PriceAdjustment.new(
-            _parent: aggregate[:parent],
-            price: type,
-            data: aggregate[:data].merge(data),
-            description: description,
-            amount: aggregate[:amount]
+    def group_discounts_by_id
+      reduce({}) do |memo, adjustment|
+        if adjustment.discount?
+          memo[adjustment.data["discount_id"]] ||= PriceAdjustment.new(
+            quantity: adjustment.quantity,
+            data: adjustment.data.merge("discount_value" => 0.0), #{ "discount_id" => "5ca26fd187c68b8926709347", "discount_value" => 0.0 },
+            price: adjustment.price,
+            description: adjustment.description,
+            calculator: adjustment.calculator,
+            amount: 0.to_m
           )
+
+          memo[adjustment.data["discount_id"]].amount += adjustment.amount
+          memo[adjustment.data["discount_id"]].data["discount_value"] += adjustment.data["discount_value"]
+        else
+          memo[adjustment.id] = adjustment
         end
-      )
+
+        memo
+      end.values
     end
   end
 end

@@ -4,7 +4,7 @@ module Workarea
   module Storefront
     class GlobalEIntegrationTest < Workarea::IntegrationTest
       def test_get_checkout_cart_info
-        _order_discount = create_order_total_discount(promo_codes: %w(TESTCODE))
+        order_discount = create_order_total_discount(promo_codes: %w(TESTCODE))
         product_1 = create_complete_product(
           variants: [{ sku: 'SKU', details: { material: 'cotton' }, regular: 5.00, sale: 4.00 }]
         )
@@ -85,7 +85,7 @@ module Workarea
               "Description" => "Order Total - Order Total Discount",
               "CalculationMode" => 1,
               "CouponCode" => "testcode",
-              "DiscountCode" => "#{cart.id}-order_total_discount"
+              "DiscountCode" => order_discount.id.to_s
             }
           ]
         }
@@ -354,7 +354,7 @@ module Workarea
           product_ids: [product_1.id.to_s, product_2.id.to_s]
         )
 
-        _order_discount = create_order_total_discount(
+        order_discount = create_order_total_discount(
           compatible_discount_ids: [product_discount.id.to_s]
         )
 
@@ -430,7 +430,7 @@ module Workarea
               "Name" => "Test Discount",
               "Description" => "Product - Test Discount",
               "ProductCartItemId" => cart.items.first.id.to_s,
-              "DiscountCode" => "#{cart.items.first.id.to_s}-test_discount",
+              "DiscountCode" => "#{product_discount.id}-#{cart.items.first.id}",
               "CalculationMode" => 1
             },
             {
@@ -439,14 +439,14 @@ module Workarea
               "Name" => "Test Discount",
               "Description" => "Product - Test Discount",
               "ProductCartItemId" => cart.items.second.id.to_s,
-              "DiscountCode" => "#{cart.items.second.id}-test_discount",
+              "DiscountCode" => "#{product_discount.id}-#{cart.items.second.id}",
               "CalculationMode" => 1
             },
             {
               "OriginalDiscountValue" => 0.45,
               "Name" => "Order Total Discount",
               "Description" => "Order Total - Order Total Discount",
-              "DiscountCode" => "#{cart.id}-order_total_discount",
+              "DiscountCode" => order_discount.id.to_s,
               "DiscountType" => 1,
               "CalculationMode" => 1
             }
@@ -462,7 +462,7 @@ module Workarea
           product_ids: [product_1.id.to_s]
         )
 
-        _product_discount_2 = create_product_discount(
+        product_discount_2 = create_product_discount(
           product_ids: [product_1.id.to_s],
           compatible_discount_ids: [product_discount_1.id.to_s]
         )
@@ -477,7 +477,7 @@ module Workarea
 
         assert response.ok?
         expected_response = {
-          "productsList" =>  [
+          "productsList" => [
             {
 
               "ProductCode" => product_1.skus.first,
@@ -501,13 +501,22 @@ module Workarea
               "OriginalSalePrice" => 5.0
             }
           ],
-          "discountsList" =>  [
+          "discountsList" => [
             {
-              "OriginalDiscountValue" => 3.75,
+              "OriginalDiscountValue" => 2.5,
               "Name" => "Test Discount",
               "Description" => "Product - Test Discount",
               "ProductCartItemId" => cart.items.first.id.to_s,
-              "DiscountCode" => "#{cart.items.first.id}-test_discount",
+              "DiscountCode" => "#{product_discount_1.id}-#{cart.items.first.id.to_s}",
+              "DiscountType" => 1,
+              "CalculationMode" => 1
+            },
+            {
+              "OriginalDiscountValue" => 1.25,
+              "Name" => "Test Discount",
+              "Description" => "Product - Test Discount",
+              "ProductCartItemId"  =>  cart.items.first.id.to_s,
+              "DiscountCode" => "#{product_discount_2.id}-#{cart.items.first.id.to_s}",
               "DiscountType" => 1,
               "CalculationMode" => 1
             }
@@ -524,7 +533,7 @@ module Workarea
           variants: [{ sku: 'FREE_SKU', regular: 5.to_m }]
         )
 
-        create_free_gift_discount(
+        free_gift_discount = create_free_gift_discount(
           name: 'Test',
           sku: 'FREE_SKU',
           order_total_operator: :greater_than,
@@ -587,7 +596,7 @@ module Workarea
               "Name" => "Test",
               "Description" => "Free Gift - Test",
               "ProductCartItemId" => cart.items.detect(&:free_gift?).id.to_s,
-              "DiscountCode" => "#{cart.items.detect(&:free_gift?).id}-test",
+              "DiscountCode" => "#{free_gift_discount.id}-#{cart.items.detect(&:free_gift?).id}",
               "DiscountType" => 1
             }
           ]

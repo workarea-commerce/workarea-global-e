@@ -1,0 +1,7 @@
+module Workarea
+  decorate SaveOrderAnalytics do
+    def all_price_adjustments
+      super + @order.discount_adjustments
+    end
+  end
+end

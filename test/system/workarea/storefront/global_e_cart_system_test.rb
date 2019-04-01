@@ -19,8 +19,13 @@ module Workarea
             product_ids: [product_1.id.to_s, product_2.id.to_s]
           )
 
-          _order_discount = create_order_total_discount(
+          product_discount_2 = create_product_discount(
+            product_ids: [product_1.id.to_s],
             compatible_discount_ids: [product_discount.id.to_s]
+          )
+
+          _order_discount = create_order_total_discount(
+            compatible_discount_ids: [product_discount.id.to_s, product_discount_2.id.to_s]
           )
 
           visit storefront.product_path(product_1)

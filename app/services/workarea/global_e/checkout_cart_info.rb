@@ -308,12 +308,12 @@ module Workarea
 
         def discount_item_price_adjustments
           order.items.flat_map do |order_item|
-            order_item.price_adjustments.discounts.reduce_by_description("item")
+            order_item.price_adjustments.discounts.adjusting("item")
           end.compact
         end
 
         def discount_order_price_adjustments
-          order.price_adjustments.reduce_by_description("order", "order_id" => order.id.to_s)
+          order.price_adjustments.discounts.adjusting("order").group_discounts_by_id
         end
 
         def item_discounts
@@ -325,9 +325,6 @@ module Workarea
         end
 
         def order_discounts
-          # discounts
-          #   .select { |discount| discount.price_level.to_s == "order" }
-          #   .map { |discount| GlobalE::Discount.new discount, order: order }
           discount_order_price_adjustments.map do |price_adjustment|
             discount = discounts.detect { |d| d.id.to_s == price_adjustment.data["discount_id"] }
 

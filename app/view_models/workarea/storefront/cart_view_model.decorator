@@ -1,7 +1,7 @@
 module Workarea
   decorate Storefront::CartViewModel, with: :global_e do
     def total_adjustments
-      @total_adjustments ||= price_adjustments.reduce_by_description('order', "order_id" => model.id.to_s)
+      model.price_adjustments.adjusting("order").group_discounts_by_id
     end
   end
 end
