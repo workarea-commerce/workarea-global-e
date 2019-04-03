@@ -339,7 +339,7 @@ module Workarea
         "OrderId" => "GE927127",
         "DiscountedShippingPrice" => 19.97,
         "StatusCode" => "N/A",
-        "MerchantGUID" => "0f4eec24-8988-4361-be9a-a7468d05f1fe",
+        "MerchantGUID" => "abcdabcd-abcd-abcd-abcd-abcdabcdabcd",
         "CartId" => order.global_e_token,
         "MerchantOrderId" => nil,
         "PriceCoefficientRate" => 1.000000
@@ -548,7 +548,7 @@ module Workarea
           "ShippingMethodStatusCode" => "Undefined",
           "ShippingMethodStatusName" => "undefined"
         },
-        "MerchantGUID" => "88e86f4a-32b5-4e02-8464-d5e426770e24",
+        "MerchantGUID" => "abcdabcd-abcd-abcd-abcd-abcdabcdabcd",
         "MerchantOrderId" => nil,
         "OrderId" => "GE2139821US",
         "PriceCoefficientRate" => 1.0,
@@ -742,7 +742,7 @@ module Workarea
           "ShippingMethodStatusCode" => "Undefined",
           "ShippingMethodStatusName" => "undefined"
         },
-        "MerchantGUID" => "88e86f4a-32b5-4e02-8464-d5e426770e24",
+        "MerchantGUID" => "abcdabcd-abcd-abcd-abcd-abcdabcdabcd",
         "MerchantOrderId" => order.id,
         "OrderId" => "GE2130509US",
         "PriceCoefficientRate" => 1.000000,

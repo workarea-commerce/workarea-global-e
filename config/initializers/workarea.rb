@@ -15,6 +15,7 @@ Workarea.configure do |config|
   config.global_e.enabled = true
   config.global_e.javascript_source = nil
   config.global_e.css_source = nil
+  config.global_e.merchant_guid = nil
 
   config.global_e.domestic_countries = ["US"]
 

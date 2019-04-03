@@ -24,6 +24,10 @@ module Workarea
       config.css_source
     end
 
+    def self.merchant_guid
+      config.merchant_guid
+    end
+
     def self.domestic_countries
       config.domestic_countries
     end

@@ -4,6 +4,8 @@ module Workarea
   module Storefront
     module GlobalEAPi
       class ReceiveOrderIntegrationTest < Workarea::IntegrationTest
+        include GlobalESupport
+
         def test_successful_post
           order = create_cart
 

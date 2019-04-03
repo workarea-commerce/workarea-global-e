@@ -4,6 +4,8 @@ module Workarea
   module Storefront
     module GlobalEAPi
       class ReceiveOrderRefundIntegrationTest < Workarea::IntegrationTest
+        include GlobalESupport
+
         def test_successful_post
           order = create_global_e_shipped_order
 

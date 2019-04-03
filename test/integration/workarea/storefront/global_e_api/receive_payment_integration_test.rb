@@ -4,6 +4,8 @@ module Workarea
   module Storefront
     module GlobalEAPi
       class ReceivePaymentIntegrationTest < Workarea::IntegrationTest
+        include GlobalESupport
+
         def test_successful_post
           order = create_global_e_completed_checkout
 

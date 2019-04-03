@@ -3,6 +3,7 @@ module Workarea
     module Globale
       class RefundController < Storefront::ApplicationController
         before_action :parse_order_refund
+        before_action :validate_merchant_guid
         before_action :find_order
         after_action :log_api_event
 
@@ -30,6 +31,12 @@ module Workarea
             @order_refund = Workarea::GlobalE::Merchant::OrderRefund.new(
               params.to_unsafe_hash.except(:controller, :action, :api)
             )
+          end
+
+          def validate_merchant_guid
+            return if @order_refund.merchant_guid == GlobalE.merchant_guid
+
+            head :bad_request
           end
 
           def find_order
