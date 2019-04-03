@@ -1,9 +1,9 @@
 module Workarea
   module GlobalE
     class Discount
-      attr_reader :discount, :order, :price_adjustment, :shipping
+      attr_reader :discount, :order, :price_adjustment
 
-      def initialize(discount, order:, price_adjustment: nil)
+      def initialize(discount, order:, price_adjustment:)
         @discount = discount
         @order = order
         @price_adjustment = price_adjustment
@@ -36,16 +36,8 @@ module Workarea
       def original_discount_value
         if free_gift? && pricing_sku.present?
           pricing_sku.find_price(quantity: 1).regular.to_f
-        elsif price_adjustment.present?
-          price_adjustment.amount.abs.to_f
         else
-          # TODO is this dead?
-          order
-            .price_adjustments
-            .select { |pa| pa.data['discount_id'] == discount.id.to_s }
-            .sum
-            .abs
-            .to_f
+          price_adjustment.amount.abs.to_f
         end
       end
 
