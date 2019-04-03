@@ -63,7 +63,7 @@ module Workarea
               discounted_international_shipping_total: discounted_international_shipping_price,
 
               total_value: order.items.sum(&:total_value),
-              total_price: order.items.sum(&:total_value) + discounted_shipping_price,
+              total_price: order.items.sum(&:total_price) - order.discount_adjustments.sum { |pa| pa.amount.abs },
               international_total_price: international_total_price,
 
               # GlobalE tax isn't a reconciliation value and therefore isn't available
