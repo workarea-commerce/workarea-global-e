@@ -12,6 +12,10 @@ module Workarea
       Workarea.config.global_e
     end
 
+    def self.enabled?
+      config.enabled && javascript_source.present? && css_source.present?
+    end
+
     def self.javascript_source
       config.javascript_source
     end
