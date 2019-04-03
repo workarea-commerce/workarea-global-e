@@ -105,7 +105,7 @@ module Workarea
 
               PriceAdjustment.new(
                 price: "item",
-                quantity:order_item.quantity,
+                quantity: order_item.quantity,
                 description: discount.description,
                 calculator: self.class.name,
                 amount: -Money.from_amount(discount.price, currency),
@@ -120,7 +120,7 @@ module Workarea
             product_discounts.map do |discount|
               PriceAdjustment.new(
                 price: "item",
-                quantity:order_item.quantity,
+                quantity: order_item.quantity,
                 description: discount.description,
                 calculator: self.class.name,
                 amount: -Money.from_amount(discount.international_price, international_currency),
@@ -132,4 +132,3 @@ module Workarea
     end
   end
 end
-

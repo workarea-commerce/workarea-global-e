@@ -515,7 +515,7 @@ module Workarea
               "OriginalDiscountValue" => 1.25,
               "Name" => "Test Discount",
               "Description" => "Product - Test Discount",
-              "ProductCartItemId"  =>  cart.items.first.id.to_s,
+              "ProductCartItemId" => cart.items.first.id.to_s,
               "DiscountCode" => "#{product_discount_2.id}-#{cart.items.first.id.to_s}",
               "DiscountType" => 1,
               "CalculationMode" => 1
