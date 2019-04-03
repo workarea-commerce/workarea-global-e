@@ -30,11 +30,7 @@ module Workarea
     # end
 
     def total_adjustments
-      if order.placed?
-        raise 'x'
-      else
-        model.price_adjustments.adjusting("item")
-      end
+      model.price_adjustments.adjusting("item")
     end
 
     def original_price
