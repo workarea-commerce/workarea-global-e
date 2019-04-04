@@ -14,6 +14,7 @@ module Workarea
       field :discounted_international_shipping_total, type: Money
       field :total_duties_price, type: Money
       field :international_total_price, type: Money
+      field :contains_clearance_fees_price, type: Money
 
       embeds_many :discount_adjustments,
         class_name: 'Workarea::PriceAdjustment',

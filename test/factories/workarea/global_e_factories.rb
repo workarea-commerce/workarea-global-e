@@ -30,7 +30,7 @@ module Workarea
       order.tap(&:save!)
     end
 
-    def create_global_e_completed_checkout(order: nil, items: nil, discounted: false)
+    def create_global_e_completed_checkout(order: nil, items: nil)
       order ||= create_order(global_e_id: create_global_e_order_id)
       items = items ||
         begin
@@ -57,15 +57,7 @@ module Workarea
 
       order.tap(&:save!).reload
 
-      merchant_order = GlobalE::Merchant::Order.new(
-        JSON.parse(
-          if discounted
-            global_e_send_order_to_mechant_body_with_discounts(order: order)
-          else
-            global_e_send_order_to_mechant_body(order: order)
-          end
-        )
-      )
+      merchant_order = GlobalE::Merchant::Order.new(JSON.parse(global_e_send_order_to_mechant_body(order: order)))
       response = GlobalE::Api::SendOrderToMerchant.new(order, merchant_order).response
 
       GlobalE::OrderApiEvents.upsert_one(
@@ -227,7 +219,8 @@ module Workarea
             "Brand" => nil,
             "Categories" => [],
             "ListPrice" => 5.11,
-            "InternationalListPrice" => 5.00
+            "InternationalListPrice" => 5.00,
+            "DiscountedPriceExcDutiesAndTaxes" => 0.0
           }
         end,
         "RoundingRate" => 0.723416,
@@ -342,7 +335,10 @@ module Workarea
         "MerchantGUID" => "abcdabcd-abcd-abcd-abcd-abcdabcdabcd",
         "CartId" => order.global_e_token,
         "MerchantOrderId" => nil,
-        "PriceCoefficientRate" => 1.000000
+        "PriceCoefficientRate" => 1.000000,
+        "GenericHSCode" => nil,
+        "TotalDutiesAndTaxesPrice" => 0.0,
+        "CCFPrice" => 0.0
       }.to_json
     end
 

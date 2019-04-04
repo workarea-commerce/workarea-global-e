@@ -74,7 +74,7 @@ module Workarea
 
           post storefront.globale_receive_order_path,
             headers: { 'CONTENT_TYPE' => 'application/json' },
-            params: global_e_send_order_to_mechant_body_with_discounts(order: order)
+            params: global_e_send_order_to_mechant_body(order: order)
 
           order.reload
           assert response.ok?, "Expected 200 response"
@@ -95,7 +95,7 @@ module Workarea
             .flat_map { |oi| oi.international_price_adjustments.map { |pa| pa.amount.currency.iso_code } }
             .uniq
 
-          assert_equal ["CAD"], price_adjustments_currency
+          assert_equal ["EUR"], price_adjustments_currency
         end
 
         def test_item_going_out_of_stock

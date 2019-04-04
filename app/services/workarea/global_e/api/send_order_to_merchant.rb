@@ -66,10 +66,9 @@ module Workarea
               total_price: order.items.sum(&:total_price) - order.discount_adjustments.sum { |pa| pa.amount.abs },
               international_total_price: international_total_price,
 
-              # GlobalE tax isn't a reconciliation value and therefore isn't available
-              # in the merchant's base currency
-              tax_total: 0.to_m,
+              tax_total: total_duties_and_taxes_price,
               total_duties_price: total_duties_price,
+              contains_clearance_fees_price: contains_clearance_fees_price,
               duties_guaranteed: international_details.duties_guaranteed
             )
           end
@@ -117,9 +116,24 @@ module Workarea
             )
           end
 
+          def total_duties_and_taxes_price
+            Money.from_amount(
+              merchant_order.total_duties_and_taxes_price,
+              merchant_order.currency_code
+            )
+          end
+
+          def contains_clearance_fees_price
+            Money.from_amount(
+              merchant_order.contains_clearance_fees_price,
+              merchant_order.currency_code
+            )
+          end
+
           def save_shippings
             Workarea::Shipping.where(order_id: order.id).destroy_all
             shipping.update_attributes(
+              international_shipping_total: discounted_international_shipping_price,
               address: shipping_address,
               shipping_service: shipping_service,
               price_adjustments: [
@@ -130,7 +144,7 @@ module Workarea
                   calculator: self.class.name
                 }
               ],
-              global_e_price_adjustments: [
+              international_price_adjustments: [
                 {
                   price: 'shipping',
                   amount: discounted_international_shipping_price,

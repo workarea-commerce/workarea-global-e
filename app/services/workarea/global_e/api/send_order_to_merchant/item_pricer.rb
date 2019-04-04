@@ -25,7 +25,10 @@ module Workarea
             international_total_value: international_discounted_price,
 
             total_price: base_currency_adjustments.adjusting("item").sum,
-            international_total_price: international_currency_adjustments.adjusting("item").sum
+            international_total_price: international_currency_adjustments.adjusting("item").sum,
+
+            discounted_price_except_duties_and_taxes: discounted_price_except_duties_and_taxes,
+            generic_hs_code: merchant_product.generic_hs_code
           )
         end
 
@@ -127,6 +130,13 @@ module Workarea
                 data: discount.hash
               )
             end
+          end
+
+          def discounted_price_except_duties_and_taxes
+            Money.from_amount(
+              merchant_product.discounted_price_except_duties_and_taxes,
+              currency
+            )
           end
       end
     end

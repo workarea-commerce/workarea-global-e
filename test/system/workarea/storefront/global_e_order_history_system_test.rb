@@ -24,7 +24,7 @@ module Workarea
 
       def test_viewing_orders_with_discounts
         user = create_user(email: 'user@workarea.com', password: 'W3bl1nc!')
-        order = create_global_e_completed_checkout(order: create_order(email: user.email, user_id: user.id), discounted: true)
+        order = create_global_e_completed_checkout(order: create_order(email: user.email, user_id: user.id))
 
         visit storefront.login_path
 

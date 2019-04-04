@@ -200,6 +200,22 @@ module Workarea
         def international_list_price
           hash["InternationalListPrice"]
         end
+
+        # Product price exclusive of duties & taxes in base currency
+        #
+        # @return [String]
+        #
+        def discounted_price_except_duties_and_taxes
+          hash["DiscountedPriceExcDutiesAndTaxes"]
+        end
+
+        # Product HS code
+        #
+        # @return [String]
+        #
+        def generic_hs_code
+          hash["GenericHSCode"]
+        end
       end
     end
   end
