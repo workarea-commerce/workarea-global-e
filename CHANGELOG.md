@@ -1,3 +1,15 @@
+Workarea Global E 1.0.0.beta.2 (2019-04-04)
+--------------------------------------------------------------------------------
+
+*   Add new fields from GlobalE
+
+    `Order#contains_clearance_fees_price`
+    `Order::Item#discounted_price_except_duties_and_taxes`
+    `Order::Item#generic_hs_code`
+    Eric Pigeon
+
+
+
 Workarea Global E 1.0.0.beta.1 (2019-04-03)
 --------------------------------------------------------------------------------
 
