@@ -14,5 +14,13 @@ module Workarea
     def international_discounted_price
       international_total_value
     end
+
+    # Adds an international price adjustment to the item. Does not persist.
+    #
+    # @return [self]
+    #
+    def adjust_international_pricing(options = {})
+      international_price_adjustments.build(options)
+    end
   end
 end

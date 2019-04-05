@@ -5,11 +5,11 @@ module Workarea
         if adjustment.discount?
           memo[adjustment.data["discount_id"]] ||= PriceAdjustment.new(
             quantity: adjustment.quantity,
-            data: adjustment.data.merge("discount_value" => 0.0), #{ "discount_id" => "5ca26fd187c68b8926709347", "discount_value" => 0.0 },
+            data: adjustment.data.merge("discount_value" => 0.0),
             price: adjustment.price,
             description: adjustment.description,
             calculator: adjustment.calculator,
-            amount: 0.to_m
+            amount: 0.to_m(adjustment.amount.currency)
           )
 
           memo[adjustment.data["discount_id"]].amount += adjustment.amount

@@ -34,6 +34,8 @@ module Workarea
       # @return [Float]
       #
       def original_discount_value
+        return 0 if order.fixed_pricing?
+
         if free_gift? && pricing_sku.present?
           pricing_sku.find_price(quantity: 1).regular.to_f
         else
@@ -64,6 +66,14 @@ module Workarea
       # @return [Float]
       #
       def discount_value
+        return 0 unless order.fixed_pricing?
+
+        # TODO test this with free gifts
+        if free_gift? && pricing_sku.present?
+          pricing_sku.find_price(quantity: 1).regular.to_f
+        else
+          price_adjustment.amount.abs.to_f
+        end
       end
 
       # Discount name
@@ -161,6 +171,7 @@ module Workarea
       # return [Integer]
       #
       def calculation_mode
+        return 3 if order.fixed_pricing?
         return 1 if free_gift?
 
         amount_type = discount.try(:amount_type)

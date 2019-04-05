@@ -50,11 +50,14 @@ module Workarea
           ImageURL: catalog_product_image_url,
           ImageHeight: image_height,
           ImageWidth: image_width,
+          ListPrice: list_price,
           OriginalListPrice: original_list_price,
+          IsFixedPrice: is_fixed_price,
           OrderedQuantity: ordered_quantity,
           IsVirtual: is_virtual,
           IsBlockedForGlobalE: is_blocked_for_global_e,
           Attributes: attributes,
+          SalePrice: sale_price,
           OriginalSalePrice: original_sale_price
         }.compact
       end
@@ -317,6 +320,9 @@ module Workarea
       # @return [Float]
       #
       def list_price
+        return 0 unless is_fixed_price
+
+        order_item.international_price_adjustments.first.data['original_price'].to_f
       end
 
       # Product list price (before any discounts) in original Merchant’s
@@ -329,6 +335,8 @@ module Workarea
       # @return [Float]
       #
       def original_list_price
+        return 0 if is_fixed_price
+
         order_item.price_adjustments&.first&.data['original_price']&.to_f ||
           pricing_sku.find_price(quantity: ordered_quantity).regular.to_f
       end
@@ -340,7 +348,10 @@ module Workarea
       #
       # @return [Float]
       #
-      def decimal_sale_price
+      def sale_price
+        return 0 unless is_fixed_price
+
+        order_item.international_price_adjustments.first.unit.to_f
       end
 
       # Product sale price as displayed to the customer, after applying
@@ -374,6 +385,8 @@ module Workarea
       #
       #
       def original_sale_price
+        return 0 if is_fixed_price
+
         order_item.price_adjustments.first.unit.to_f
       end
 
@@ -408,7 +421,7 @@ module Workarea
       # @return [Boolean]
       #
       def is_fixed_price
-        false
+        order_item.order.fixed_pricing
       end
 
       # Ordered quantity for the product (to be used in Checkout / Order
@@ -564,8 +577,6 @@ module Workarea
       end
 
       private
-
-
 
         def variant
           @variant ||= product.variants.find_by(sku: sku)

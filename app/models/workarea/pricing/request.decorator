@@ -1,0 +1,17 @@
+module Workarea
+  decorate Pricing::Request, with: :global_e do
+    private
+      def clone_order_attributes
+        attributes = @persisted_order.as_document.except('_id','id')
+
+        if attributes['items'].present?
+          attributes['items'].each do |item|
+            item['price_adjustments'] = []
+            item['international_price_adjustments'] = []
+          end
+        end
+
+        attributes
+      end
+  end
+end

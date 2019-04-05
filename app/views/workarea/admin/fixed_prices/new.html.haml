@@ -1,0 +1,70 @@
+- @page_title = t('workarea.admin.fixed_prices.title', sku: @sku.name)
+
+.view
+  .view__header
+    .grid.grid--middle.grid--right
+      .grid__cell.grid__cell--50
+        .view__heading
+          = link_to_index_for(@sku)
+          %h1= link_to @sku.name, url_for(@sku)
+      .grid__cell.grid__cell--25
+        = render_aux_navigation_for(@sku)
+
+  .view__container
+    = render_cards_for(@sku, :fixed_prices)
+
+  .view__container.view__container
+    - @fixed_price.errors.full_messages.each do |message|
+      = render_message 'error', message
+
+    %p= t('workarea.admin.fixed_prices.fixed_price_description')
+
+    = form_tag pricing_sku_fixed_prices_path(@sku), method: :post, data: { unsaved_changes: '' } do
+      %table
+        %thead
+          %tr
+            %th= t('workarea.admin.fixed_prices.currency')
+            %th= t('workarea.admin.fixed_prices.country')
+            %th= t('workarea.admin.fixed_prices.regular_price')
+            %th= t('workarea.admin.fixed_prices.sale_price')
+            %th= t('workarea.admin.fixed_prices.msrp')
+            %th= t('workarea.admin.fields.active')
+            %th
+            %th
+        %tbody
+          - @sku.fixed_prices.each do |fixed_price, index|
+            %tr
+              %td #{fixed_price.currency.name} (#{fixed_price.currency.symbol})
+              %td= fixed_price.country
+              %td= number_to_currency(fixed_price.regular)
+              %td= number_to_currency(fixed_price.sale)
+              %td
+                - if fixed_price.msrp
+                  = number_to_currency(fixed_price.msrp)
+              %td
+                - if fixed_price.active?
+                  = t('workarea.admin.fixed_prices.active')
+                - else
+                  = t('workarea.admin.fixed_prices.inactive')
+              %td
+              %td
+
+          %tr
+            %td
+              = select_tag "fixed_price[currency_code]", options_for_select(currency_options, @fixed_price.currency_code), title: t('workarea.admin.fields.currency')
+            %td
+              = select_tag "fixed_price[country]", options_for_select(fixed_price_country_options, @fixed_price.country&.alpha2), title: 'TODO'
+            %td
+              = text_field_tag 'fixed_price[regular]', @fixed_price.regular, class: 'text-box text-box--small', title: t('workarea.admin.fields.regular')
+            %td
+              = text_field_tag 'fixed_price[sale]', @fixed_price.sale, class: 'text-box text-box--small', title: t('workarea.admin.fields.sale')
+            %td
+              = text_field_tag 'fixed_price[msrp]', @fixed_price.msrp, class: 'text-box text-box--small', title: t('workarea.admin.fields.msrp')
+            %td
+              = toggle_button_for 'fixed_price[active]', @fixed_price.active
+            %td
+            %td
+
+      .workflow-bar
+        .grid.grid--auto.grid--right.grid--middle
+          .grid__cell= button_tag t('workarea.admin.fixed_prices.new.create_fixed_price'), value: 'create_fixed_price', class: 'workflow-bar__button workflow-bar__button--create'

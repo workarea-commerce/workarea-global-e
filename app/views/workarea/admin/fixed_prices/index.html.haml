@@ -1,0 +1,55 @@
+- @page_title = t('workarea.admin.fixed_prices.title', sku: @sku.name)
+
+.view
+  .view__header
+    .grid
+      .grid__cell.grid__cell--25
+        = render 'workarea/admin/releases/select'
+      .grid__cell.grid__cell--50
+        .view__heading
+          = link_to_index_for(@sku)
+          %h1= link_to @sku.name, url_for(@sku)
+      .grid__cell.grid__cell--25
+        = render_aux_navigation_for(@sku)
+
+  .view__container
+    = render_cards_for(@sku, :fixed_prices)
+
+  .view__container.view__container--narrow
+    %table
+      %thead
+        %tr
+          %th= t('workarea.admin.fixed_prices.currency')
+          %th= t('workarea.admin.fixed_prices.country')
+          %th= t('workarea.admin.fixed_prices.regular_price')
+          %th #{t('workarea.admin.fixed_prices.sale_price')} #{t('workarea.admin.fixed_prices.sale_price_default')}
+          %th= t('workarea.admin.fixed_prices.msrp')
+          %th= t('workarea.admin.fields.active')
+          %th= t('workarea.admin.fields.on_sale')
+          %th
+      %tbody
+        - @sku.fixed_prices.each do |fixed_price|
+          %tr
+            %td #{fixed_price.currency} (#{fixed_price.currency.symbol})
+            %td= fixed_price.country&.name
+            %td= number_to_currency(fixed_price.regular)
+            %td= number_to_currency(fixed_price.sale)
+            %td
+              - if fixed_price.msrp
+                = number_to_currency(fixed_price.msrp)
+            %td
+              - if fixed_price.active?
+                = t('workarea.admin.fixed_prices.active')
+              - else
+                = t('workarea.admin.fixed_prices.inactive')
+            %td= fixed_price.on_sale? ? t("workarea.admin.pricing_skus.on_sale") : t("workarea.admin.pricing_skus.not_on_sale")
+            %td
+              .align-right<
+                = link_to edit_pricing_sku_fixed_price_path(@sku, fixed_price), id: dom_id(fixed_price, 'edit_action') do
+                  = inline_svg('workarea/admin/icons/edit.svg', class: 'svg-icon svg-icon--small', title: t('workarea.admin.actions.edit'))
+                = link_to pricing_sku_fixed_price_path(@sku, fixed_price), id: dom_id(fixed_price, 'delete_action'), data: { method: 'delete', confirm: t('workarea.admin.actions.delete_confirmation') } do
+                  = inline_svg('workarea/admin/icons/delete.svg', class: 'svg-icon svg-icon--small svg-icon--red', title: t('workarea.admin.actions.delete'))
+
+    .workflow-bar
+      .grid.grid--auto.grid--right.grid--middle
+        .grid__cell= link_to t('workarea.admin.fixed_prices.index.button'), new_pricing_sku_fixed_price_path(@sku), id: 'add_pricing_sku_fixed_price', class: 'workflow-bar__button workflow-bar__button--create'

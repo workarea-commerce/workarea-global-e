@@ -1,0 +1,73 @@
+- @page_title = t('workarea.admin.fixed_prices.title', sku: @sku.name)
+
+.view
+  .view__header
+    .grid
+      .grid__cell.grid__cell--25
+        = render 'workarea/admin/releases/select'
+      .grid__cell.grid__cell--50
+        .view__heading
+          = link_to_index_for(@sku)
+          %h1= link_to @sku.name, url_for(@sku)
+      .grid__cell.grid__cell--25
+        = render_aux_navigation_for(@sku)
+
+  .view__container
+    = render_cards_for(@sku, :fixed_prices)
+
+  .view__container.view__container
+    = form_tag pricing_sku_fixed_price_path(@sku, @fixed_price), method: :patch, data: { unsaved_changes: '' } do
+      = hidden_field_tag "fixed_price[currency_code]", @fixed_price.currency.iso_code
+
+      %table
+        %thead
+          %tr
+            %th= t('workarea.admin.fixed_prices.country')
+            %th= t('workarea.admin.fixed_prices.regular_price')
+            %th #{t('workarea.admin.fixed_prices.sale_price')} #{t('workarea.admin.fixed_prices.sale_price_default')}
+            %th= t('workarea.admin.fixed_prices.msrp')
+            %th
+              = t('workarea.admin.fields.active')
+              = inline_svg('workarea/admin/i18n.svg', class: 'svg-icon svg-icon--small') if locale_options.many? && Workarea.config.localized_active_fields
+            %th
+            %th
+        %tbody
+          - @sku.fixed_prices.each do |fixed_price|
+            - if fixed_price.id == @fixed_price.id
+              %tr
+                %td
+                  = select_tag "fixed_price[country]", options_for_select(fixed_price_country_options, @fixed_price.country&.alpha2), title: 'TODO'
+                %td
+                  %span.currency_symbol= fixed_price.currency.symbol
+                  = text_field_tag 'fixed_price[regular]', fixed_price.regular, class: 'text-box text-box--small', title: t('workarea.admin.fields.regular'), id: "fixed_price[regular]"
+                %td
+                  %span.currency_symbol= fixed_price.currency.symbol
+                  = text_field_tag 'fixed_price[sale]', fixed_price.sale, class: 'text-box text-box--small', title: t('workarea.admin.fields.sale'), id: "fixed_price[sale]"
+                %td
+                  - if fixed_price.msrp
+                    %span.currency_symbol= fixed_price.currency.symbol
+                    = text_field_tag 'fixed_price[msrp]', fixed_price.msrp, class: 'text-box text-box--small', title: t('workarea.admin.fields.msrp'), id: "fixed_price[msrp]"
+                %td
+                  = toggle_button_for 'fixed_price[active]', @fixed_price.active?
+                %td
+                %td
+            - else
+              %tr
+                %td= fixed_price.country
+                %td= number_to_currency(fixed_price.regular)
+                %td= number_to_currency(fixed_price.sale)
+                %td
+                  - if fixed_price.msrp
+                    = number_to_currency(fixed_price.msrp)
+                %td
+                  - if fixed_price.active?
+                    = t('workarea.admin.fixed_prices.active')
+                  - else
+                    = t('workarea.admin.fixed_prices.inactive')
+                %td
+                %td
+
+      .workflow-bar
+        .grid.grid--auto.grid--right.grid--middle
+          .grid__cell= render 'workarea/admin/shared/publishing_select'
+          .grid__cell= button_tag t('workarea.admin.form.save_changes'), value: 'save_fixed_price', class: 'workflow-bar__button workflow-bar__button--update'

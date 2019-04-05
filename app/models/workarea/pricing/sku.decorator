@@ -1,0 +1,17 @@
+module Workarea
+  decorate Pricing::Sku, with: :global_e do
+    decorated do
+      embeds_many :fixed_prices, class_name: "Workarea::GlobalE::FixedPrice", inverse_of: :pricing_sku
+    end
+
+    # Find the Fixed Price for this country currency combination, or for just the
+    # currency otherwise returns nil
+    #
+    # @return [Workarea::GlobalE::FixedPrice, nil]
+    #
+    def fixed_price_for(currency_code:, country: nil)
+      fixed_prices.find_by(currency_code: currency_code, country: country) rescue nil ||
+        fixed_prices.find_by(currency_code: currency_code) rescue nil
+    end
+  end
+end

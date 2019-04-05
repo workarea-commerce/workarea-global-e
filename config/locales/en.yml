@@ -1,24 +1,65 @@
 en:
   workarea:
     admin:
+      fields:
+        currency: Currency
+      fixed_prices:
+        active: Active
+        country: Country
+        fixed_price_description: >
+          Fixed prices allow you to specify country or currency for that price.  A fixed price that doesn't
+          specify a currency will be the default price for any country that uses that currency.  If a fixed
+          price is present, users browsing or shipping to that country or using the specified currency will
+          see the fixed price.  If no fixed price is present, the default price will display using global
+          normal price conversion. 
+        currency: Currency
+        flash_messages:
+          create_error: There was a problem creating your Fixed Price.
+          deleted: "%{sku} fixed price has been deleted."
+          saved: Your SKU has been saved.
+          update_error: There was a problem updating your Fixed Price.
+        index:
+          button: Add new fixed price
+        label: Fixed Prices
+        msrp: MSRP
+        new:
+          create_fixed_price: Create Fixed Price
+        regular_price: Regular price
+        sale_price: Sale price
+        sale_price_default: "(defaults to regular)"
+        title: Fixed prices for %{sku}
       orders:
         cards:
           global_e:
             button: View Global E
             global_e_id: 'GlobalE ID:'
-            international_subtotal_price: 'Subtotal:'
             international_shipping_total: 'Shipping Total:'
+            international_subtotal_price: 'Subtotal:'
+            title: Global-E
             total_duties_price: 'Taxes and Duties:'
             total_price: 'Total Price:'
-            title: Global-E
         global_e:
           global_e_id: 'GlobalE ID:'
           international_totals: International Totals
-          title: "%{name} Details"
-          transacting_currency: Transacting currency
           items:
             international_pricing: International Pricing
             products: Products
             quantity: Quantity
             title: Items
+          title: "%{name} Details"
+          transacting_currency: Transacting currency
         tax_and_duties: Taxes and Duties
+      pricing_skus:
+        cards:
+          fixed_prices:
+            button: Manage Fixed Prices
+
+    fixed_price:
+      errors:
+        currency_must_be_unique: Currency needs to be unique per sku
+        country_must_be_unique: Country needs to be unieuq per sku
+        country_xor_currency: Specify a country or a currency but not both
+        currency_and_regular_mistmatch: Regular price and currency fields do not match
+        invalid_currency: Invalid currency
+        invalid_fixed_price_currency: Fixed price needs to be in a foreign currency
+        sale_and_regular_currency_mismatch: Regular price and sale price currencies do not match

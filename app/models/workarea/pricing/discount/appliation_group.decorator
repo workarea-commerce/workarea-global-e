@@ -1,0 +1,16 @@
+module Workarea
+  decorate Pricing::Discount::ApplicationGroup, with: :global_e do
+    def apply
+      return super unless order.fixed_pricing?
+
+      discounts.each do |discount|
+        discount_order = Pricing::Discount::Order.new(order, shippings, discount)
+        next unless discount.qualifies?(discount_order)
+
+        discount.apply(discount_order)
+        international_discount_order = Pricing::Discount::InternationalOrder.new(order, shippings, discount)
+        discount.apply(international_discount_order)
+      end
+    end
+  end
+end
