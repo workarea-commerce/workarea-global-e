@@ -2,7 +2,7 @@ require 'test_helper'
 
 module Workarea
   module Storefront
-    class GlobalEIntegrationTest < Workarea::IntegrationTest
+    class GlobalEcheckoutCartInfoIntegrationTest < Workarea::IntegrationTest
       def test_get_checkout_cart_info
         order_discount = create_order_total_discount(promo_codes: %w(TESTCODE))
         product_1 = create_complete_product(
@@ -38,8 +38,11 @@ module Workarea
               "ImageURL" => "/product_images/test-product/cotton/#{product_1.images.first.id}/detail.jpg?c=0",
               "ImageHeight" => 780,
               "ImageWidth" => 780,
+              "ListPrice" => 0,
               "OriginalListPrice" => 5.0,
+              "SalePrice" => 0,
               "OriginalSalePrice" => 5.0,
+              "IsFixedPrice" => false,
               "OrderedQuantity" => 1,
               "IsVirtual" => false,
               "IsBlockedForGlobalE" => false,
@@ -64,8 +67,11 @@ module Workarea
               "ImageURL" => "/product_images/test-product-1/cotton/#{product_2.images.first.id}/detail.jpg?c=0",
               "ImageHeight" => 780,
               "ImageWidth" => 780,
+              "ListPrice" => 0,
               "OriginalListPrice" => 5.0,
+              "SalePrice" => 0,
               "OriginalSalePrice" => 4.0,
+              "IsFixedPrice" => false,
               "OrderedQuantity" => 1,
               "IsVirtual" => false,
               "IsBlockedForGlobalE" => false,
@@ -81,6 +87,7 @@ module Workarea
             {
               "OriginalDiscountValue" => 0.9,
               "DiscountType" => 1,
+              "DiscountValue" => 0,
               "Name" => "Order Total Discount",
               "Description" => "Order Total - Order Total Discount",
               "CalculationMode" => 1,
@@ -126,8 +133,11 @@ module Workarea
               "ImageURL" => "/product_images/test-product/cotton/#{product_1.images.first.id}/detail.jpg?c=0",
               "ImageHeight" => 780,
               "ImageWidth" => 780,
+              "ListPrice" => 0,
               "OriginalListPrice" => 5.0,
+              "SalePrice" => 0,
               "OriginalSalePrice" => 5.0,
+              "IsFixedPrice" => false,
               "OrderedQuantity" => 1,
               "IsVirtual" => false,
               "IsBlockedForGlobalE" => false,
@@ -152,8 +162,11 @@ module Workarea
               "ImageURL" => "/product_images/test-product-1/cotton/#{product_2.images.first.id}/detail.jpg?c=0",
               "ImageHeight" => 780,
               "ImageWidth" => 780,
+              "ListPrice" => 0,
               "OriginalListPrice" => 5.0,
+              "SalePrice" => 0,
               "OriginalSalePrice" => 4.0,
+              "IsFixedPrice" => false,
               "OrderedQuantity" => 1,
               "IsVirtual" => false,
               "IsBlockedForGlobalE" => false,
@@ -189,8 +202,11 @@ module Workarea
               "ImageURL" => "/product_images/test-product/cotton/#{product_1.images.first.id}/detail.jpg?c=0",
               "ImageHeight" => 780,
               "ImageWidth" => 780,
+              "ListPrice" => 0,
               "OriginalListPrice" => 5.0,
+              "SalePrice" => 0,
               "OriginalSalePrice" => 5.0,
+              "IsFixedPrice" => false,
               "OrderedQuantity" => 1,
               "IsVirtual" => false,
               "IsBlockedForGlobalE" => false,
@@ -273,8 +289,11 @@ module Workarea
               "ImageURL" => "/product_images/test-product/cotton/#{product_1.images.first.id}/detail.jpg?c=0",
               "ImageHeight" => 780,
               "ImageWidth" => 780,
+              "ListPrice" => 0,
               "OriginalListPrice" => 5.0,
+              "SalePrice" => 0,
               "OriginalSalePrice" => 5.0,
+              "IsFixedPrice" => false,
               "OrderedQuantity" => 1,
               "IsVirtual" => false,
               "IsBlockedForGlobalE" => false,
@@ -384,8 +403,11 @@ module Workarea
               "ImageURL" => "/product_images/test-product/cotton/#{product_1.images.first.id}/detail.jpg?c=0",
               "ImageHeight" => 780,
               "ImageWidth" => 780,
+              "ListPrice" => 0,
               "OriginalListPrice" => 5.0,
+              "SalePrice" => 0,
               "OriginalSalePrice" => 5.0,
+              "IsFixedPrice" => false,
               "OrderedQuantity" => 1,
               "IsVirtual" => false,
               "IsBlockedForGlobalE" => false,
@@ -410,8 +432,11 @@ module Workarea
               "ImageURL" => "/product_images/test-product-1/cotton/#{product_2.images.first.id}/detail.jpg?c=0",
               "ImageHeight" => 780,
               "ImageWidth" => 780,
+              "ListPrice" => 0,
               "OriginalListPrice" => 5.0,
+              "SalePrice" => 0,
               "OriginalSalePrice" => 4.0,
+              "IsFixedPrice" => false,
               "OrderedQuantity" => 1,
               "IsVirtual" => false,
               "IsBlockedForGlobalE" => false,
@@ -427,6 +452,7 @@ module Workarea
             {
               "OriginalDiscountValue" => 2.50,
               "DiscountType" => 1,
+              "DiscountValue" => 0,
               "Name" => "Test Discount",
               "Description" => "Product - Test Discount",
               "ProductCartItemId" => cart.items.first.id.to_s,
@@ -436,6 +462,7 @@ module Workarea
             {
               "OriginalDiscountValue" => 2.00,
               "DiscountType" => 1,
+              "DiscountValue" => 0,
               "Name" => "Test Discount",
               "Description" => "Product - Test Discount",
               "ProductCartItemId" => cart.items.second.id.to_s,
@@ -448,6 +475,7 @@ module Workarea
               "Description" => "Order Total - Order Total Discount",
               "DiscountCode" => order_discount.id.to_s,
               "DiscountType" => 1,
+              "DiscountValue" => 0,
               "CalculationMode" => 1
             }
           ]
@@ -493,11 +521,14 @@ module Workarea
               "ImageURL" => "/product_images/test-product/cotton/#{product_1.images.first.id}/detail.jpg?c=0",
               "ImageHeight" => 780,
               "ImageWidth" => 780,
+              "ListPrice" => 0,
               "OriginalListPrice" => 5.0,
+              "IsFixedPrice" => false,
               "OrderedQuantity" => 1,
               "IsVirtual" => false,
               "IsBlockedForGlobalE" => false,
               "Attributes" =>  [{ "AttributeCode" => "cotton", "AttributeTypeCode" => "material" }],
+              "SalePrice" => 0,
               "OriginalSalePrice" => 5.0
             }
           ],
@@ -509,6 +540,7 @@ module Workarea
               "ProductCartItemId" => cart.items.first.id.to_s,
               "DiscountCode" => "#{product_discount_1.id}-#{cart.items.first.id.to_s}",
               "DiscountType" => 1,
+              "DiscountValue" => 0,
               "CalculationMode" => 1
             },
             {
@@ -518,6 +550,7 @@ module Workarea
               "ProductCartItemId" => cart.items.first.id.to_s,
               "DiscountCode" => "#{product_discount_2.id}-#{cart.items.first.id.to_s}",
               "DiscountType" => 1,
+              "DiscountValue" => 0,
               "CalculationMode" => 1
             }
           ]
@@ -563,8 +596,11 @@ module Workarea
               "ImageURL" => "/product_images/test-product/cotton/#{product_1.images.first.id}/detail.jpg?c=0",
               "ImageHeight" => 780,
               "ImageWidth" => 780,
+              "ListPrice" => 0,
               "OriginalListPrice" => 5.0,
+              "SalePrice" => 0,
               "OriginalSalePrice" => 5.0,
+              "IsFixedPrice" => false,
               "OrderedQuantity" => 1,
               "IsVirtual" => false,
               "IsBlockedForGlobalE" => false,
@@ -581,11 +617,14 @@ module Workarea
               "CartItemId" => cart.items.detect(&:free_gift?).id.to_s,
               "Name" => "Free Item",
               "URL" => "http://www.example.com/products/free-item",
+              "ListPrice" => 0,
               "OriginalListPrice" => 5.0,
+              "IsFixedPrice" => false,
               "OrderedQuantity" => 1,
               "IsVirtual" => false,
               "IsBlockedForGlobalE" => false,
               "Attributes" => [],
+              "SalePrice" => 0,
               "OriginalSalePrice" => 0.0
             }
           ],
@@ -597,62 +636,12 @@ module Workarea
               "Description" => "Free Gift - Test",
               "ProductCartItemId" => cart.items.detect(&:free_gift?).id.to_s,
               "DiscountCode" => "#{free_gift_discount.id}-#{cart.items.detect(&:free_gift?).id}",
-              "DiscountType" => 1
+              "DiscountType" => 1,
+              "DiscountValue" => 0
             }
           ]
         }
         assert_equal(expected_response, JSON.parse(response.body))
-      end
-
-      if Workarea::Plugin.installed?(:gift_cards)
-        def test_gift_cards_blocked_from_global_e
-          product = create_complete_product(
-            name: 'Gift Card',
-            gift_card: true,
-            digital: true,
-            customizations: 'gift_card',
-            variants: [{ sku: 'GIFTCARD', regular: 10.to_m }]
-          )
-
-          cart = create_cart(
-            items: [
-              { product: product, sku: product.skus.first, quantity: 1 }
-            ]
-          )
-
-          get storefront.global_e_checkout_cart_info_path(cartToken: cart.global_e_token, format: :json)
-
-          assert response.ok?
-
-          expected_response = {
-            "productsList" => [
-              {
-                "ProductCode" => product.skus.first,
-                "ProductGroupCode" => product.id,
-                "CartItemId" => cart.items.first.id.to_s,
-                "Name" => product.name,
-                "Description" => product.description,
-                "URL" => "http://www.example.com/products/gift-card",
-                "Weight" => 5.0,
-                "Height" => 5,
-                "Width" => 5,
-                "Length" => 5,
-                "ImageURL" => "/product_images/gift-card/#{product.images.first.id}/detail.jpg?c=0",
-                "ImageHeight" => 780,
-                "ImageWidth" => 780,
-                "OriginalListPrice" => 10.0,
-                "OriginalSalePrice" => 10.0,
-                "OrderedQuantity" => 1,
-                "IsVirtual" => true,
-                "IsBlockedForGlobalE" => true,
-                "Attributes" => []
-              }
-            ],
-            "discountsList" => []
-          }
-
-          assert_equal(expected_response, JSON.parse(response.body))
-        end
       end
     end
   end

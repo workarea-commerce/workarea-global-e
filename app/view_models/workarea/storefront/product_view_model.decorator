@@ -1,0 +1,7 @@
+module Workarea
+  decorate Storefront::ProductViewModel, with: :global_e do
+    decorated do
+      delegate :sell_min_fixed_prices, :sell_max_fixed_prices, :original_min_fixed_prices, :original_max_fixed_prices, to: :pricing
+    end
+  end
+end

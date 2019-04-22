@@ -4,7 +4,20 @@ module Workarea
       after_action :set_global_e_cart_id_cookie
     end
 
+    def current_order
+      @current_order ||= super.tap do |order|
+        order.assign_attributes(
+          currency: global_e_cookie["currencyCode"] || order.currency,
+          shipping_country: Country[global_e_cookie["countryISO"]] || order.shipping_country
+        )
+      end
+    end
+
     private
+
+      def global_e_cookie
+        @global_e_cookie ||= JSON.parse cookies[:GlobalE_Data] rescue {}
+      end
 
       def set_global_e_cart_id_cookie
         if current_order.persisted?

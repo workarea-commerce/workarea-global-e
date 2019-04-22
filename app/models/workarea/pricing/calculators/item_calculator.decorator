@@ -1,0 +1,48 @@
+module Workarea
+  decorate Pricing::Calculators::ItemCalculator, with: :global_e do
+    def adjust
+      order.fixed_pricing = is_fixed_price?
+
+      return super unless is_fixed_price?
+
+      order.items.each do |item|
+        price = pricing.for_sku(item.sku, quantity: item.quantity)
+
+        item.adjust_pricing(
+          price: 'item',
+          quantity: item.quantity,
+          calculator: self.class.name,
+          amount: price.sell * item.quantity,
+          description: 'Item Subtotal',
+          data: {
+            'on_sale' => price.on_sale?,
+            'original_price' => price.regular.to_f,
+            'tax_code' => price.tax_code
+          }
+        )
+
+        fixed_price = pricing.fixed_price_for_sku(item.sku, currency_code: order.currency, country: order.shipping_country)
+
+        item.adjust_international_pricing(
+          price: 'item',
+          quantity: item.quantity,
+          calculator: self.class.name,
+          amount: fixed_price.sell * item.quantity,
+          description: 'Item Subtotal',
+          data: {
+            'on_sale' => fixed_price.on_sale?,
+            'original_price' => fixed_price.regular.to_f,
+            'tax_code' => price.tax_code
+          }
+        )
+      end
+    end
+
+    private
+
+      def is_fixed_price?
+        pricing.records.present? &&
+          pricing.records.all? { |sku| sku.fixed_price_for(currency_code: order.currency, country: order.shipping_country) }
+      end
+  end
+end

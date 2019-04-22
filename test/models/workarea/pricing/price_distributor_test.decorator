@@ -1,0 +1,21 @@
+module Workarea
+  decorate Pricing::PriceDistributorTest, with: :global_e do
+    def test_results
+      units = [{ id: '1234', price: 0.to_m }]
+      distributor = Pricing::PriceDistributor.new(0.to_m, units)
+      assert_equal({ '1234' => 0.to_m }, distributor.results)
+
+      units = [
+        { id: '1', price: 43.to_m },
+        { id: '2', price: 43.to_m },
+        { id: '3', price: 54.to_m },
+        { id: '4', price: 54.to_m },
+        { id: '5', price: 108.to_m },
+        { id: '6', price: 0.to_m }
+      ]
+
+      distributor = Pricing::PriceDistributor.new(3.to_m, units)
+      assert_equal(3.to_m, distributor.results.values.sum)
+    end
+  end
+end

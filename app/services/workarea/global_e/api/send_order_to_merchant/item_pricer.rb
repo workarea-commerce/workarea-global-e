@@ -133,6 +133,8 @@ module Workarea
           end
 
           def discounted_price_except_duties_and_taxes
+            return unless merchant_product.discounted_price_except_duties_and_taxes
+
             Money.from_amount(
               merchant_product.discounted_price_except_duties_and_taxes,
               currency

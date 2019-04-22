@@ -1,0 +1,37 @@
+module Workarea
+  decorate Pricing::PriceDistributor, with: :global_e do
+    def initialize(total_value, units)
+      @currency = total_value.currency
+      @total_value = total_value
+      @units = units
+      @total_price = units.sum { |u| u[:price] }
+    end
+
+    def distributed_results
+      tmp = Hash.new(0.to_m(@currency))
+
+      @units.each do |unit|
+        next if @total_value.to_f.zero? ||
+                unit[:price].to_f.zero? ||
+                @total_price.to_f.zero?
+
+        unit_value = @total_value.to_f *
+          (unit[:price].to_f / @total_price.to_f)
+
+        @total_price -= unit[:price]
+        @total_value -= unit_value.to_m(@currency)
+
+        tmp[unit[:id]] += unit_value.to_m(@currency)
+      end
+
+      tmp
+    end
+
+    def empty_results
+      @units.inject({}) do |memo, unit|
+        memo[unit[:id]] ||= 0.to_m(@currency)
+        memo
+      end
+    end
+  end
+end

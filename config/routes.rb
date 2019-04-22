@@ -19,4 +19,8 @@ Workarea::Admin::Engine.routes.draw do
       get :global_e
     end
   end
+
+  resources :pricing_skus, only: [] do
+    resources :fixed_prices, except: :show
+  end
 end

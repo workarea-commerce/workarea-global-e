@@ -1,0 +1,90 @@
+module Workarea
+  decorate Pricing::Collection, with: :global_e do
+    # GlobalE sell min fixed prices
+    # Returns a hash of:
+    # { defualts: { Currency: Price }, Country: Price }
+    #
+    # @return [::Hash]
+    #
+    def sell_min_fixed_prices
+      sell_min_defaults = default_fixed_prices.map do |currency, prices|
+        [currency, prices.map { |p| p.sell.to_f }.sort.first]
+      end.to_h.presence
+
+      sell_min_country_prices = country_fixed_prices.map do |country, prices|
+        [country.alpha2, prices.map { |p| p.sell.to_f }.sort.first]
+      end.to_h
+
+
+      { defaults: sell_min_defaults }.merge(sell_min_country_prices).compact
+    end
+
+    # GlobalE sell max fixed prices
+    # Returns a hash of:
+    # { defualts: { Currency: Price }, Country: Price }
+    #
+    # @return [::Hash]
+    #
+    def sell_max_fixed_prices
+      sell_min_defaults = default_fixed_prices.map do |currency, prices|
+        [currency, prices.map { |p| p.sell.to_f }.sort.last]
+      end.to_h.presence
+
+      sell_min_country_prices = country_fixed_prices.map do |country, prices|
+        [country.alpha2, prices.map { |p| p.sell.to_f }.sort.last]
+      end.to_h
+
+
+      { defaults: sell_min_defaults }.merge(sell_min_country_prices).compact
+    end
+
+    def original_min_fixed_prices
+      original_min_defaults = default_fixed_prices.map do |currency, prices|
+        [currency, prices.map { |p| [p.msrp&.to_f, p.regular.to_f].compact.max }.sort.first]
+      end.to_h.presence
+
+      original_min_country_prices = country_fixed_prices.map do |country, prices|
+        [country.alpha2, prices.map { |p| [p.msrp&.to_f, p.regular.to_f].compact.max }.sort.first]
+      end.to_h
+
+      { defaults: original_min_defaults }.merge(original_min_country_prices).compact
+    end
+
+    def original_max_fixed_prices
+      original_max_defaults = default_fixed_prices.map do |currency, prices|
+        [currency, prices.map { |p| [p.msrp&.to_f, p.regular.to_f].compact.max }.sort.last]
+      end.to_h.presence
+
+      original_max_country_prices = country_fixed_prices.map do |country, prices|
+        [country.alpha2, prices.map { |p| [p.msrp&.to_f, p.regular.to_f].compact.max }.sort.last]
+      end.to_h
+
+      { defaults: original_max_defaults }.merge(original_max_country_prices).compact
+    end
+
+    # @ return [Workarea::GlobalE::FixedPrice, nil]
+    #
+    def fixed_price_for_sku(sku, currency_code:, country:)
+      return unless sku = records.detect { |r| r.id == sku }
+      sku.fixed_price_for(currency_code: currency_code, country: country)
+    end
+
+    private
+
+      def fixed_prices
+        @fixed_prices ||= records.flat_map(&:fixed_prices)
+      end
+
+      def default_fixed_prices
+        @default_fixed_prices ||= fixed_prices.select do |fixed_price|
+          fixed_price.country.blank?
+        end.group_by(&:currency_code)
+      end
+
+      def country_fixed_prices
+        @country_fixed_prices ||= fixed_prices.select do |fixed_price|
+          fixed_price.country.present?
+        end.group_by(&:country)
+      end
+  end
+end

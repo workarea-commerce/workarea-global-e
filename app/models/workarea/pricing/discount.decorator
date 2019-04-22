@@ -1,0 +1,50 @@
+module Workarea
+  decorate Pricing::Discount, with: :global_e do
+    # Fixed price orders can only handle percentage discounts or free gifts
+    # a future improvement would be for FlatOrPercentOff to localize the amount field
+    # to allow for fixed price orders to handle flat off amounts
+    #
+    def qualifies?(order)
+      return super unless order.fixed_pricing?
+      return super if is_percentage_discount? || is_free_gift?
+
+      false
+    end
+
+    # Build the data {Hash} used to create the price
+    # adjustment.
+    #
+    # This is the same method from Core except that the 0.to_m uses the same
+    # currency as `value`
+    #
+    # @param [Money] value
+    # @param [Integer] quantity
+    # @return [Hash]
+    #
+    def adjustment_data(value, quantity)
+      value = value.abs
+
+      {
+        price: self.class.price_level,
+        description: name,
+        calculator: self.class.name,
+        amount: 0.to_m(value.currency) - value,
+        quantity: quantity,
+        data: {
+          'discount_id' => id.to_s,
+          'discount_value' => value.to_f
+        }
+      }
+    end
+
+    private
+
+      def is_percentage_discount?
+        self.is_a?(Workarea::Pricing::Discount::FlatOrPercentOff) && amount_type == :percent
+      end
+
+      def is_free_gift?
+        self.is_a?(Workarea::Pricing::Discount::FreeGift)
+      end
+  end
+end

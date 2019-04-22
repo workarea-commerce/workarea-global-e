@@ -2,6 +2,9 @@ module Workarea
   decorate Order, with: :global_e do
     decorated do
       field :currency, type: String, default: -> { Money.default_currency.iso_code }
+      field :shipping_country, type: Country
+      field :fixed_pricing, type: Boolean
+
       field :global_e, type: Boolean, default: false
       field :global_e_id, type: String
       field :global_e_token, type: String, default: -> { SecureRandom.hex(5).upcase }
@@ -34,7 +37,6 @@ module Workarea
     #
     def international_price_adjustments
       PriceAdjustmentSet.new(items.flat_map(&:international_price_adjustments))
-      # FlowPriceAdjustmentSet.new(items.flat_map(&:flow_price_adjustments), experience)
     end
 
     # Do not run callbacks if global_e order, they will be run after

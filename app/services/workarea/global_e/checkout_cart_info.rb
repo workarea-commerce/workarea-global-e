@@ -308,12 +308,20 @@ module Workarea
 
         def discount_item_price_adjustments
           order.items.flat_map do |order_item|
-            order_item.price_adjustments.discounts.adjusting("item")
+            if order.fixed_pricing?
+              order_item.international_price_adjustments
+            else
+              order_item.price_adjustments
+            end.discounts.adjusting("item")
           end.compact
         end
 
         def discount_order_price_adjustments
-          order.price_adjustments.discounts.adjusting("order").group_discounts_by_id
+          if order.fixed_pricing?
+            order.international_price_adjustments
+          else
+            order.price_adjustments
+          end.discounts.adjusting("order").group_discounts_by_id
         end
 
         def item_discounts
@@ -329,6 +337,20 @@ module Workarea
             discount = discounts.detect { |d| d.id.to_s == price_adjustment.data["discount_id"] }
 
             GlobalE::Discount.new discount, order: order, price_adjustment: price_adjustment
+          end
+        end
+
+        def order_skus
+          order.items.map(&:sku)
+        end
+
+        def pricing
+          @pricing ||= Pricing::Collection.new(order_skus)
+        end
+
+        def is_fixed_priced_order?
+          pricing.records.all? do |sku|
+            sku.fixed_price_for(currency_code: order.currency, country: order.shipping_country)
           end
         end
     end

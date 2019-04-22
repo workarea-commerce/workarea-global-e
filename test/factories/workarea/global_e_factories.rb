@@ -110,7 +110,7 @@ module Workarea
           attributes[:variants].each do |attrs|
             pricing_attrs = [
               :regular, :sale, :msrp, :on_sale,
-              :tax_code, :discountable
+              :tax_code, :discountable, :fixed_prices
             ]
             inventory_attrs = [:available, :policy]
 
@@ -118,7 +118,8 @@ module Workarea
             sku.attributes = attrs.slice(
               :on_sale,
               :tax_code,
-              :discountable
+              :discountable,
+              :fixed_prices
             )
             sku.prices.build(attrs.slice(:regular, :sale, :msrp))
             sku.save!
@@ -339,218 +340,6 @@ module Workarea
         "GenericHSCode" => nil,
         "TotalDutiesAndTaxesPrice" => 0.0,
         "CCFPrice" => 0.0
-      }.to_json
-    end
-
-    # Deprecated global_e_send_order_to_mechant_body now includes discounts
-    #
-    def global_e_send_order_to_mechant_body_with_discounts(order: nil)
-      order ||= create_cart
-
-      discounts = Pricing::Discount.all.to_a
-
-      order_discounts = order.price_adjustments.discounts.reject { |pa| pa.price == "order" } +
-        order.price_adjustments.discounts.select { |pa| pa.price == "order" }.group_discounts_by_id
-
-      {
-        "AllowMailsFromMerchant" => false,
-        "ReservationRequestId" => nil,
-        "ClearCart" => true,
-        "CurrencyCode" => "USD",
-        "Customer" => {
-          "EmailAddress" => "mmallette@jam-n.com",
-          "IsEndCustomerPrimary" => true,
-          "SendConfirmation" => false
-        },
-        "CustomerComments" => nil,
-        "Discounts" => order_discounts.map do |price_adjustment|
-          discount = discounts.detect { |d| price_adjustment.data["discount_id"] == d.id.to_s }
-          {
-            "Name" => discount.name,
-            "Description" => "#{discount.class.name.demodulize.underscore.titleize} - #{discount.name}",
-            "Price" => (price_adjustment.amount * 1.1).abs.to_f,
-            "DiscountType" => 1,
-            "VATRate" => 0.0,
-            "LocalVATRate" => 0.0,
-            "CouponCode" => nil,
-            "InternationalPrice" => (price_adjustment.amount * 1.4).abs.to_f,
-            "DiscountCode" => price_adjustment.global_e_discount_code,
-            "ProductCartItemId" => price_adjustment.price == "item" ? price_adjustment._parent.id.to_s : nil,
-            "LoyaltyVoucherCode" => nil
-          }
-        end,
-        "DoNotChargeVAT" => false,
-        "FreeShippingCouponCode" => nil,
-        "IsFreeShipping" => false,
-        "IsSplitOrder" => false,
-        "LoyaltyCode" => nil,
-        "LoyaltyPointsEarned" => 0.0,
-        "LoyaltyPointsSpent" => 0.0,
-        "Markups" => [],
-        "OriginalMerchantTotalProductsDiscountedPrice" => 249.32,
-        "OTVoucherAmount" => nil,
-        "OTVoucherCode" => nil,
-        "OTVoucherCurrencyCode" => nil,
-        "InitialCheckoutCultureCode" => "en-GB",
-        "CultureCode" => "en-GB",
-        "HubId" => 40,
-        "PrimaryShipping" => {
-          "Address1" => "211+Yonge+St+Suite+600",
-          "Address2" => nil,
-          "City" => "Toronto",
-          "Company" => nil,
-          "CountryCode" => "CA",
-          "CountryCode3" => "CAN",
-          "CountryName" => "Canada",
-          "Email" => "epigeon%40weblinc.com",
-          "Fax" => nil,
-          "FirstName" => "Canada",
-          "LastName" => "Pigeon",
-          "MiddleName" => nil,
-          "Phone1" => "0000000000",
-          "Phone2" => nil,
-          "Salutation" => nil,
-          "StateCode" => "ON",
-          "StateOrProvince" => "Ontario",
-          "Zip" => "ON+M5B+1M4"
-        },
-        "Products" => order.items.map do |order_item|
-          {
-            "Price" => 65.11,
-            "PriceBeforeRoundingRate" => 65.0,
-            "PriceBeforeGlobalEDiscount" => 65.11,
-            "Quantity" => order_item.quantity,
-            "VATRate" => 0.0,
-            "InternationalPrice" => 90.0,
-            "CartItemId" => order_item.id.to_s,
-            "ParentCartItemId" => nil,
-            "CartItemOptionId" => nil,
-            "HandlingCode" => nil,
-            "GiftMessage" => nil,
-            "RoundingRate" => 0.7234444444444444,
-            "IsBackOrdered" => false,
-            "BackOrderDate" => nil,
-            "DiscountedPrice" => 55.67,
-            "InternationalDiscountedPrice" => 76.95,
-            "ListPrice" => 72.22,
-            "InternationalListPrice" => 100.0,
-            "Attributes" => nil
-          }
-        end,
-        "RoundingRate" => 0.723416,
-        "SameDayDispatch" => false,
-        "SameDayDispatchCost" => 0.0,
-        "SecondaryShipping" => {
-          "Address1" => "3388 Garfield Avenue",
-          "Address2" => nil,
-          "City" => "Commerce",
-          "Company" => nil,
-          "CountryCode" => "US",
-          "CountryCode3" => "USA",
-          "CountryName" => "United States",
-          "Email" => "mmallette@jam-n.com",
-          "Fax" => nil,
-          "FirstName" => "GlobalE",
-          "LastName" => "Los Angeles International Airport (LAX)",
-          "MiddleName" => nil,
-          "Phone1" => "323-721-4552",
-          "Phone2" => nil,
-          "Salutation" => nil,
-          "StateCode" => "CA",
-          "StateOrProvince" => "California",
-          "Zip" => "90040"
-        },
-        "ShippingMethodCode" => "globaleintegration_standard",
-        "ShipToStoreCode" => nil,
-        "UrlParameters" => nil,
-        "IsReplacementOrder" => false,
-        "OriginalOrder" => nil,
-        "UserId" => "5c0e71fda0e1cd0321c85195",
-        "PaymentDetails" => nil,
-        "PrimaryBilling" => {
-          "Address1" => "211+Yonge+St+Suite+600",
-          "Address2" => nil,
-          "City" => "Toronto",
-          "Company" => nil,
-          "CountryCode" => "CA",
-          "CountryCode3" => "CAN",
-          "CountryName" => "Canada",
-          "Email" => "epigeon%40weblinc.com",
-          "Fax" => nil,
-          "FirstName" => "Canada",
-          "LastName" => "Pigeon",
-          "MiddleName" => nil,
-          "Phone1" => "0000000000",
-          "Phone2" => nil,
-          "Salutation" => nil,
-          "StateCode" => "ON",
-          "StateOrProvince" => "Ontario",
-          "Zip" => "ON+M5B+1M4"
-        },
-        "SecondaryBilling" => {
-          "Address1" => "79 Madison Ave",
-          "Address2" => nil,
-          "City" => "New York",
-          "Company" => "GlobalE",
-          "CountryCode" => "US",
-          "CountryCode3" => "USA",
-          "CountryName" => "United States",
-          "Email" => "service@global-e.com",
-          "Fax" => nil,
-          "FirstName" => "GlobalE",
-          "LastName" => "GlobalE",
-          "MiddleName" => nil,
-          "Phone1" => "+1 (212) 634-3952",
-          "Phone2" => nil,
-          "Salutation" => nil,
-          "StateCode" => "NY",
-          "StateOrProvince" => "NY",
-          "Zip" => "10016"
-        },
-        "CartHash" => "205953BD496784194E429D7860E89605",
-        "CartId" => order.global_e_token,
-        "DiscountedShippingPrice" => 18.28,
-        "InternationalDetails" => {
-          "ConsignmentFee" => 0.0,
-          "CurrencyCode" => "CAD",
-          "DeliveryDaysFrom" => 2,
-          "DeliveryDaysTo" => 2,
-          "DiscountedShippingPrice" => 24.99,
-          "DutiesGuaranteed" => true,
-          "OrderTrackingNumber" => nil,
-          "OrderTrackingUrl" => "https%3a%2f%2fqa.bglobale.com%2fOrder%2fTrack%2fmZ7c%3fOrderId%3dGE2139821US%26ShippingEmail%3depigeon%40weblinc.com",
-          "OrderWaybillNumber" => nil,
-          "PaymentMethodCode" => "1",
-          "PaymentMethodName" => "Visa",
-          "RemoteAreaSurcharge" => 0.0,
-          "SameDayDispatchCost" => 0.0,
-          "ShippingMethodCode" => "40001858",
-          "ShippingMethodName" => "DHL Express Worldwide",
-          "ShippingMethodTypeCode" => "Express",
-          "ShippingMethodTypeName" => "Express Courier (Air)",
-          "SizeOverchargeValue" => 0.0,
-          "TotalCCFPrice" => 0.0,
-          "TotalDutiesPrice" => 0.0,
-          "TotalPrice" => 372.62,
-          "TotalShippingPrice" => 24.99,
-          "TransactionCurrencyCode" => "CAD",
-          "TransactionTotalPrice" => 372.62,
-          "ParcelsTracking" => nil,
-          "CardNumberLastFourDigits" => "1111",
-          "ExpirationDate" => "2020-2-29",
-          "CashOnDeliveryFee" => 0.0,
-          "ShipmentLocation" => nil,
-          "ShipmentStatusUpdateTime" => nil,
-          "ShippingMethodStatusCode" => "Undefined",
-          "ShippingMethodStatusName" => "undefined"
-        },
-        "MerchantGUID" => "abcdabcd-abcd-abcd-abcd-abcdabcdabcd",
-        "MerchantOrderId" => nil,
-        "OrderId" => "GE2139821US",
-        "PriceCoefficientRate" => 1.0,
-        "StatusCode" => "N/A",
-        "WebStoreCode" => nil,
-        "WebStoreInstanceCode" => "GlobalEDefaultStoreInstance"
       }.to_json
     end
 
