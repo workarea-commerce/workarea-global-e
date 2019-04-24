@@ -36,7 +36,7 @@
             - if fixed_price.id == @fixed_price.id
               %tr
                 %td
-                  = select_tag "fixed_price[country]", options_for_select(fixed_price_country_options, @fixed_price.country&.alpha2), title: 'TODO'
+                  = select_tag "fixed_price[country]", options_for_select(global_e_country_options, @fixed_price.country&.alpha2), title: t('workarea.admin.field.country')
                 %td
                   %span.currency_symbol= fixed_price.currency.symbol
                   = text_field_tag 'fixed_price[regular]', fixed_price.regular, class: 'text-box text-box--small', title: t('workarea.admin.fields.regular'), id: "fixed_price[regular]"

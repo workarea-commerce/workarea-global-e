@@ -23,4 +23,8 @@ Workarea::Admin::Engine.routes.draw do
   resources :pricing_skus, only: [] do
     resources :fixed_prices, except: :show
   end
+
+  resources :catalog_products, only: [] do
+    resources :country_exceptions, except: :show
+  end
 end

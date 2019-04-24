@@ -1,0 +1,31 @@
+.grid__cell
+  .card{ class: card_classes(:country_exceptions, local_assigns[:active]) }
+    = link_to catalog_product_country_exceptions_path(model), class: 'card__header' do
+      %span.card__header-text= t('workarea.admin.catalog_products.cards.country_exceptions.title')
+      = inline_svg 'workarea/admin/i18n.svg', class: 'card__icon'
+
+    - if local_assigns[:active].blank?
+      .card__body
+        - if model.country_exceptions.empty?
+          %p.card__empty-note= t('workarea.admin.catalog_products.cards.country_exceptions.no_country_exceptions')
+          = link_to catalog_product_country_exceptions_path(model), class: 'card__button' do
+            %span.button.button--small= t('workarea.admin.catalog_products.cards.country_exceptions.add_country_exceptions')
+        - else
+          %ul.list-reset
+            - model.country_exceptions.take(10).each do |country_exception|
+              %li
+                %strong= t('workarea.admin.fields.country')
+                = country_exception.country
+              %li
+                %strong= t('workarea.admin.fields.restricted')
+                = country_exception.restricted
+
+              %li
+                %strong= t('workarea.admin.fields.vat_rate')
+                = country_exception.vat_rate
+
+              %hr.card__hr
+            - if model.country_exceptions.size > 10
+              %li= t('workarea.admin.cards.more', amount: model.country_exceptions.size - 10)
+          = link_to catalog_product_country_exceptions_path(model), class: 'card__button' do
+            %span.button.button--small= t('workarea.admin.catalog_products.cards.country_exceptions.button')

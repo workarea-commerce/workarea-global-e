@@ -1,0 +1,10 @@
+module Workarea
+  decorate Catalog::Product, with: :global_e do
+    decorated do
+      field :global_e_forbidden, type: Boolean
+      embeds_many :country_exceptions,
+        class_name: "Workarea::GlobalE::CountryException",
+        inverse_of: :product
+    end
+  end
+end

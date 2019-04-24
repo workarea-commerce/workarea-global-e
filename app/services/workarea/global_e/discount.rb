@@ -68,7 +68,6 @@ module Workarea
       def discount_value
         return 0 unless order.fixed_pricing?
 
-        # TODO test this with free gifts
         if free_gift? && pricing_sku.present?
           pricing_sku.find_price(quantity: 1).regular.to_f
         else

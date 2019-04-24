@@ -9,7 +9,7 @@ module Workarea
         end.compact
       end
 
-      def fixed_price_country_options
+      def global_e_country_options
         [["---", nil]] + GlobalE.config.countries.map do |alpha2|
           next unless country = Country[alpha2]
           [country.name, alpha2]

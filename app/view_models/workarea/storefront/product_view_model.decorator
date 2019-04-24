@@ -3,5 +3,26 @@ module Workarea
     decorated do
       delegate :sell_min_fixed_prices, :sell_max_fixed_prices, :original_min_fixed_prices, :original_max_fixed_prices, to: :pricing
     end
+
+
+    # @return [::Hash]
+    #
+    def country_exceptions_data
+      data = model.country_exceptions.map do |country_exception|
+        [
+          country_exception.country.alpha2,
+          {
+            restricted: country_exception.restricted.presence,
+            vat: country_exception.vat_rate.presence
+          }.compact
+        ]
+      end.to_h
+
+      if model.global_e_forbidden?
+        data["all"] = { "forbidden" => true }
+      end
+
+      data
+    end
   end
 end

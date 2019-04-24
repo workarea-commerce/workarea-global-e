@@ -1,8 +1,33 @@
 en:
   workarea:
     admin:
+      catalog_products:
+        cards:
+          country_exceptions:
+            add_country_exceptions: Add country exceptions
+            button: Manage Country Exceptions
+            manage_country_exceptions: Manage Country Exceptions
+            no_country_exceptions: No country exceptions.
+            title: Country Exceptions
+      country_exceptions:
+        edit:
+          page_title: Edit country exception on %{product}
+        flash_messages:
+          create_error: There was a problem creating your Country Exception.
+          deleted: Your Country Exception has been deleted.
+          saved: Your Country Exception has been saved.
+          update_error: There was a problem updating your Country Exception.
+        index:
+          add_new: Add New
+          heading: Manage Country Exceptions
+          page_title: Country Exceptions for %{product}
+        new:
+          create_country_exception: Create country exception
+          page_title: New country exception on %{product}
       fields:
         currency: Currency
+        vat_rate: VAT Rate
+        restricted: Restricted
       fixed_prices:
         active: Active
         country: Country
@@ -11,7 +36,7 @@ en:
           specify a currency will be the default price for any country that uses that currency.  If a fixed
           price is present, users browsing or shipping to that country or using the specified currency will
           see the fixed price.  If no fixed price is present, the default price will display using global
-          normal price conversion. 
+          normal price conversion.
         currency: Currency
         flash_messages:
           create_error: There was a problem creating your Fixed Price.
@@ -54,12 +79,20 @@ en:
           fixed_prices:
             button: Manage Fixed Prices
 
+    country_exception:
+      errors:
+        country_must_be_unique: Country needs to be unique per product
+        restricted_or_vat_rate_required: Vat rate or restricted required
+
     fixed_price:
       errors:
         currency_must_be_unique: Currency needs to be unique per sku
-        country_must_be_unique: Country needs to be unieuq per sku
-        country_xor_currency: Specify a country or a currency but not both
+        country_must_be_unique: Country needs to be unique per sku
         currency_and_regular_mistmatch: Regular price and currency fields do not match
         invalid_currency: Invalid currency
         invalid_fixed_price_currency: Fixed price needs to be in a foreign currency
         sale_and_regular_currency_mismatch: Regular price and sale price currencies do not match
+
+    storefront:
+      products:
+        restricted_item_message: This item isn't available for purchase in your country
