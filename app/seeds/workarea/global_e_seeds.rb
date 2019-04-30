@@ -54,7 +54,7 @@ module Workarea
       Money.from_amount((fractional + 500 - remainder) / 100, currency_code)
     end
 
-    def add_country_excpetions
+    def add_country_exceptions
       Catalog::Product.all.each_by(100) do |product|
         product.country_exceptions.create!(
           country: Country['DE'],
