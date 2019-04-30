@@ -2,8 +2,9 @@ module Workarea
   class GlobalESeeds
     def perform
       puts 'Adding fixed prices...'
-
       add_fixed_prices
+      puts 'Adding country exceptions...'
+      add_country_exceptions
     end
 
     private
@@ -51,6 +52,15 @@ module Workarea
       remainder = fractional % 500
 
       Money.from_amount((fractional + 500 - remainder) / 100, currency_code)
+    end
+
+    def add_country_excpetions
+      Catalog::Product.all.each_by(100) do |product|
+        product.country_exceptions.create!(
+          country: Country['DE'],
+          restricted: true
+        )
+      end
     end
   end
 end

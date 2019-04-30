@@ -53,7 +53,7 @@
             %td
               = select_tag "fixed_price[currency_code]", options_for_select(currency_options, @fixed_price.currency_code), title: t('workarea.admin.fields.currency')
             %td
-              = select_tag "fixed_price[country]", options_for_select(fixed_price_country_options, @fixed_price.country&.alpha2), title: 'TODO'
+              = select_tag "fixed_price[country]", options_for_select(global_e_country_options, @fixed_price.country&.alpha2), title:  t('workarea.admin.fields.country')
             %td
               = text_field_tag 'fixed_price[regular]', @fixed_price.regular, class: 'text-box text-box--small', title: t('workarea.admin.fields.regular')
             %td

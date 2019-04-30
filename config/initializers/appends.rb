@@ -29,3 +29,13 @@ Workarea.append_partials(
   'admin.order_cards',
   'workarea/admin/orders/global_e'
 )
+
+Workarea.append_partials(
+  'admin.catalog_product_cards',
+  'workarea/admin/catalog_products/country_exceptions_card'
+)
+
+Workarea.append_partials(
+  'storefront.product_details',
+  'workarea/storefront/products/restricted_item_text'
+)
