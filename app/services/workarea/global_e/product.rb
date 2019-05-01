@@ -18,21 +18,22 @@ module Workarea
         end
       end
 
-      attr_reader :product, :sku, :order_item
+      attr_reader :product, :sku, :order_item, :delivered_quantity
 
-      def self.from_order_item(order_item)
+      def self.from_order_item(order_item, delivered_quantity: nil)
         product = if order_item.product_attributes.present?
                       Mongoid::Factory.from_db(Catalog::Product, order_item.product_attributes)
                     else
                       Catalog::Product.find_by_sku(order_item.sku)
                     end
-        new(product, order_item.sku, order_item: order_item)
+        new(product, order_item.sku, order_item: order_item, delivered_quantity: delivered_quantity)
       end
 
-      def initialize(product, sku, order_item: nil)
+      def initialize(product, sku, order_item: nil, delivered_quantity: nil)
         @product = product
         @sku = sku
         @order_item = order_item
+        @delivered_quantity = delivered_quantity
       end
 
       def as_json(*args)

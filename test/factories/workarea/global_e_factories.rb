@@ -71,8 +71,8 @@ module Workarea
       order.reload
     end
 
-    def create_global_e_placed_order(order: nil)
-      order = create_global_e_completed_checkout
+    def create_global_e_placed_order(order: nil, items: nil)
+      order = create_global_e_completed_checkout(order: order, items: items)
 
       merchant_order = GlobalE::Merchant::Order.new(
         JSON.parse(global_e_peform_order_payment_body(order: order))

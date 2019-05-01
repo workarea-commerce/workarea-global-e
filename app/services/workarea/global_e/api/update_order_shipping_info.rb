@@ -28,7 +28,8 @@ module Workarea
               merchant_order.international_details.order_tracking_number,
               order.items.map do |item|
                 { 'id' => item.id.to_s, 'quantity' => item.quantity }
-              end
+              end,
+              send_to_global_e: false
             )
           end
       end
