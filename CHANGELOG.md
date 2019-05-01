@@ -1,3 +1,30 @@
+Workarea Global E 1.0.0.beta.3 (2019-05-01)
+--------------------------------------------------------------------------------
+
+*   Implement OrderUpdateDispatch
+
+    GLOBALE-21
+    Eric Pigeon
+
+*   Country Exceptions Support
+
+    Country exceptions allow certain product's to have a minimum VAT rate,
+    or be restricted from checkout.
+
+    GLOBALE-26
+    Eric Pigeon
+
+*   Add Fixed Price Support
+
+    Fixed prices allow the merchant to target specific countries, or
+    currencies (like the Eurozone) to localize their prices instead of
+    dynamic conversion.
+
+    GLOBALE-25
+    Eric Pigeon
+
+
+
 Workarea Global E 1.0.0.beta.2 (2019-04-04)
 --------------------------------------------------------------------------------
 
