@@ -1,13 +1,13 @@
 - if item.on_sale?
   %p{class: "#{css_block}__price"}
     %span{class: "#{css_block}__label" } #{t('workarea.storefront.orders.price_now')}:
-    %strong{ data: { ge_basket_productsaleprice: "" } }= number_to_currency(item.original_unit_price)
+    %strong{ data: { ge_basket_productsaleprice: "", fp: item.product.sell_min_fixed_prices.presence&.to_json } }= number_to_currency(item.original_unit_price)
   %p{class: "#{css_block}__price"}
     %span{class: "#{css_block}__label" } #{t('workarea.storefront.orders.price_was')}:
     %s{ data: { ge_basket_productlistprice: "" } }= number_to_currency(item.original_price)
 - else
   %p{class: "#{css_block}__price" }
-    %span{ data: { ge_basket_productsaleprice: "" } }= number_to_currency(item.original_unit_price)
+    %span{ data: { ge_basket_productsaleprice: "", fp: item.product.sell_min_fixed_prices.presence&.to_json } }= number_to_currency(item.original_unit_price)
 - if item.customized?
   %p{class: "#{css_block}__price"}
     %span{class: "#{css_block}__label" } #{t('workarea.storefront.orders.customizations')}:

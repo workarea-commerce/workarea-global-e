@@ -3,7 +3,7 @@ module Workarea
     decorated do
       field :currency, type: String, default: -> { Money.default_currency.iso_code }
       field :shipping_country, type: Country
-      field :fixed_pricing, type: Boolean
+      field :fixed_pricing, type: Boolean, default: false
 
       field :global_e, type: Boolean, default: false
       field :global_e_id, type: String

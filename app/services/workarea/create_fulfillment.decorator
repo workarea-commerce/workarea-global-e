@@ -1,0 +1,12 @@
+module Workarea
+  decorate CreateFulfillment, with: :global_e do
+    def initialize(order, global_e: false)
+      @order = order
+      @global_e = global_e
+    end
+
+    def fulfillment
+      @fulfillment ||= super.tap { |f| f.global_e = @global_e }
+    end
+  end
+end
