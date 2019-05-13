@@ -6,5 +6,9 @@ module Workarea
         class_name: "Workarea::GlobalE::CountryException",
         inverse_of: :product
     end
+
+    def global_e_forbidden
+      super || (Plugin.installed?(:gift_cards) && gift_card?)
+    end
   end
 end

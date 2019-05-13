@@ -2,11 +2,12 @@ module Workarea
   decorate Fulfillment, with: :global_e do
     decorated do
       field :global_e_tracking_url, type: String
+      field :global_e, type: Boolean, default: false
     end
 
     def ship_items(tracking_number, shipped_items, send_to_global_e: true)
       result = super(tracking_number, shipped_items)
-      if result && send_to_global_e
+      if result && send_to_global_e && global_e?
         GlobalE::UpdateOrderDispatch.perform_async(id, tracking_number)
       end
       result
