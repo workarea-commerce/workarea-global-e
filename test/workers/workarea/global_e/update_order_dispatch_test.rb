@@ -41,7 +41,11 @@ module Workarea
               {
                 "ParcelCode" => "1z",
                 "Products" => order.items.map do |order_item|
-                  GlobalE::Product.from_order_item order_item, delivered_quantity: order_item.quantity
+                  {
+                    CartItemId: order_item.id.to_s,
+                    DeliveryQuantity: order_item.quantity,
+                    ProductCode: order_item.sku
+                  }
                 end,
                 "TrackingDetails" => { "TrackingNumber" => "1z" }
               }

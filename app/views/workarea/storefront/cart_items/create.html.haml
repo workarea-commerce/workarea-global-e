@@ -44,9 +44,11 @@
                       %span.table__price-label= adjustment.description.titleize
 
                     - if adjustment.discount?
-                      %strong.table__price-discount= number_to_currency(adjustment.amount)
+                      %strong.table__price-discount{ data: { ge_basket_productdiscountsprice: adjustment.global_e_discount_code } }= number_to_currency(adjustment.amount)
+                    - elsif @item.total_adjustments.one?
+                      %span{ data: { ge_basket_producttotalprice: "" } }= number_to_currency(adjustment.amount)
                     - else
-                      %span= number_to_currency(adjustment.amount)
+                      %span{ data: { ge_basket_productsubtotalprice: "" } }= number_to_currency(adjustment.amount)
 
                 - if @item.total_adjustments.many?
                   %p.table__price

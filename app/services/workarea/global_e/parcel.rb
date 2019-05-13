@@ -30,11 +30,14 @@ module Workarea
       # including the list of products in each parcel is mandatory (such as in
       # UpdateParcelDispatch method).
       #
-      # @return [Workarea::GlobalE::Product]
+      # @return [Hash]
       #
       def products
         @products ||= package.items.map do |fulfillment_item|
-          GlobalE::Product.from_order_item fulfillment_item, delivered_quantity: fulfillment_item.quantity
+          GlobalE::Product.from_order_item(
+            fulfillment_item,
+            delivery_quantity: fulfillment_item.quantity
+          ).as_json.slice(:CartItemId, :DeliveryQuantity, :ProductCode)
         end
       end
 

@@ -4,13 +4,14 @@ module Workarea
       include Sidekiq::Worker
 
       DOMAINS = {
-        qa: 'https://connect-qa.bglobale.com',
-        staging: 'https://connect2.bglobale.com',
-        prod: 'https://api.global-e.com'
+        "qa" => "https://connect-qa.bglobale.com",
+        "qa-int" => "https://connect.bglobale.com/",
+        "staging" => "ttps://connect2.bglobale.com",
+        "production" => "https://api.global-e.com"
       }
 
       def perform(id, tracking_number)
-        domain = DOMAINS[:staging]
+        domain = DOMAINS[GlobalE.environment]
         path = "/Order/UpdateOrderDispatchV2?merchantGUID=#{GlobalE.merchant_guid}"
 
         dispatch = UpdateOrderDispatchRequest.new(id, tracking_number: tracking_number)
@@ -27,7 +28,7 @@ module Workarea
 
         response = http.request(post)
 
-        raise unless response.is_a? Net::HTTPSuccess
+        raise response.body unless response.is_a? Net::HTTPSuccess
       end
     end
   end

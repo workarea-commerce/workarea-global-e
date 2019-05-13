@@ -36,6 +36,13 @@ module Workarea
       config.shipping_discount_types
     end
 
+    def self.environment
+      (config.environment || Rails.env)
+        .to_s
+        .downcase
+        .presence_in(["qa", "staging", "production"]) || "qa"
+    end
+
     def self.free_gift_discount_types
       config.free_gift_discount_types
     end

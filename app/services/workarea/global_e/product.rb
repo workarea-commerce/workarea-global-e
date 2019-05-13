@@ -18,22 +18,22 @@ module Workarea
         end
       end
 
-      attr_reader :product, :sku, :order_item, :delivered_quantity
+      attr_reader :product, :sku, :order_item, :delivery_quantity
 
-      def self.from_order_item(order_item, delivered_quantity: nil)
+      def self.from_order_item(order_item, delivery_quantity: nil)
         product = if order_item.product_attributes.present?
                       Mongoid::Factory.from_db(Catalog::Product, order_item.product_attributes)
                     else
                       Catalog::Product.find_by_sku(order_item.sku)
                     end
-        new(product, order_item.sku, order_item: order_item, delivered_quantity: delivered_quantity)
+        new(product, order_item.sku, order_item: order_item, delivery_quantity: delivery_quantity)
       end
 
-      def initialize(product, sku, order_item: nil, delivered_quantity: nil)
+      def initialize(product, sku, order_item: nil, delivery_quantity: nil)
         @product = product
         @sku = sku
         @order_item = order_item
-        @delivered_quantity = delivered_quantity
+        @delivery_quantity = delivery_quantity
       end
 
       def as_json(*args)
@@ -55,6 +55,7 @@ module Workarea
           OriginalListPrice: original_list_price,
           IsFixedPrice: is_fixed_price,
           OrderedQuantity: ordered_quantity,
+          DeliveryQuantity: delivery_quantity,
           IsVirtual: is_virtual,
           IsBlockedForGlobalE: is_blocked_for_global_e,
           Attributes: attributes,
@@ -437,9 +438,10 @@ module Workarea
       # Quantity actually set for delivery for the product (to be used in
       # Order methods described below, as needed)
       #
-      # @return [Integer]
+      # @return [Integer, nil]
       #
       def delivery_quantity
+        @delivery_quantity.presence
       end
 
       # Setting this to TRUE indicates that the product represents a set of
@@ -529,7 +531,7 @@ module Workarea
       #
       def attributes
         variant.details.map do |key, values|
-          GlobalE::Attribute.new(type_code: key, code: values.join(", "))
+          GlobalE::Attribute.new(type_code: key, name: key, code: values.join(", "))
         end
       end
 
