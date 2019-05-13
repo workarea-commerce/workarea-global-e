@@ -1,3 +1,20 @@
+Workarea Global E 1.0.0.beta.4 (2019-05-13)
+--------------------------------------------------------------------------------
+
+*   Feedback from GlobalE QA
+
+    Price order before redirect to ensure fixed pricing is cleared out if
+    needed
+    Set gift cards as forbidden
+    Only send GlobalE orders to GlobalE in OrderUpdateDispatch
+    Add data tags to `cart_items/create.html.haml`
+    Add fixed pricing tags to unit prices in `carts/show.html.haml`
+
+    GLOBALE-27
+    Eric Pigeon
+
+
+
 Workarea Global E 1.0.0.beta.3 (2019-05-01)
 --------------------------------------------------------------------------------
 
