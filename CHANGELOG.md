@@ -1,3 +1,18 @@
+Workarea Global E 1.0.0.beta.5 (2019-05-16)
+--------------------------------------------------------------------------------
+
+*   QA feedback
+
+    Fix DiveredQuantity -> DilveryQuantity
+    Add `name` in Product.Attributes
+    Add missing data tags on `cart_items/create`
+    Add data tag to GE Checkout view
+    Add config for controlling GE environment
+    Send only required fields in Parcel.Product
+    Eric Pigeon
+
+
+
 Workarea Global E 1.0.0.beta.4 (2019-05-13)
 --------------------------------------------------------------------------------
 
