@@ -64,7 +64,8 @@ module Workarea
                 "Attributes" => [
                   {
                     "AttributeCode" => "cotton",
-                    "AttributeTypeCode" => "material"
+                    "AttributeTypeCode" => "material",
+                    "Name" => "material"
                   }
                 ]
               },
@@ -93,7 +94,8 @@ module Workarea
                 "Attributes" => [
                   {
                     "AttributeCode" => "cotton",
-                    "AttributeTypeCode" => "material"
+                    "AttributeTypeCode" => "material",
+                    "Name" => "material"
                   }
                 ]
               }
@@ -165,7 +167,8 @@ module Workarea
                 "Attributes" => [
                   {
                     "AttributeCode" => "cotton",
-                    "AttributeTypeCode" => "material"
+                    "AttributeTypeCode" => "material",
+                    "Name" => "material"
                   }
                 ]
               },
@@ -194,7 +197,8 @@ module Workarea
                 "Attributes" => [
                   {
                     "AttributeCode" => "cotton",
-                    "AttributeTypeCode" => "material"
+                    "AttributeTypeCode" => "material",
+                    "Name" => "material"
                   }
                 ]
               }
@@ -277,7 +281,8 @@ module Workarea
                 "Attributes" => [
                   {
                     "AttributeCode" => "cotton",
-                    "AttributeTypeCode" => "material"
+                    "AttributeTypeCode" => "material",
+                    "Name" => "material"
                   }
                 ]
               },
@@ -306,7 +311,8 @@ module Workarea
                 "Attributes" => [
                   {
                     "AttributeCode" => "cotton",
-                    "AttributeTypeCode" => "material"
+                    "AttributeTypeCode" => "material",
+                    "Name" => "material"
                   }
                 ]
               }

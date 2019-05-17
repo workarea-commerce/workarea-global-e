@@ -49,7 +49,8 @@ module Workarea
               "Attributes" => [
                 {
                   "AttributeCode" => "cotton",
-                  "AttributeTypeCode" => "material"
+                  "AttributeTypeCode" => "material",
+                  "Name" => "material"
                 }
               ]
             },
@@ -78,7 +79,8 @@ module Workarea
               "Attributes" => [
                 {
                   "AttributeCode" => "cotton",
-                  "AttributeTypeCode" => "material"
+                  "AttributeTypeCode" => "material",
+                  "Name" => "material"
                 }
               ]
             }
@@ -144,7 +146,8 @@ module Workarea
               "Attributes" => [
                 {
                   "AttributeCode" => "cotton",
-                  "AttributeTypeCode" => "material"
+                  "AttributeTypeCode" => "material",
+                  "Name" => "material"
                 }
               ]
             },
@@ -173,7 +176,8 @@ module Workarea
               "Attributes" => [
                 {
                   "AttributeCode" => "cotton",
-                  "AttributeTypeCode" => "material"
+                  "AttributeTypeCode" => "material",
+                  "Name" => "material"
                 }
               ]
             }
@@ -213,7 +217,8 @@ module Workarea
               "Attributes" => [
                 {
                   "AttributeCode" => "cotton",
-                  "AttributeTypeCode" => "material"
+                  "AttributeTypeCode" => "material",
+                  "Name" => "material"
                 }
               ]
             }
@@ -300,7 +305,8 @@ module Workarea
               "Attributes" => [
                 {
                   "AttributeCode" => "cotton",
-                  "AttributeTypeCode" => "material"
+                  "AttributeTypeCode" => "material",
+                  "Name" => "material"
                 }
               ]
             }
@@ -414,7 +420,8 @@ module Workarea
               "Attributes" => [
                 {
                   "AttributeCode" => "cotton",
-                  "AttributeTypeCode" => "material"
+                  "AttributeTypeCode" => "material",
+                  "Name" => "material"
                 }
               ]
             },
@@ -443,7 +450,8 @@ module Workarea
               "Attributes" => [
                 {
                   "AttributeCode" => "cotton",
-                  "AttributeTypeCode" => "material"
+                  "AttributeTypeCode" => "material",
+                  "Name" => "material"
                 }
               ]
             }
@@ -527,7 +535,7 @@ module Workarea
               "OrderedQuantity" => 1,
               "IsVirtual" => false,
               "IsBlockedForGlobalE" => false,
-              "Attributes" =>  [{ "AttributeCode" => "cotton", "AttributeTypeCode" => "material" }],
+              "Attributes" =>  [{ "AttributeCode" => "cotton", "AttributeTypeCode" => "material", "Name" => "material" }],
               "SalePrice" => 0,
               "OriginalSalePrice" => 5.0
             }
@@ -607,7 +615,8 @@ module Workarea
               "Attributes" => [
                 {
                   "AttributeCode" => "cotton",
-                  "AttributeTypeCode" => "material"
+                  "AttributeTypeCode" => "material",
+                  "Name" => "material"
                 }
               ]
             },

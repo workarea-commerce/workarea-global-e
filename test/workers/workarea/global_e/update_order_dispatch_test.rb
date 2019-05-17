@@ -27,7 +27,7 @@ module Workarea
             { 'id' => fulfillment_item.order_item_id, "quantity" => fulfillment_item.quantity }
           end
 
-          url = "https://connect2.bglobale.com/Order/UpdateOrderDispatchV2?merchantGUID=#{GlobalE.merchant_guid}"
+          url = "https://connect-qa.bglobale.com/Order/UpdateOrderDispatchV2?merchantGUID=#{GlobalE.merchant_guid}"
           stub_request(:any, url).to_return(body: "{}")
 
           fulfillment.ship_items("1Z", package_items)
