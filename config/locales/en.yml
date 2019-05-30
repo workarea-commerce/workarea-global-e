@@ -9,7 +9,11 @@ en:
             manage_country_exceptions: Manage Country Exceptions
             no_country_exceptions: No country exceptions.
             title: Country Exceptions
+        edit:
+          global_e_forbidden: Yes
+          not_global_e_forbidden: No
       country_exceptions:
+        global_e_forbidden: GlobalE Forbidden
         edit:
           page_title: Edit country exception on %{product}
         flash_messages:

@@ -39,3 +39,13 @@ Workarea.append_partials(
   'storefront.product_details',
   'workarea/storefront/products/restricted_item_text'
 )
+
+Workarea.append_partials(
+  'admin.product_attributes_card',
+  'workarea/admin/catalog_products/global_e_attributes'
+)
+
+Workarea.append_partials(
+  'admin.product_fields',
+  'workarea/admin/catalog_products/global_e_fields'
+)

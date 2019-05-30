@@ -1,0 +1,4 @@
+.grid__cell.grid__cell--25
+  .property
+    %span.property__name= t('workarea.admin.country_exceptions.global_e_forbidden')
+    =  toggle_button_for 'product[global_e_forbidden]', @product.global_e_forbidden, title_true: t('workarea.admin.catalog_products.edit.global_e_forbidden'), title_false: t('workarea.admin.catalog_products.edit.not_global_e_forbidden')
