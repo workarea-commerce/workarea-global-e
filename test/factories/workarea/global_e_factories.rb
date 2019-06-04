@@ -343,6 +343,226 @@ module Workarea
       }.to_json
     end
 
+    def global_e_send_order_to_merchant_with_shipping_discounts_body(email: "John.Smith@global-e.com", order: nil)
+      order ||= create_cart
+
+      discounts = Pricing::Discount.all.to_a
+
+      order_discounts = order.price_adjustments.discounts.reject { |pa| pa.price == "order" } +
+        order.price_adjustments.discounts.select { |pa| pa.price == "order" }.group_discounts_by_id
+
+      {
+        "AllowMailsFromMerchant" => false,
+        "ReservationRequestId" => nil,
+        "ClearCart" => true,
+        "CurrencyCode" => "USD",
+        "Customer" => {
+          "EmailAddress" => "info@global-e.com",
+          "IsEndCustomerPrimary" => false,
+          "SendConfirmation" => false
+        },
+        "CustomerComments" => nil,
+        "Discounts" => order_discounts.map do |price_adjustment|
+          discount = discounts.detect { |d| price_adjustment.data["discount_id"] == d.id.to_s }
+          {
+            "Name" => discount.name,
+            "Description" => "#{discount.class.name.demodulize.underscore.titleize} - #{discount.name}",
+            "Price" => (price_adjustment.amount * 1.1).abs.to_f,
+            "DiscountType" => 1,
+            "VATRate" => 0.0,
+            "LocalVATRate" => 0.0,
+            "CouponCode" => nil,
+            "InternationalPrice" => (price_adjustment.amount * 1.4).abs.to_f,
+            "DiscountCode" => price_adjustment.global_e_discount_code,
+            "ProductCartItemId" => price_adjustment.price == "item" ? price_adjustment._parent.id.to_s : nil,
+            "LoyaltyVoucherCode" => nil
+          }
+        end + [
+          {
+            "CouponCode" => nil,
+            "Description" => "Shipping discount provided from fixed price range 205739",
+            "DiscountCode" => nil,
+            "DiscountType" => 2,
+            "InternationalPrice" => 14.13,
+            "LocalVATRate" => 0,
+            "LoyaltyVoucherCode" => nil,
+            "Name" => "Shipping discount for fixed price",
+            "Price" => 15.35,
+            "ProductCartItemId" => nil,
+            "VATRate" => 0
+          },
+          {
+            "CouponCode" => nil,
+            "Description" => "Discount generated to discount the DDP",
+            "DiscountCode" => nil,
+            "DiscountType" => 4,
+            "InternationalPrice" => 47.43,
+            "LocalVATRate" => 0,
+            "LoyaltyVoucherCode" => nil,
+            "Name" => "Hidden DDP",
+            "Price" => 53.03,
+            "ProductCartItemId" => nil,
+            "VATRate" => 0
+          }
+        ],
+        "DoNotChargeVAT" => false,
+        "FreeShippingCouponCode" => nil,
+        "IsFreeShipping" => false,
+        "IsSplitOrder" => false,
+        "LoyaltyCode" => nil,
+        "LoyaltyPointsEarned" => 0.0,
+        "LoyaltyPointsSpent" => 0.0,
+        "Markups" => [],
+        "OriginalMerchantTotalProductsDiscountedPrice" => 249.32,
+        "OTVoucherAmount" => nil,
+        "OTVoucherCode" => nil,
+        "OTVoucherCurrencyCode" => nil,
+        "InitialCheckoutCultureCode" => "en-GB",
+        "CultureCode" => "en-GB",
+        "HubId" => 40,
+        "UserId" => nil,
+        "Products" => order.items.map do |order_item|
+          {
+            "Attributes" => [
+              {
+                "AttributeKey" => "color",
+                "AttributeValue" => "GREY"
+              }
+            ],
+            "Sku" => "7290012491726",
+            "Price" => 21.5500,
+            "DiscountedPrice" => 20.50,
+            "Quantity" => 8,
+            "VATRate" => 18.000000,
+            "InternationalPrice" => 4.8400,
+            "InternationalDiscountedPrice" => 4.8400,
+            "CartItemId" => order_item.id.to_s,
+            "Brand" => nil,
+            "Categories" => [],
+            "ListPrice" => 5.11,
+            "InternationalListPrice" => 5.00,
+            "DiscountedPriceExcDutiesAndTaxes" => 0.0
+          }
+        end,
+        "RoundingRate" => 0.723416,
+        "SameDayDispatch" => false,
+        "SameDayDispatchCost" => 0.0,
+        "PrimaryShipping" => {
+          "FirstName" => "GlobalE ",
+          "LastName" => "GlobalE",
+          "MiddleName" => nil,
+          "Salutation" => nil,
+          "Company" => "GlobalE",
+          "Address1" => "21/D, Yegi'a Kapayim st. Yellow building - Floor 1",
+          "Address2" => "Test Address2\r\nGlobal-e OrderId => GE927127",
+          "City" => "Petach Tikva",
+          "StateCode" => "NN",
+          "StateOrProvince" => nil,
+          "Zip" => "4913020",
+          "Email" => "info@global-e.com",
+          "Phone1" => " 972 73 204 1384",
+          "Phone2" => "Test Phone2",
+          "Fax" => "Test Fax",
+          "CountryCode" => "IL",
+          "CountryName" => "Israel"
+        },
+        "SecondaryShipping" => {
+          "FirstName" => "John",
+          "LastName" => "S mith",
+          "MiddleName" => nil,
+          "Salutation" => nil,
+          "Company" => nil,
+          "Address1" => "Amishav 24",
+          "Address2" => nil,
+          "City" => "Paris",
+          "StateCode" => nil,
+          "StateOrProvince" => nil,
+          "Zip" => "66666",
+          "Email" => email,
+          "Phone1" => "98756344782",
+          "Phone2" => nil,
+          "Fax" => nil,
+          "CountryCode" => "FR",
+          "CountryName" => "France"
+        },
+        "ShippingMethodCode" => "globaleintegration_standard",
+        "InternationalDetails" => {
+          "CurrencyCode" => "EUR",
+          "TotalPrice" => 64.8800,
+          "TransactionCurrencyCode" => " EUR",
+          "TransactionTotalPrice" => 64.8800,
+          "TotalShippingPrice" => 32.7400,
+          "DiscountedShippingPrice" => 19.97,
+          "TotalDutiesPrice" => 0.0000,
+          "ShippingMethodCode" => "2",
+          "PaymentMethodCode" => "1",
+          "PaymentMethodName" => "Visa",
+          "ShippingMethodName" => "DHL Express Worldwide",
+          "ShippingMethodTypeCode" => "Express",
+          "ShippingMethodTypeName" => "Express Courier (Air)",
+          "DutiesGuaranteed" => false,
+          "OrderTrackingNumber" => nil,
+          "OrderTrackingUrl" => "http://www.israelpost.co.il/itemtrace.nsf/mainsearch?openform",
+          "OrderWaybillNumber" => nil,
+          "OrderWaybillUrl" => nil,
+          "ShippingMethodStatusCode" => "0",
+          "ShippingMethodStatusName" => "undefined",
+          "CardNumberLastFourDigits" => "7854",
+          "ExpirationDate" => "2023-06-30",
+          "TotalVATAmount" => 11.1400
+        },
+        "PaymentDetails" => nil,
+        "PrimaryBilling" => {
+          "FirstName" => "GlobalE",
+          "LastName" => "GlobalE",
+          "MiddleName" => nil,
+          "Salutation" => nil,
+          "Company" => "GlobalE",
+          "Address1" => "21/D, Yegi'a Kapayim st. Yellow building - Floor 1",
+          "Address2" => nil,
+          "City" => "Petach Tikva",
+          "StateCode" => nil,
+          "StateOrProvince" => nil,
+          "Zip" => "4913020",
+          "Email" => "info@global-e.com",
+          "Phone1" => " 972 73 204 1384",
+          "Phone2" => nil,
+          "Fax" => " 972 73 204 1386",
+          "CountryCode" => "IL",
+          "CountryName" => "Israel"
+        },
+        "SecondaryBilling" => {
+          "FirstName" => "John",
+          "LastName" => "S mith",
+          "MiddleName" => nil,
+          "Salutation" => nil,
+          "Company" => "GlobalE",
+          "Address1" => "Amishav 24",
+          "Address2" => nil,
+          "City" => "Paris",
+          "StateCode" => nil,
+          "StateOrProvince" => nil,
+          "Zip" => "66666",
+          "Email" => email,
+          "Phone1" => "972500000",
+          "Phone2" => nil,
+          "Fax" => nil,
+          "CountryCode" => "FR",
+          "CountryName" => "France"
+        },
+        "OrderId" => "GE927127",
+        "DiscountedShippingPrice" => 19.97,
+        "StatusCode" => "N/A",
+        "MerchantGUID" => "abcdabcd-abcd-abcd-abcd-abcdabcdabcd",
+        "CartId" => order.global_e_token,
+        "MerchantOrderId" => nil,
+        "PriceCoefficientRate" => 1.000000,
+        "GenericHSCode" => nil,
+        "TotalDutiesAndTaxesPrice" => 0.0,
+        "CCFPrice" => 0.0
+      }.to_json
+    end
+
     def global_e_peform_order_payment_body(order: nil)
       order ||= create_global_e_completed_checkout
 

@@ -90,5 +90,28 @@ module Workarea
 
       assert_equal(-0.5.to_m("EUR"), discount_adjustment.amount)
     end
+
+    def test_discounts_clean_themselves_from_international_adjustments
+      order_total = create_order_total_discount(amount_type: 'percent', amount: 10)
+
+      _product_discount_1 = create_product_discount(compatible_discount_ids: [order_total.id.to_s])
+      _product_discount_2 = create_product_discount(compatible_discount_ids: [order_total.id.to_s])
+
+      create_pricing_sku(
+        id: 'SKU',
+        tax_code: "001",
+        prices: [{ regular: 10.to_m, sale: 3.to_m }],
+        fixed_prices: [{ currency_code: "EUR", regular: 5.to_m("EUR"), sale: 3.to_m("EUR") }]
+      )
+
+      order = Order.new(currency: "EUR")
+      order.add_item(product_id: 'PRODUCT', sku: 'SKU')
+
+      Pricing.perform(order)
+
+      order_item = order.items.first
+      assert_equal(2, order_item.price_adjustments.length)
+      assert_equal(2, order_item.international_price_adjustments.length)
+    end
   end
 end

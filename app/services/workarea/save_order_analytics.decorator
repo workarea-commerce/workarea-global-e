@@ -3,5 +3,16 @@ module Workarea
     def all_price_adjustments
       super + @order.discount_adjustments
     end
+
+    def discounts_by(field)
+      all_price_adjustments.select(&:discount?).reduce({}) do |memo, price_adjustment|
+        next memo unless price_adjustment.data.has_key? 'discount_id'
+        discount_id = price_adjustment.data['discount_id']
+
+        memo[discount_id] ||= 0
+        memo[discount_id] += price_adjustment.send(field).abs
+        memo
+      end
+    end
   end
 end

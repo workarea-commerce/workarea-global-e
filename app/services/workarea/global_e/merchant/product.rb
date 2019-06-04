@@ -205,8 +205,8 @@ module Workarea
         #
         # @return [String]
         #
-        def discounted_price_except_duties_and_taxes
-          hash["DiscountedPriceExcDutiesAndTaxes"]
+        def discounted_price_for_customs
+          hash["DiscountedPriceForCustoms"]
         end
 
         # Product HS code

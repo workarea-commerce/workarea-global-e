@@ -143,7 +143,7 @@ module Workarea
                   description: shipping_service[:name],
                   calculator: self.class.name
                 }
-              ],
+              ] + shipping_discount_adjustments,
               international_price_adjustments: [
                 {
                   price: 'shipping',
@@ -151,8 +151,40 @@ module Workarea
                   description: shipping_service[:name],
                   calculator: self.class.name
                 }
-              ]
+              ] + shipping_international_discount_adjustments
             )
+          end
+
+          def shipping_discounts
+            discounts.select(&:shipping?)
+          end
+
+          def shipping_discount_adjustments
+            shipping_discounts.map do |discount|
+              {
+                price: "shipping",
+                quantity: 1,
+                description: discount.description,
+                calculator: self.class.name,
+                amount: -Money.from_amount(discount.price, merchant_order.currency_code),
+                data: discount.hash.merge(
+                  "dicount_value" => -Money.from_amount(discount.price, merchant_order.currency_code)
+                )
+              }
+            end
+          end
+
+          def shipping_international_discount_adjustments
+            shipping_discounts.map do |discount|
+              {
+                price: "shipping",
+                quantity: 1,
+                description: discount.description,
+                calculator: self.class.name,
+                amount: -Money.from_amount(discount.international_price, international_details.currency_code),
+                data: discount.hash
+              }
+            end
           end
 
           def save_payment
@@ -203,7 +235,7 @@ module Workarea
                 description: discount.description,
                 calculator: self.class.name,
                 amount: -Money.from_amount(discount.price, merchant_order.currency_code),
-                data: original_price_adjustment.data
+                data: (original_price_adjustment&.data || {})
                 .merge("dicount_value" => -Money.from_amount(discount.price, merchant_order.currency_code))
                 .merge(discount.hash)
               }
@@ -223,7 +255,7 @@ module Workarea
 
           def order_discounts
             discounts.select do |merchant_discount|
-              merchant_discount.product_cart_item_id.blank?
+              merchant_discount.product_cart_item_id.blank? && !merchant_discount.shipping?
             end
           end
 
