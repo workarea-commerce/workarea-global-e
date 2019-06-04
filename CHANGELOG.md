@@ -1,3 +1,39 @@
+Workarea Global E 1.0.0.beta.7 (2019-06-04)
+--------------------------------------------------------------------------------
+
+*   Handle discounts that only exist in GlobalE
+
+    Shipping and Duties discounts only exist in GlobalE and don't have a
+    corresponding discount in Workarea, handle when the original discount
+    doens't exist and ignore them in analytics
+    Eric Pigeon
+
+*   Only show country execptions on Products#show
+
+    only add country exceptions data tags to the main product on
+    Products#show
+    Eric Pigeon
+
+*   Fix discounts overdiscounting fixed pricing orders
+
+    In `Discount::ApplicationGroup#value` each discount is applied to the
+    order then removed from the order to determine the total value of that
+    group. This fixes a bug were the discounts weren't removing
+    international adjustments when calculating `ApplicationGroup#value`
+
+    GLOBALE-29
+    Eric Pigeon
+
+*   Change Order::Item#discounted_price_except_duties_and_taxes to discounted_price_for_customs
+
+    Eric Pigeon
+
+*   Add Catalog::Product#global_e_forbidden to the admin
+
+    Eric Pigeon
+
+
+
 Workarea Global E 1.0.0.beta.6 (2019-05-17)
 --------------------------------------------------------------------------------
 
