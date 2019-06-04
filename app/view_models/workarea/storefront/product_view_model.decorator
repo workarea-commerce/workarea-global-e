@@ -4,10 +4,17 @@ module Workarea
       delegate :sell_min_fixed_prices, :sell_max_fixed_prices, :original_min_fixed_prices, :original_max_fixed_prices, to: :pricing
     end
 
+    def current_product?
+      options["controller"] == "workarea/storefront/products" &&
+        options["action"] == "show" &&
+        options["id"] == model.slug
+    end
 
-    # @return [::Hash]
+    # @return [::String, nil]
     #
     def country_exceptions_data
+      return unless current_product?
+
       data = model.country_exceptions.map do |country_exception|
         [
           country_exception.country.alpha2,
@@ -22,7 +29,7 @@ module Workarea
         data["all"] = { "forbidden" => true }
       end
 
-      data
+      data.to_json
     end
   end
 end
