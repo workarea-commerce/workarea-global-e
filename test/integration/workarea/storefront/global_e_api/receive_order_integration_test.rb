@@ -199,6 +199,26 @@ module Workarea
           assert api_events.receive_order.present?
           assert api_events.receive_order_response.present?
         end
+
+        def test_with_shipping_discounts
+          order = create_cart
+
+          post storefront.globale_receive_order_path,
+            headers: { 'CONTENT_TYPE' => 'application/json' },
+            params: global_e_send_order_to_merchant_with_shipping_discounts_body(order: order)
+
+          assert response.ok?, "Expected 200 response"
+
+          shipping = Workarea::Shipping.find_by(order_id: order.id)
+
+          assert_equal 2, shipping.price_adjustments.size
+          assert_equal 2, shipping.international_price_adjustments.size
+
+          order.reload
+
+          assert_equal 1, order.discount_adjustments.size
+          assert_equal 1, order.international_discount_adjustments.size
+        end
       end
     end
   end

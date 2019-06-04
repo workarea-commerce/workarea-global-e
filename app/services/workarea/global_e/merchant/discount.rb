@@ -104,12 +104,22 @@ module Workarea
         end
 
         # Discount type (“Cart”, “Shipping”, etc.), as defined in
-        # DiscountTypeOptions enumeration described in Discount class in this document.
+        # | DiscountType Option Value | Name                             | Description |
+        # | 1                         | Cart Discount                    | Discount related to volume, amount, coupon or another promotion value. |
+        # | 2                         | Shipping Discount                | Discount aimed to sponsor international shipping. |
+        # | 3                         | Loyalty points discount          | Discount applied against the Merchant’s loyalty points to be spent for this purchase. |
+        # | 4                         | Duties discount                  | Discount aimed to sponsor taxes & duties pre- paid by the end customer in Global-e checkout. |
+        # | 5                         | Checkout Loyalty Points Discount | Discount applied against the Merchant’s loyalty points in Global-e checkout. |
+        # | 6                         | Payment Charge                   | Discount aimed to sponsor “Cash on Delivery” fee. |
         #
         # @return [Integer]
         #
         def discount_type
           hash["DiscountType"]
+        end
+
+        def shipping?
+          discount_type == 2
         end
       end
     end
