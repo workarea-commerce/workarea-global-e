@@ -1,3 +1,15 @@
+Workarea Global E 1.0.0.beta.8 (2019-06-07)
+--------------------------------------------------------------------------------
+
+*   Update Product.Attributes
+
+    Change Attribute#name to the detail values and Attribute#code to the the
+    key.
+    Fix typo in GlobalE API URLs
+    Eric Pigeon
+
+
+
 Workarea Global E 1.0.0.beta.7 (2019-06-04)
 --------------------------------------------------------------------------------
 
