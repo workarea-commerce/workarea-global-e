@@ -472,7 +472,9 @@ module Workarea
       # @return [Boolean]
       #
       def is_blocked_for_global_e
-        product.try(:gift_card?) || false
+        return true if product.try(:gift_card?)
+
+        product.global_e_forbidden?
       end
 
       # Code applicable to the product on the Merchant’s site. This code may
@@ -531,7 +533,7 @@ module Workarea
       #
       def attributes
         variant.details.map do |key, values|
-          GlobalE::Attribute.new(type_code: key, name: key, code: values.join(", "))
+          GlobalE::Attribute.new(type_code: key, name: values.join(", "), code: key)
         end
       end
 

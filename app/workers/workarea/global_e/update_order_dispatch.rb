@@ -6,7 +6,7 @@ module Workarea
       DOMAINS = {
         "qa" => "https://connect-qa.bglobale.com",
         "qa-int" => "https://connect.bglobale.com/",
-        "staging" => "ttps://connect2.bglobale.com",
+        "staging" => "https://connect2.bglobale.com",
         "production" => "https://api.global-e.com"
       }
 

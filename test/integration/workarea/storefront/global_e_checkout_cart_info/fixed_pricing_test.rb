@@ -7,7 +7,7 @@ module Workarea
         def test_with_fixed_prices
           product_1 = create_complete_product(
             variants: [
-              { sku: 'SKU', details: { material: 'cotton' }, regular: 5.00, sale: 4.00, fixed_prices: [
+              { sku: 'SKU', details: { material: 'Cotton' }, regular: 5.00, sale: 4.00, fixed_prices: [
                 { country: Country['AT'], currency_code: "EUR", regular: 4.to_m("EUR") }
               ] }
             ]
@@ -15,7 +15,7 @@ module Workarea
 
           product_2 = create_complete_product(
             variants: [
-              { sku: 'SKU2', details: { material: 'cotton' }, regular: 5.00, sale: 4.00, on_sale: true, fixed_prices: [
+              { sku: 'SKU2', details: { material: 'Cotton' }, regular: 5.00, sale: 4.00, on_sale: true, fixed_prices: [
                 { country: Country['AT'], currency_code: "EUR", regular: 4.to_m("EUR"), sale: 3.99.to_m("EUR") }
               ] }
             ]
@@ -50,7 +50,7 @@ module Workarea
                 "Height" => 5,
                 "Width" => 5,
                 "Length" => 5,
-                "ImageURL" => "/product_images/test-product/cotton/#{product_1.images.first.id}/detail.jpg?c=0",
+                "ImageURL" => "/product_images/test-product/Cotton/#{product_1.images.first.id}/detail.jpg?c=0",
                 "ImageHeight" => 780,
                 "ImageWidth" => 780,
                 "ListPrice" => 4.0,
@@ -63,9 +63,9 @@ module Workarea
                 "IsBlockedForGlobalE" => false,
                 "Attributes" => [
                   {
-                    "AttributeCode" => "cotton",
+                    "AttributeCode" => "material",
                     "AttributeTypeCode" => "material",
-                    "Name" => "material"
+                    "Name" => "Cotton"
                   }
                 ]
               },
@@ -80,7 +80,7 @@ module Workarea
                 "Height" => 5,
                 "Width" => 5,
                 "Length" => 5,
-                "ImageURL" => "/product_images/test-product-1/cotton/#{product_2.images.first.id}/detail.jpg?c=0",
+                "ImageURL" => "/product_images/test-product-1/Cotton/#{product_2.images.first.id}/detail.jpg?c=0",
                 "ImageHeight" => 780,
                 "ImageWidth" => 780,
                 "ListPrice" => 4.0,
@@ -93,9 +93,9 @@ module Workarea
                 "IsBlockedForGlobalE" => false,
                 "Attributes" => [
                   {
-                    "AttributeCode" => "cotton",
+                    "AttributeCode" => "material",
                     "AttributeTypeCode" => "material",
-                    "Name" => "material"
+                    "Name" => "Cotton"
                   }
                 ]
               }
@@ -108,7 +108,7 @@ module Workarea
         def test_product_discounts
           product_1 = create_complete_product(
             variants: [
-              { sku: 'SKU', details: { material: 'cotton' }, regular: 5.00, sale: 4.00, fixed_prices: [
+              { sku: 'SKU', details: { material: 'Cotton' }, regular: 5.00, sale: 4.00, fixed_prices: [
                 { country: Country['AT'], currency_code: "EUR", regular: 10.to_m("EUR") }
               ] }
             ]
@@ -116,7 +116,7 @@ module Workarea
 
           product_2 = create_complete_product(
             variants: [
-              { sku: 'SKU2', details: { material: 'cotton' }, regular: 5.00, sale: 4.00, on_sale: true, fixed_prices: [
+              { sku: 'SKU2', details: { material: 'Cotton' }, regular: 5.00, sale: 4.00, on_sale: true, fixed_prices: [
                 { country: Country['AT'], currency_code: "EUR", regular: 4.to_m("EUR"), sale: 3.99.to_m("EUR") }
               ] }
             ]
@@ -153,7 +153,7 @@ module Workarea
                 "Height" => 5,
                 "Width" => 5,
                 "Length" => 5,
-                "ImageURL" => "/product_images/test-product/cotton/#{product_1.images.first.id}/detail.jpg?c=0",
+                "ImageURL" => "/product_images/test-product/Cotton/#{product_1.images.first.id}/detail.jpg?c=0",
                 "ImageHeight" => 780,
                 "ImageWidth" => 780,
                 "ListPrice" => 10.0,
@@ -166,9 +166,9 @@ module Workarea
                 "IsBlockedForGlobalE" => false,
                 "Attributes" => [
                   {
-                    "AttributeCode" => "cotton",
+                    "AttributeCode" => "material",
                     "AttributeTypeCode" => "material",
-                    "Name" => "material"
+                    "Name" => "Cotton"
                   }
                 ]
               },
@@ -183,7 +183,7 @@ module Workarea
                 "Height" => 5,
                 "Width" => 5,
                 "Length" => 5,
-                "ImageURL" => "/product_images/test-product-1/cotton/#{product_2.images.first.id}/detail.jpg?c=0",
+                "ImageURL" => "/product_images/test-product-1/Cotton/#{product_2.images.first.id}/detail.jpg?c=0",
                 "ImageHeight" => 780,
                 "ImageWidth" => 780,
                 "ListPrice" => 4.0,
@@ -196,9 +196,9 @@ module Workarea
                 "IsBlockedForGlobalE" => false,
                 "Attributes" => [
                   {
-                    "AttributeCode" => "cotton",
+                    "AttributeCode" => "material",
                     "AttributeTypeCode" => "material",
-                    "Name" => "material"
+                    "Name" => "Cotton"
                   }
                 ]
               }
@@ -222,7 +222,7 @@ module Workarea
         def test_order_discounts
           product_1 = create_complete_product(
             variants: [
-              { sku: 'SKU', details: { material: 'cotton' }, regular: 5.00, sale: 4.00, fixed_prices: [
+              { sku: 'SKU', details: { material: 'Cotton' }, regular: 5.00, sale: 4.00, fixed_prices: [
                 { country: Country['AT'], currency_code: "EUR", regular: 10.to_m("EUR") }
               ] }
             ]
@@ -230,7 +230,7 @@ module Workarea
 
           product_2 = create_complete_product(
             variants: [
-              { sku: 'SKU2', details: { material: 'cotton' }, regular: 5.00, sale: 4.00, on_sale: true, fixed_prices: [
+              { sku: 'SKU2', details: { material: 'Cotton' }, regular: 5.00, sale: 4.00, on_sale: true, fixed_prices: [
                 { country: Country['AT'], currency_code: "EUR", regular: 4.to_m("EUR"), sale: 3.99.to_m("EUR") }
               ] }
             ]
@@ -267,7 +267,7 @@ module Workarea
                 "Height" => 5,
                 "Width" => 5,
                 "Length" => 5,
-                "ImageURL" => "/product_images/test-product/cotton/#{product_1.images.first.id}/detail.jpg?c=0",
+                "ImageURL" => "/product_images/test-product/Cotton/#{product_1.images.first.id}/detail.jpg?c=0",
                 "ImageHeight" => 780,
                 "ImageWidth" => 780,
                 "ListPrice" => 10.0,
@@ -280,9 +280,9 @@ module Workarea
                 "IsBlockedForGlobalE" => false,
                 "Attributes" => [
                   {
-                    "AttributeCode" => "cotton",
+                    "AttributeCode" => "material",
                     "AttributeTypeCode" => "material",
-                    "Name" => "material"
+                    "Name" => "Cotton"
                   }
                 ]
               },
@@ -297,7 +297,7 @@ module Workarea
                 "Height" => 5,
                 "Width" => 5,
                 "Length" => 5,
-                "ImageURL" => "/product_images/test-product-1/cotton/#{product_2.images.first.id}/detail.jpg?c=0",
+                "ImageURL" => "/product_images/test-product-1/Cotton/#{product_2.images.first.id}/detail.jpg?c=0",
                 "ImageHeight" => 780,
                 "ImageWidth" => 780,
                 "ListPrice" => 4.0,
@@ -310,9 +310,9 @@ module Workarea
                 "IsBlockedForGlobalE" => false,
                 "Attributes" => [
                   {
-                    "AttributeCode" => "cotton",
+                    "AttributeCode" => "material",
                     "AttributeTypeCode" => "material",
-                    "Name" => "material"
+                    "Name" => "Cotton"
                   }
                 ]
               }

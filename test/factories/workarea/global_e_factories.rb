@@ -100,7 +100,7 @@ module Workarea
         description: "Description",
         details:  { 'Material' => 'Cotton', 'Style' => '12345' },
         filters:  { 'Material' => 'Cotton', 'Style' => '12345' },
-        variants: [{ sku: 'SKU', details: { material: 'cotton' }, regular: 5.00 }]
+        variants: [{ sku: 'SKU', details: { material: 'Cotton' }, regular: 5.00 }]
       }.merge(overrides)
 
       Workarea::Catalog::Product.new(attributes.except(:variants)).tap do |product|
