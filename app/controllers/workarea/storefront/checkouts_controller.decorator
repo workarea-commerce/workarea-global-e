@@ -16,7 +16,7 @@ module Workarea
       end
 
       def is_operated_by_global_e?
-        cookies.fetch(:GlobalE_IsOperated, 'false') == 'true'
+        cookies.fetch(:GlobalE_IsOperated, 'false').casecmp?('true')
       end
   end
 end

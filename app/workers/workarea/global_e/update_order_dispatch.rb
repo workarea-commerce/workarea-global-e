@@ -3,15 +3,8 @@ module Workarea
     class UpdateOrderDispatch
       include Sidekiq::Worker
 
-      DOMAINS = {
-        "qa" => "https://connect-qa.bglobale.com",
-        "qa-int" => "https://connect.bglobale.com/",
-        "staging" => "https://connect2.bglobale.com",
-        "production" => "https://api.global-e.com"
-      }
-
       def perform(id, tracking_number)
-        domain = DOMAINS[GlobalE.environment]
+        domain = GlobalE.domains[GlobalE.environment]
         path = "/Order/UpdateOrderDispatchV2?merchantGUID=#{GlobalE.merchant_guid}"
 
         dispatch = UpdateOrderDispatchRequest.new(id, tracking_number: tracking_number)

@@ -12,6 +12,13 @@ Workarea.configure do |config|
 
   config.global_e = ActiveSupport::Configurable::Configuration.new
 
+  config.global_e.domains = {
+    "qa" => "https://connect-qa.bglobale.com",
+    "qa-int" => "https://connect.bglobale.com/",
+    "staging" => "https://connect2.bglobale.com",
+    "production" => "https://api.global-e.com"
+  }
+
   config.global_e.enabled = true
   config.global_e.javascript_source = nil
   config.global_e.css_source = nil
