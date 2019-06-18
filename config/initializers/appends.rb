@@ -9,11 +9,6 @@ Workarea.append_partials(
 )
 
 Workarea.append_javascripts(
-  "storefront.config",
-  "workarea/storefront/global_e/global_e_config"
-)
-
-Workarea.append_javascripts(
   "storefront.modules",
   "workarea/storefront/global_e/modules/suppress_price_ranges"
 )

@@ -17,8 +17,6 @@ Workarea.configure do |config|
   config.global_e.css_source = nil
   config.global_e.merchant_guid = nil
 
-  config.global_e.domestic_countries = ["US"]
-
   config.global_e.currencies = ["AFN", "DZD", "ARS", "AMD", "AWG", "AUD", "AZN",
     "BSD", "BHD", "THB", "PAB", "BBD", "BZD", "BMD", "BOB", "BRL", "BND", "BGN",
     "BIF", "CAD", "CVE", "KYD", "XOF", "XAF", "XPF", "CLP", "COP", "KMF", "CDF",

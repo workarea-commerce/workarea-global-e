@@ -28,10 +28,6 @@ module Workarea
       config.merchant_guid
     end
 
-    def self.domestic_countries
-      config.domestic_countries
-    end
-
     def self.shipping_discount_types
       config.shipping_discount_types
     end
