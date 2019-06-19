@@ -1,3 +1,20 @@
+Workarea Global E 1.0.0.beta.9 (2019-06-19)
+--------------------------------------------------------------------------------
+
+*   Move GlobalE domains to config
+
+    Eric Pigeon
+
+*   Remove domestic countries config
+
+    Remove config for controlling what countries aren't operated by GlobalE
+    and use new cookie
+
+    GLOBALE-30
+    Eric Pigeon
+
+
+
 Workarea Global E 1.0.0.beta.8 (2019-06-07)
 --------------------------------------------------------------------------------
 
