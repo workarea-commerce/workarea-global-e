@@ -4,11 +4,7 @@ module Workarea
   module Storefront
     class GlobalECheckoutsIntegrationTest < Workarea::IntegrationTest
       def test_domestic_orders_are_not_redirected
-        cookies['GlobalE_Data'] = JSON.generate({
-          "countryISO" => "US",
-          "currencyCode" => "USD",
-          "cultureCode" => "en-GB"
-        })
+        cookies['GlobalE_IsOperated'] = false
         product = create_product
 
         post storefront.cart_items_path,
@@ -22,14 +18,10 @@ module Workarea
         assert_redirected_to storefront.checkout_addresses_url
       end
 
-      def test_international_orders_are_redirected
-        cookies['GlobalE_Data'] = JSON.generate({
-          "countryISO" => "CA",
-          "currencyCode" => "CAD",
-          "cultureCode" => "en-CA"
-        })
-        product = create_product
+      def test_externational_orders_are_redirected
+        cookies['GlobalE_IsOperated'] = true
 
+        product = create_product
         post storefront.cart_items_path,
           params: {
             product_id: product.id,
@@ -42,6 +34,7 @@ module Workarea
       end
 
       def test_guest_checkout_clears_user_order_details
+        cookies['GlobalE_IsOperated'] = true
         cookies['GlobalE_Data'] = JSON.generate({
           "countryISO" => "CA",
           "currencyCode" => "CAD",

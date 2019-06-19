@@ -28,10 +28,6 @@ module Workarea
       config.merchant_guid
     end
 
-    def self.domestic_countries
-      config.domestic_countries
-    end
-
     def self.shipping_discount_types
       config.shipping_discount_types
     end
@@ -40,7 +36,11 @@ module Workarea
       (config.environment || Rails.env)
         .to_s
         .downcase
-        .presence_in(["qa", "staging", "production"]) || "qa"
+        .presence_in(domains.keys) || "qa"
+    end
+
+    def self.domains
+      config.domains
     end
 
     def self.free_gift_discount_types

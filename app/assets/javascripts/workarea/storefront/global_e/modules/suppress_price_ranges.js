@@ -3,23 +3,12 @@
  */
 
 WORKAREA.registerModule('global_e_price_filter', (function () {
-    var globalECookie = function() {
-            try {
-                return JSON.parse(decodeURIComponent(WORKAREA.cookie.read('GlobalE_Data'))) || {};
-            }
-            catch (err) {
-                return {};
-            }
-        },
-
-        shippingCountry = function() {
-            return globalECookie().countryISO;
+    var  isOperatedByGlobalE = function() {
+            return WORKAREA.cookie.read('GlobalE_IsOperated') === "true";
         },
 
         init = function($scope) {
-            if (_.isUndefined(shippingCountry()) || _.includes(WORKAREA.config.globalE.domesticCountries, shippingCountry())) {
-                return;
-            }
+            if (!isOperatedByGlobalE()) { return; }
 
             $('.result-filters__section--price', $scope).hide();
         };
