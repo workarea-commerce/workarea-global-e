@@ -32,7 +32,9 @@ module Workarea
           end
 
           def update_payment
-            payment.update_attributes(global_e_approved_at: Time.current)
+            payment.with(write: { w: "majority", j: true }) do
+              payment.update_attributes!(global_e_approved_at: Time.current)
+            end
           end
 
           def payment
