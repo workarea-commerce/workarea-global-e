@@ -1,3 +1,25 @@
+Workarea Global E 1.0.0 (2019-08-22)
+--------------------------------------------------------------------------------
+
+*   Fix incorrect item price adjustment amounts
+
+    GLOBALE-37
+    Eric Pigeon
+
+*   Save payment with journaled and write majority
+
+    GLOBALE-31
+    Eric Pigeon
+
+*   Add GlobalE Order Id to Admin Search Text
+
+    Update GlobalE orders to be search `jump_to`
+
+    GLOBALE-32
+    Eric Pigeon
+
+
+
 Workarea Global E 1.0.0.beta.9 (2019-06-19)
 --------------------------------------------------------------------------------
 
