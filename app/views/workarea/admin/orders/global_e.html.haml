@@ -60,7 +60,7 @@
               %tr
                 %td
                   %p= t('workarea.admin.orders.cards.global_e.international_subtotal_price')
-                %td.align-right= @order.international_subtotal_price
+                %td.align-right= number_to_currency(@order.international_subtotal_price)
               - if @order.international_discount_adjustments.any?
                 - @order.international_discount_adjustments.each do |adjustment|
                   %tr
@@ -74,7 +74,7 @@
               %tr
                 %td
                   %p= t('workarea.admin.orders.cards.global_e.international_shipping_total')
-                %td.align-right= @order.international_shipping_total
+                %td.align-right= number_to_currency(@order.international_shipping_total)
               %tr
                 %td
                   %p= t('workarea.admin.orders.cards.global_e.total_duties_price')

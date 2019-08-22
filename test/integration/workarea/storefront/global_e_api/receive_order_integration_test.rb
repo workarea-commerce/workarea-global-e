@@ -25,11 +25,14 @@ module Workarea
 
           assert order.global_e?
           assert order.international_total_price.present?
-          assert_equal "€4.84", order.international_subtotal_price.format
+          assert_equal "€9.68", order.international_subtotal_price.format
           assert_equal "€19.97", order.international_shipping_total.format
           assert_equal "€64.88", order.international_total_price.format
           assert_equal "€0.00", order.total_duties_price.format
           refute order.duties_guaranteed
+
+          item = order.items.first
+          assert_equal "€9.68", item.international_price_adjustments.first.amount.format
 
           assert_equal :pending_global_e_fraud_check, order.status
 

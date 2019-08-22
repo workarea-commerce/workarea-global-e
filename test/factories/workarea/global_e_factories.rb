@@ -11,7 +11,7 @@ module Workarea
             {
               product: product,
               sku: product.skus.first,
-              quantity: 1
+              quantity: 2
             }
           ]
         end

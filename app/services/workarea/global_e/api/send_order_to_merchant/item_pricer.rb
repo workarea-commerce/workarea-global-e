@@ -47,7 +47,7 @@ module Workarea
                   "on_sale" => base_currency_sell_price < base_currency_list_price,
                   "original_price" => base_currency_list_price.to_f
                 },
-                amount: base_currency_sell_price
+                amount: base_currency_sell_price * order_item.quantity
               )]
             ) + base_currency_discount_adjustments
           end
@@ -63,7 +63,7 @@ module Workarea
                   "on_sale" => international_currency_sell_price < international_currency_list_price,
                   "original_price" => international_currency_list_price.to_f
                 },
-                amount: international_currency_sell_price
+                amount: international_currency_sell_price * order_item.quantity
               )]
             ) + international_currency_discount_adjustments
           end
