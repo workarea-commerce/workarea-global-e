@@ -23,6 +23,7 @@ module Workarea
                 update_order
                 save_shippings
                 save_payment
+                save_user_addresses
 
                 raise GlobalE::UnpurchasableOrder, order.errors.full_messages.join("\n") unless @order.valid?(:purchasable)
 
@@ -203,6 +204,16 @@ module Workarea
             )
           end
 
+          def save_user_addresses
+            return unless order.user_id.present?
+
+            SaveUserAddresses.perform!(
+              order.user_id,
+              shipping_details: shipping_details,
+              billing_details: billing_details
+            )
+          end
+
           # @raise [Workarea::GlobalE::InventoryCaptureFailure]
           #
           def capture_invetory
@@ -270,6 +281,8 @@ module Workarea
             )
           end
 
+          # @return [Workarea::GlobalE::Merchant::CustomerDetails]
+          #
           def shipping_details
             if merchant_order.customer.is_end_customer_primary
               merchant_order.primary_shipping

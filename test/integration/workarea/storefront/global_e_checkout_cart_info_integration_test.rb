@@ -316,6 +316,7 @@ module Workarea
             "UserId" => user.id.to_s,
             "AddressDetails" => [
               {
+                "AddressBookId" => user.addresses[0].id.to_s,
                 "FirstName" => "Ben",
                 "LastName" => "Crouse",
                 "Phone1" => "2159251800",
@@ -332,6 +333,7 @@ module Workarea
                 "Email" => user.email
               },
               {
+                "AddressBookId" => user.addresses[1].id.to_s,
                 "FirstName" => "Ben",
                 "LastName" => "Crouse",
                 "Phone1" => "2159251800",
@@ -348,6 +350,7 @@ module Workarea
                 "Email" => user.email
               },
               {
+                "AddressBookId" => user.addresses[2].id.to_s,
                 "FirstName" => "Ben",
                 "LastName" => "Crouse",
                 "Phone1" => "2159251800",

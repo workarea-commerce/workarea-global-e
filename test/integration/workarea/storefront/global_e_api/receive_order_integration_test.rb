@@ -222,6 +222,54 @@ module Workarea
           assert_equal 1, order.discount_adjustments.size
           assert_equal 1, order.international_discount_adjustments.size
         end
+
+        def test_updating_user_addresses
+          user = create_user(
+            addresses: [
+              {
+                first_name: 'Ben',
+                last_name: 'Crouse',
+                street: '22 S. 3rd St.',
+                city: 'Philadelphia',
+                region: 'PA',
+                postal_code: '19106',
+                country: 'US',
+                phone_number: '2159251800',
+                last_billed_at: Time.current
+              },
+              {
+                first_name: 'Ben',
+                last_name: 'Crouse',
+                street: '22 S. 3rd St.',
+                city: 'Philadelphia',
+                region: 'PA',
+                postal_code: '19106',
+                country: 'US',
+                phone_number: '2159251800',
+                last_billed_at: Time.current
+              }
+            ]
+          )
+          order = create_cart(user: user)
+
+          post storefront.globale_receive_order_path,
+            headers: { 'CONTENT_TYPE' => 'application/json' },
+            params: global_e_send_order_to_mechant_body(order: order, user: user)
+
+          assert response.ok?, "Expected 200 response"
+
+          response_body = JSON.parse response.body
+          assert response_body["Success"]
+          assert_equal order.id, response_body["InternalOrderId"]
+
+          order.reload
+          assert_equal "GE927127", order.global_e_id
+          assert order.placed?
+          assert order.global_e?
+
+          user.reload
+          assert_equal 2, user.addresses.size
+        end
       end
     end
   end
