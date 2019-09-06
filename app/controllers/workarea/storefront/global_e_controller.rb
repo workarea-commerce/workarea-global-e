@@ -10,6 +10,13 @@ module Workarea
           InventoryAdjustment.new(order).tap(&:perform)
         end
 
+        # GlobalE overriding fixed pricing for the order
+        #
+        if checkout_cart_info_params[:isFixedPriceSupported].present? &&
+            checkout_cart_info_params[:isFixedPriceSupported].to_s == "false"
+          order.update_attribute(:fixed_pricing, false)
+        end
+
         render json: Workarea::GlobalE::CheckoutCartInfo.new(order).to_json
       end
 
@@ -22,7 +29,13 @@ module Workarea
         end
 
         def checkout_cart_info_params
-          params.permit(:cartToken, :countryCode, :IsStockValidation, :MerchantGUID)
+          params.permit(
+            :cartToken,
+            :countryCode,
+            :IsStockValidation,
+            :MerchantGUID,
+            :isFixedPriceSupported
+          )
         end
     end
   end

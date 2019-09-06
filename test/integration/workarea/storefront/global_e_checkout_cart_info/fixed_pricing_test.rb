@@ -331,6 +331,107 @@ module Workarea
           }
           assert_equal(expected_response, JSON.parse(response.body))
         end
+
+        def test_overriding_fixed_prices
+          product_1 = create_complete_product(
+            variants: [
+              { sku: 'SKU', details: { material: 'Cotton' }, regular: 5.00, sale: 4.00, fixed_prices: [
+                { country: Country['AT'], currency_code: "EUR", regular: 4.to_m("EUR") }
+              ] }
+            ]
+          )
+
+          product_2 = create_complete_product(
+            variants: [
+              { sku: 'SKU2', details: { material: 'Cotton' }, regular: 5.00, sale: 4.00, on_sale: true, fixed_prices: [
+                { country: Country['AT'], currency_code: "EUR", regular: 4.to_m("EUR"), sale: 3.99.to_m("EUR") }
+              ] }
+            ]
+          )
+
+          cart = create_cart(
+            order: create_order(promo_codes: ['TESTCODE'], currency: "EUR", shipping_country: Country['BE']),
+            items: [
+              { product: product_1, sku: product_1.skus.first, quantity: 1 },
+              { product: product_2, sku: product_2.skus.first, quantity: 1 }
+            ]
+          )
+
+          cookies['GlobalE_Data'] = JSON.generate({
+            "countryISO" => "AT",
+            "currencyCode" => "EUR",
+            "cultureCode" => "de"
+          })
+          get storefront.global_e_checkout_cart_info_path(cartToken: cart.global_e_token, isFixedPriceSupported: false, format: :json)
+
+          assert response.ok?
+          expected_response = {
+            "productsList" => [
+              {
+                "ProductCode" => product_1.skus.first,
+                "ProductGroupCode" => product_1.id,
+                "CartItemId" => cart.items.first.id.to_s,
+                "Name" => product_1.name,
+                "Description" => product_1.description,
+                "URL" => "http://www.example.com/products/test-product",
+                "Weight" => 5.0,
+                "Height" => 5,
+                "Width" => 5,
+                "Length" => 5,
+                "ImageURL" => "/product_images/test-product/Cotton/#{product_1.images.first.id}/detail.jpg?c=0",
+                "ImageHeight" => 780,
+                "ImageWidth" => 780,
+                "ListPrice" => 0,
+                "OriginalListPrice" => 5.0,
+                "SalePrice" => 0,
+                "OriginalSalePrice" => 5.0,
+                "IsFixedPrice" => false,
+                "OrderedQuantity" => 1,
+                "IsVirtual" => false,
+                "IsBlockedForGlobalE" => false,
+                "Attributes" => [
+                  {
+                    "AttributeCode" => "material",
+                    "AttributeTypeCode" => "material",
+                    "Name" => "Cotton"
+                  }
+                ]
+              },
+              {
+                "ProductCode" => product_2.skus.first,
+                "ProductGroupCode" => product_2.id,
+                "CartItemId" => cart.items.second.id.to_s,
+                "Name" => product_2.name,
+                "Description" => product_2.description,
+                "URL" => "http://www.example.com/products/test-product-1",
+                "Weight" => 5.0,
+                "Height" => 5,
+                "Width" => 5,
+                "Length" => 5,
+                "ImageURL" => "/product_images/test-product-1/Cotton/#{product_2.images.first.id}/detail.jpg?c=0",
+                "ImageHeight" => 780,
+                "ImageWidth" => 780,
+                "ListPrice" => 0,
+                "OriginalListPrice" => 5.0,
+                "SalePrice" => 0,
+                "OriginalSalePrice" => 4.0,
+                "IsFixedPrice" => false,
+                "OrderedQuantity" => 1,
+                "IsVirtual" => false,
+                "IsBlockedForGlobalE" => false,
+                "Attributes" => [
+                  {
+                    "AttributeCode" => "material",
+                    "AttributeTypeCode" => "material",
+                    "Name" => "Cotton"
+                  }
+                ]
+              }
+            ],
+            "discountsList" => []
+          }
+          assert_equal(expected_response, JSON.parse(response.body))
+        end
       end
     end
   end
