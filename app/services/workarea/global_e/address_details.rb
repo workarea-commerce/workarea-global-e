@@ -31,7 +31,8 @@ module Workarea
           IsShipping: is_shipping,
           IsBilling: is_billing,
           IsDefaultShipping: is_default_shipping,
-          IsDefaultBilling: is_default_billing
+          IsDefaultBilling: is_default_billing,
+          AddressBookId: address_book_id
         }.compact
       end
 
@@ -203,6 +204,14 @@ module Workarea
       #
       def is_default_billing
         user.default_billing_address == address
+      end
+
+      # Id of the current address from within the address book
+      #
+      # @return [String]
+      #
+      def address_book_id
+        address.id.to_s
       end
     end
   end

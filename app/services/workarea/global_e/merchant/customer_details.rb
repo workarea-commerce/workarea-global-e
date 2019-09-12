@@ -9,6 +9,25 @@ module Workarea
           @url_encoded = url_encoded
         end
 
+        # Attributes used for saving to a {Workarea::Address}
+        #
+        # @return [Hash]
+        #
+        def workarea_address_attributes
+          {
+            first_name:           first_name,
+            last_name:            last_name,
+            street:               address1,
+            street_2:             address2,
+            city:                 city,
+            region:               state_code,
+            postal_code:          zip,
+            country:              Country[country_code],
+            phone_number:         phone1,
+            skip_region_presence: true
+          }
+        end
+
         # First Name
         #
         # @return [String]
@@ -150,6 +169,7 @@ module Workarea
         # @return [String]
         #
         def address_book_id
+          hash["AddressBookId"]
         end
 
         # Name of the current address from within the address book

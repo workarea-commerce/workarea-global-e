@@ -1,0 +1,9 @@
+module Workarea
+  decorate SaveUserOrderDetails, with: :global_e do
+    decorated do
+      sidekiq_options(
+        sidekiq_options["enqueue_on"].merge(ignore_if: -> { self.global_e? })
+      )
+    end
+  end
+end

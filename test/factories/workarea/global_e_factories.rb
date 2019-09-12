@@ -3,7 +3,11 @@ module Workarea
     Factories.add self
 
     def create_cart(order: nil, items: nil, user: nil)
-      order ||= create_order(email: nil, checkout_started_at: Time.current, user_id: user&.id&.to_s)
+      order ||= create_order(
+        email: user&.email,
+        checkout_started_at: Time.current,
+        user_id: user&.id&.to_s
+      )
       items = items ||
         begin
           product = create_product
@@ -150,8 +154,56 @@ module Workarea
       end
     end
 
-    def global_e_send_order_to_mechant_body(email: "John.Smith@global-e.com", order: nil)
-      order ||= create_cart
+    def global_e_send_order_to_mechant_body(email: "John.Smith@global-e.com", order: nil, user: nil)
+      order ||= create_cart(user: user)
+
+      shipping_address = {
+        "FirstName" => "John",
+        "LastName" => "S mith",
+        "MiddleName" => nil,
+        "Salutation" => nil,
+        "Company" => nil,
+        "Address1" => "Amishav 24",
+        "Address2" => nil,
+        "City" => "Paris",
+        "StateCode" => nil,
+        "StateOrProvince" => nil,
+        "Zip" => "66666",
+        "Email" => email,
+        "Phone1" => "98756344782",
+        "Phone2" => nil,
+        "Fax" => nil,
+        "CountryCode" => "FR",
+        "CountryName" => "France"
+      }
+
+      billing_address = {
+        "FirstName" => "John",
+        "LastName" => "S mith",
+        "MiddleName" => nil,
+        "Salutation" => nil,
+        "Company" => "GlobalE",
+        "Address1" => "Amishav 24",
+        "Address2" => nil,
+        "City" => "Paris",
+        "StateCode" => nil,
+        "StateOrProvince" => nil,
+        "Zip" => "66666",
+        "Email" => email,
+        "Phone1" => "972500000",
+        "Phone2" => nil,
+        "Fax" => nil,
+        "CountryCode" => "FR",
+        "CountryName" => "France"
+      }
+      if user.present?
+        billing_address.merge!(
+          "AddressBookId" => user.default_shipping_address.id.to_s
+        )
+        shipping_address.merge!(
+          "AddressBookId" => user.default_billing_address.id.to_s
+        )
+      end
 
       discounts = Pricing::Discount.all.to_a
 
@@ -246,25 +298,7 @@ module Workarea
           "CountryCode" => "IL",
           "CountryName" => "Israel"
         },
-        "SecondaryShipping" => {
-          "FirstName" => "John",
-          "LastName" => "S mith",
-          "MiddleName" => nil,
-          "Salutation" => nil,
-          "Company" => nil,
-          "Address1" => "Amishav 24",
-          "Address2" => nil,
-          "City" => "Paris",
-          "StateCode" => nil,
-          "StateOrProvince" => nil,
-          "Zip" => "66666",
-          "Email" => email,
-          "Phone1" => "98756344782",
-          "Phone2" => nil,
-          "Fax" => nil,
-          "CountryCode" => "FR",
-          "CountryName" => "France"
-        },
+        "SecondaryShipping" => shipping_address,
         "ShippingMethodCode" => "globaleintegration_standard",
         "InternationalDetails" => {
           "CurrencyCode" => "EUR",
@@ -311,25 +345,7 @@ module Workarea
           "CountryCode" => "IL",
           "CountryName" => "Israel"
         },
-        "SecondaryBilling" => {
-          "FirstName" => "John",
-          "LastName" => "S mith",
-          "MiddleName" => nil,
-          "Salutation" => nil,
-          "Company" => "GlobalE",
-          "Address1" => "Amishav 24",
-          "Address2" => nil,
-          "City" => "Paris",
-          "StateCode" => nil,
-          "StateOrProvince" => nil,
-          "Zip" => "66666",
-          "Email" => email,
-          "Phone1" => "972500000",
-          "Phone2" => nil,
-          "Fax" => nil,
-          "CountryCode" => "FR",
-          "CountryName" => "France"
-        },
+        "SecondaryBilling" => billing_address,
         "OrderId" => "GE927127",
         "DiscountedShippingPrice" => 19.97,
         "StatusCode" => "N/A",
