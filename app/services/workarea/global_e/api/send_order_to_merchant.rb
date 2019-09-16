@@ -23,7 +23,7 @@ module Workarea
                 update_order
                 save_shippings
                 save_payment
-                save_user_addresses
+                save_user
 
                 raise GlobalE::UnpurchasableOrder, order.errors.full_messages.join("\n") unless @order.valid?(:purchasable)
 
@@ -204,13 +204,15 @@ module Workarea
             )
           end
 
-          def save_user_addresses
+          def save_user
             return unless order.user_id.present?
 
-            SaveUserAddresses.perform!(
+            SaveUser.perform!(
               order.user_id,
+
               shipping_details: shipping_details,
-              billing_details: billing_details
+              billing_details: billing_details,
+              culture_code: merchant_order.culture_code
             )
           end
 

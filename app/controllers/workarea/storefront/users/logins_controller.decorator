@@ -1,0 +1,13 @@
+module Workarea
+  decorate Storefront::Users::LoginsController, with: :global_e do
+    decorated { after_action :set_global_e_culture_code_cookie }
+
+    private
+
+      def set_global_e_culture_code_cookie
+        return unless current_user.global_e_culture_code.present?
+
+        cookies["GlobalECultureCode"] = current_user.global_e_culture_code
+      end
+  end
+end

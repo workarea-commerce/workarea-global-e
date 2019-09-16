@@ -12,6 +12,12 @@ module Workarea
           hash
         end
 
+        # @return [String]
+        #
+        def culture_code
+          hash["CultureCode"]
+        end
+
         # Unique identifier of the Merchant on Global-e.
         #
         # @return [String]

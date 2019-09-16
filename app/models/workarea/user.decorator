@@ -1,0 +1,10 @@
+module Workarea
+  decorate User, with: :global_e do
+    decorated do
+      # @!attribute global_e_culture_code
+      #   @return [String] the users prefered culture_code example: en-US
+      #
+      field :global_e_culture_code, type: String
+    end
+  end
+end
