@@ -5,7 +5,7 @@ module Workarea
     private
 
       def set_global_e_culture_code_cookie
-        return unless current_user.global_e_culture_code.present?
+        return unless current_user&.global_e_culture_code.present?
 
         cookies["GlobalECultureCode"] = current_user.global_e_culture_code
       end
