@@ -1,3 +1,33 @@
+Workarea Global E 1.1.0 (2019-10-01)
+--------------------------------------------------------------------------------
+
+*   GlobalE Saved Language Preferences
+
+    Store GlobalE culture code on user and set cookie for GlobalE to use
+    when starting GlobalE checkout
+
+    GLOBALE-39
+    Eric Pigeon
+
+*   Pass AddressBookId to GlobalE
+
+    Pass AddressBookId to GlobalE for saved addresses in checkout and update
+    the address after the order has been placed.
+
+    GLOBALE-36
+    Eric Pigeon
+
+*   Allow GlobalE to override fixed pricing for order
+
+    Even though a customer is ordering in a fixed price currency, sometimes
+    the order needs to be priced using conversion rules instead of the fixed
+    prices.
+
+    GLOBALE-38
+    Eric Pigeon
+
+
+
 Workarea Global E 1.0.0 (2019-08-22)
 --------------------------------------------------------------------------------
 
