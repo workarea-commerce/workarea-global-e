@@ -32,6 +32,8 @@ module Workarea
           refute order.duties_guaranteed
 
           item = order.items.first
+          assert_equal 5.0, item.nonadjusted_price
+          assert_equal Money.new(1000, "USD"), item.nonadjusted_amount
           assert_equal "€9.68", item.international_price_adjustments.first.amount.format
 
           assert_equal :pending_global_e_fraud_check, order.status

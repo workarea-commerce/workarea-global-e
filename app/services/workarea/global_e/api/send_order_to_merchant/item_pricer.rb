@@ -37,6 +37,8 @@ module Workarea
           delegate :order, to: :order_item
 
           def base_currency_adjustments
+            original_item_price_adjustment = order_item.price_adjustments.first
+
             PriceAdjustmentSet.new(
               [PriceAdjustment.new(
                 price: "item",
@@ -45,7 +47,9 @@ module Workarea
                 calculator: self.class.name,
                 data: {
                   "on_sale" => base_currency_sell_price < base_currency_list_price,
-                  "original_price" => base_currency_list_price.to_f
+                  "original_price" => base_currency_list_price.to_f,
+                  "nonadjusted_amount" => original_item_price_adjustment.amount,
+                  "nonadjusted_price" => original_item_price_adjustment.data["original_price"]
                 },
                 amount: base_currency_sell_price * order_item.quantity
               )]

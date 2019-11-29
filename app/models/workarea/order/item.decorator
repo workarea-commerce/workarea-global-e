@@ -15,6 +15,26 @@ module Workarea
       international_total_value
     end
 
+    # The original item calculator price adjustment amount before GlobalE 
+    # adjusting
+    #
+    # @return [nil, Money]
+    #
+    def nonadjusted_amount
+      return if price_adjustments.first.data["nonadjusted_amount"].nil?
+
+      Money.demongoize(price_adjustments.first.data["nonadjusted_amount"])
+    end
+
+    # The original item calculator price adjustment price before GlobalE 
+    # adjusting
+    #
+    # @return [nil, Float]
+    #
+    def nonadjusted_price
+      price_adjustments.first.data["nonadjusted_price"]
+    end
+
     # Adds an international price adjustment to the item. Does not persist.
     #
     # @return [self]
