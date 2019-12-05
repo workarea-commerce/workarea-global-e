@@ -43,6 +43,16 @@ module Workarea
           render json: @response.to_json
         end
 
+        # Remove products from the order marked as restricted on Global-E's side.
+        def remove_restricted_products
+          @job = GlobalE::Api::RemoveRestrictedProducts.perform(
+            @order,
+            params['RemovedProductCodes']
+          )
+
+          render json: @job.response
+        end
+
         private
 
           def api_error_response(error)
