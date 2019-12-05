@@ -69,6 +69,7 @@
               %th= t('workarea.admin.orders.attributes.items.product')
               %th.align-center= t('workarea.admin.orders.attributes.items.quantity')
               %th.align-right= t('workarea.admin.orders.attributes.items.pricing')
+              %th.align-right= t('workarea.admin.orders.attributs.items.nonadjusted_pricing')
           %tbody
             - @order.items.each do |item|
               %tr
@@ -89,7 +90,10 @@
                     %p
                       %strong= price_adjustment_description_for(adjustment)
                       %span= number_to_currency(adjustment.amount)
-
+                %td.align-right
+                  - if item.nonadjusted_amount.present?
+                    %p
+                      %span= number_to_currency(item.nonadjusted_amount.amount)
         .grid.grid--right
           .grid__cell.grid__cell--50
             %table.data-pairs

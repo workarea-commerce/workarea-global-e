@@ -58,6 +58,9 @@ en:
         sale_price_default: "(defaults to regular)"
         title: Fixed prices for %{sku}
       orders:
+        attributs:
+          items:
+            nonadjusted_pricing: Nonadjusted Pricing
         cards:
           global_e:
             button: View Global E
