@@ -7,6 +7,8 @@ source 'https://gems.weblinc.com' do
   gem 'workarea-gift_cards'
 end
 
+gem 'sprockets', '~> 3'
+
 gemspec
 
 group :test do
