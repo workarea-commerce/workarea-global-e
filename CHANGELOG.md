@@ -1,3 +1,24 @@
+Workarea Global E 1.2.0 (2019-12-11)
+--------------------------------------------------------------------------------
+
+*   Add Remove Restricted Products API
+
+    This allows Global-E to `POST` any products in an order that should be
+    removed, since they are restricted in the given user's area.
+
+    GLOBALE-1
+    Tom Scott
+
+*   Store nonadjusted base currency pricing
+
+    Store the original `ItemCalculator` `price` and `amount` in the data of
+    the first price adjustment for GlobalE orders
+
+    GLOBALE-40
+    Eric Pigeon
+
+
+
 Workarea Global E 1.1.0 (2019-10-01)
 --------------------------------------------------------------------------------
 
