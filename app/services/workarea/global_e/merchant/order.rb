@@ -406,11 +406,11 @@ module Workarea
         # @return [Float]
         #
         def total_duties_and_taxes_price
-          hash["TotalDutiesAndTaxesPrice"]
+          hash["DutiesPaidByCustomer"]
         end
 
         # Contains clearance Fees (CCF), in the merchant currency.
-        # This amount is included in the TotalDutiesAndTaxesPrice but provided
+        # This amount is included in the DutiesPaidByCustomer but provided
         # separately as well so it can be displayed independently or as part of
         # the shipping cost, on the invoice.
         #
