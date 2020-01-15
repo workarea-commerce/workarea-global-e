@@ -21,5 +21,5 @@ Gem::Specification.new do |spec|
       "public gem pushes."
   end
 
-  spec.add_dependency 'workarea', '~> 3.x', "< 3.4"
+  spec.add_dependency 'workarea', '~> 3.4.25'
 end

@@ -322,7 +322,7 @@ module Workarea
           "ShippingMethodStatusCode" => "0",
           "ShippingMethodStatusName" => "undefined",
           "CardNumberLastFourDigits" => "7854",
-          "ExpirationDate" => "2023-06-30",
+          "ExpirationDate" => "#{next_year}-06-30",
           "TotalVATAmount" => 11.1400
         },
         "PaymentDetails" => nil,
@@ -524,7 +524,7 @@ module Workarea
           "ShippingMethodStatusCode" => "0",
           "ShippingMethodStatusName" => "undefined",
           "CardNumberLastFourDigits" => "7854",
-          "ExpirationDate" => "2023-06-30",
+          "ExpirationDate" => "#{next_year}-06-30",
           "TotalVATAmount" => 11.1400
         },
         "PaymentDetails" => nil,

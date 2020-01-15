@@ -13,7 +13,6 @@ module Workarea
               customizations: 'gift_card',
               variants: [{ sku: 'GIFTCARD', regular: 10.to_m }]
             )
-
             cart = create_cart(
               items: [
                 { product: product, sku: product.skus.first, quantity: 1 }

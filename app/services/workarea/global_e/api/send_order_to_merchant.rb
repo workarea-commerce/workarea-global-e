@@ -46,7 +46,7 @@ module Workarea
 
           def place_order_side_effects
             CreateFulfillment.new(order, global_e: true).perform
-            SaveOrderAnalytics.new(order).perform
+            SaveOrderMetrics.perform_async(order.id)
           end
 
           def update_order

@@ -58,13 +58,12 @@ module Workarea
         order = Workarea::Order.first
         assert_equal user.id.to_s, order.user_id
 
-        cookies.delete "user_id"
+        travel_to Workarea.config.customer_session_timeout.from_now do
+          get storefront.checkout_path
 
-        get storefront.checkout_path
-        assert_redirected_to storefront.ge_checkout_url
-
-        order.reload
-        assert_nil order.user_id
+          assert_redirected_to storefront.ge_checkout_url
+          assert_nil order.reload.user_id
+        end
       end
     end
   end
