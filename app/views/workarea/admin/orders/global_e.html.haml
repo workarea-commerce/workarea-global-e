@@ -71,6 +71,16 @@
                         %strong= number_to_currency(adjustment.amount)
                       - else
                         %span= number_to_currency(adjustment.amount)
+              - if @order.discount_adjustments.any?
+                - @order.discount_adjustments.each do |adjustment|
+                  %tr
+                    %td
+                      %span= adjustment.description.titleize
+                    %td.align-right
+                      - if adjustment.discount?
+                        %strong= number_to_currency(adjustment.amount)
+                      - else
+                        %span= number_to_currency(adjustment.amount)
               %tr
                 %td
                   %p= t('workarea.admin.orders.cards.global_e.international_shipping_total')
