@@ -1,3 +1,24 @@
+Workarea Global E 1.2.1 (2020-01-21)
+--------------------------------------------------------------------------------
+
+*   Add Discount Adjustments To Admin Order Views
+
+    The `#discount_adjustments` on an order are now being output to the
+    admin user in **/admin/orders/:id**.
+
+    GLOBALE-4
+    Tom Scott
+
+*   Add Discount Adjustments To Admin Order Views
+
+    The `#discount_adjustments` on an order are now being output to the
+    admin user in **/admin/orders/:id**.
+
+    GLOBALE-4
+    Tom Scott
+
+
+
 Workarea Global E 1.2.0 (2019-12-11)
 --------------------------------------------------------------------------------
 
