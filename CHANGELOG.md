@@ -1,3 +1,33 @@
+Workarea Global E 1.3.0 (2020-01-21)
+--------------------------------------------------------------------------------
+
+*   Upgrade For Workarea v3.4
+
+    Allows the Global-e integration to be used with Workarea v3.4 and above.
+    It involves mostly minor changes surrounding the differences between the
+    former analytics and the new metrics/insights system.
+
+    GLOBALE-5
+    Tom Scott
+
+*   Add Discount Adjustments To Admin Order Views
+
+    The `#discount_adjustments` on an order are now being output to the
+    admin user in **/admin/orders/:id**.
+
+    GLOBALE-4
+    Tom Scott
+
+*   Add Discount Adjustments To Admin Order Views
+
+    The `#discount_adjustments` on an order are now being output to the
+    admin user in **/admin/orders/:id**.
+
+    GLOBALE-4
+    Tom Scott
+
+
+
 Workarea Global E 1.2.0 (2019-12-11)
 --------------------------------------------------------------------------------
 
