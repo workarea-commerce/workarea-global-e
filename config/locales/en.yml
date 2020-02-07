@@ -58,7 +58,10 @@ en:
         sale_price_default: "(defaults to regular)"
         title: Fixed prices for %{sku}
       orders:
-        attributs:
+        attributes:
+          totals:
+            duties_and_taxes_nonsubsidized: Total Duties and Taxes Owed
+            duties_and_taxes_subsidized: Tax Subsidization
           items:
             nonadjusted_pricing: Nonadjusted Pricing
         cards:

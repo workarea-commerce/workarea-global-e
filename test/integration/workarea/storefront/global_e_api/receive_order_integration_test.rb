@@ -225,6 +225,22 @@ module Workarea
           assert_equal 1, order.international_discount_adjustments.size
         end
 
+        def test_with_tax_subsidy_discount
+          order = create_cart
+
+          post storefront.globale_receive_order_path,
+            headers: { 'CONTENT_TYPE' => 'application/json' },
+            params: global_e_send_order_to_merchant_with_shipping_discounts_body(order: order)
+
+          assert response.ok?, "Expected 200 response"
+
+          order.reload
+
+          assert_equal "$53.03", order.duties_and_taxes_nonsubsidized.format
+          assert_equal "$53.03", order.duties_and_taxes_subsidized.format
+          assert_equal "$0.00", order.tax_total.format
+        end
+
         def test_updating_user_addresses
           user = create_user(
             addresses: [

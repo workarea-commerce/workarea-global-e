@@ -121,6 +121,10 @@ module Workarea
         def shipping?
           discount_type == 2
         end
+
+        def tax_subsidy?
+          discount_type == 4
+        end
       end
     end
   end

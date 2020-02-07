@@ -574,7 +574,7 @@ module Workarea
         "MerchantOrderId" => nil,
         "PriceCoefficientRate" => 1.000000,
         "GenericHSCode" => nil,
-        "TotalDutiesAndTaxesPrice" => 0.0,
+        "TotalDutiesAndTaxesPrice" => 53.03,
         "CCFPrice" => 0.0
       }.to_json
     end

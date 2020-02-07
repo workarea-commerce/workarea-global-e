@@ -126,6 +126,16 @@
                     %th
                       %span.data-pairs__name= t('workarea.admin.orders.attributes.totals.shipping')
                     %td= number_to_currency @order.shipping_total
+                  - if @order.duties_and_taxes_nonsubsidized.present?
+                    %tr
+                      %th
+                        %span.data-pairs__name= t('workarea.admin.orders.attributes.totals.duties_and_taxes_nonsubsidized')
+                      %td= number_to_currency @order.duties_and_taxes_nonsubsidized
+                  - if @order.duties_and_taxes_subsidized.present?
+                    %tr
+                      %th
+                        %span.data-pairs__name= t('workarea.admin.orders.attributes.totals.duties_and_taxes_subsidized')
+                      %td= number_to_currency @order.duties_and_taxes_subsidized
                   %tr
                     %th
                       %span.data-pairs__name= t('workarea.admin.orders.attributes.totals.tax')

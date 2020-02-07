@@ -67,10 +67,26 @@ module Workarea
               total_price: order.items.sum(&:total_price) - order.discount_adjustments.sum { |pa| pa.amount.abs },
               international_total_price: international_total_price,
 
-              tax_total: total_duties_and_taxes_price,
+              duties_and_taxes_nonsubsidized: total_duties_and_taxes_price,
+              duties_and_taxes_subsidized: total_duties_and_taxes_subsidized,
+              tax_total: total_duties_and_taxes_price - total_duties_and_taxes_subsidized,
               total_duties_price: total_duties_price,
               contains_clearance_fees_price: contains_clearance_fees_price,
               duties_guaranteed: international_details.duties_guaranteed
+            )
+          end
+
+          def total_duties_and_taxes_price
+            Money.from_amount(
+              merchant_order.total_duties_and_taxes_price,
+              merchant_order.currency_code
+            )
+          end
+
+          def total_duties_and_taxes_subsidized
+            Money.from_amount(
+              merchant_order.discounts.select { |d| d.tax_subsidy? }.sum(&:price),
+              merchant_order.currency_code
             )
           end
 
