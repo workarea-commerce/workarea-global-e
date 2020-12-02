@@ -58,7 +58,7 @@ module Workarea
         order = Workarea::Order.first
         assert_equal user.id.to_s, order.user_id
 
-        travel_to Workarea.config.customer_session_timeout.from_now do
+        travel_to (Workarea::Configuration::Session.ttl + 1.day).from_now do
           get storefront.checkout_path
 
           assert_redirected_to storefront.ge_checkout_url
