@@ -12,5 +12,5 @@ Gem::Specification.new do |spec|
   spec.license     = "MIT"
   spec.files       = `git ls-files`.split("\n")
 
-  spec.add_dependency 'workarea', '~> 3.4.25'
+  spec.add_dependency 'workarea', '~> 3.x', '>= 3.4.25'
 end

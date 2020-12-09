@@ -1,5 +1,16 @@
 module Workarea
   decorate OrderMetrics, with: :global_e do
+    # Global E orders have only the Global E tender with the transacting
+    # currency, so use the order's total price as a proxy to avoid needing
+    # to exchange for metrics.
+    def tenders
+      if payment.tenders.map(&:slug) == [:global_e_payment]
+        { global_e_payment: { orders: 1, revenue: total_price } }
+      else
+        super
+      end
+    end
+
     def all_price_adjustments
       super + @order.discount_adjustments
     end
